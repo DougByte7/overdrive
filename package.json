@@ -28,6 +28,7 @@
     "chromatic": "^5.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
+    "jest": "^26.1.0",
     "storybook-addon-specifications": "^2.1.5",
     "typescript": "^3.9.7"
   }
