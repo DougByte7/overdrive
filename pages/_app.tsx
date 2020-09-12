@@ -1,5 +1,7 @@
-import "normalize.css";
 import { FunctionComponent } from "react";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "@/theme";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 export default function MyApp({
   Component,
@@ -8,5 +10,10 @@ export default function MyApp({
   Component: FunctionComponent;
   pageProps: Record<string, any>;
 }) {
-  return <Component {...pageProps} />;
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
 }
