@@ -1,7 +1,8 @@
-import { Sheet } from "@/Common/Sheet";
-import { SheetField, SheetElements } from "@/Common/Sheet/sheet-container";
+import { Sheet } from "@/common/sheet";
+import { SheetField, SheetElements } from "@/common/sheet/sheet-container";
 import { newArray } from "@/helpers/array";
 import faker from "faker";
+import ComponentSelector from "@/sheet-builder/component-selector/component-selector-container";
 faker.seed(1);
 
 const positions = [
@@ -85,8 +86,21 @@ const fields: SheetField[] = newArray(positions.length - 3, fakeField);
 
 export default function SheetBuilder() {
   return (
-    <>
+    <main className="main">
+      <ComponentSelector />
       <Sheet fields={fields} />
-    </>
+      <style jsx>{`
+        .main {
+          display: grid;
+          grid-template-areas: "main" "toolbar";
+          font-size: 3rem;
+
+          @media screen and (min-width: 640px) {
+            grid-template-areas: "toolbar main";
+            grid-template-columns: 3rem 1fr;
+          }
+        }
+      `}</style>
+    </main>
   );
 }
