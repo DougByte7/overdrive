@@ -1,89 +1,105 @@
-import {
-  TextField,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-} from "@material-ui/core";
+import theme from "@/theme"
+import { TextField, MenuItem, Paper } from "@material-ui/core"
+import faker from "faker"
+faker.seed(1)
 
-export type SheetElements = "text" | "number" | "select" | "container";
+export type SheetFiledType = "text" | "number" | "select"
+
 type GridPosition = {
-  rowStart: number;
-  columnStart: number;
-  rowEnd: number;
-  columnEnd: number;
-};
-export type SheetField = {
-  type: SheetElements;
-  position: GridPosition;
-  label?: string;
-  value?: string | number;
-  fields?: SheetField[];
-  options?: string[];
-};
+  rowStart: number
+  columnStart: number
+  rowEnd: number
+  columnEnd: number
+}
+
+export type SheetInputField = {
+  type: SheetFiledType
+  position: GridPosition
+  label: string
+  value: string | number
+  options?: string[]
+}
+
+export interface SheetDataBlock {
+  position: GridPosition
+  inputFields: SheetInputField[]
+}
 
 interface SheetProps {
-  fields: SheetField[];
-  position?: GridPosition;
+  data: SheetDataBlock[]
+  onChangeSheetValues: (
+    dataBlockIndex: number,
+    fieldIndex: number
+  ) => (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function Sheet(props: SheetProps) {
-  const { fields, position } = props;
+  const { data, onChangeSheetValues: handleChangeSheetValues } = props
+
+  const getGridArea = (position: GridPosition) => ({
+    gridArea: `${position?.rowStart} / ${position?.columnStart} /
+        ${position?.rowEnd} / ${position?.columnEnd}`,
+  })
 
   return (
-    <div className="sheet">
-      {fields?.map((field, i) => {
-        const { type, label, value, position, options } = field;
-        const id = `${label}_${type}_${i}`;
-        const gridArea = {
-          gridArea: `${position?.rowStart} / ${position?.columnStart} /
-            ${position?.rowEnd} / ${position?.columnEnd}`,
-        };
+    <Paper className="sheet" elevation={1}>
+      <form className="sheet-block" noValidate autoComplete="off">
+        {data?.map((block, blockIndex) => {
+          return (
+            <Paper
+              key={blockIndex}
+              className="sheet-block"
+              style={getGridArea(block.position)}
+              elevation={3}
+            >
+              {block.inputFields.map((input, inputIndex) => {
+                const { label, type, position, value, options } = input
+                const id = `${label}_${type}_${blockIndex}`
+                const gridArea = getGridArea(position)
 
-        switch (type) {
-          case "number":
-          case "text":
-            return (
-              <TextField
-                key={id}
-                label={label}
-                value={value}
-                type={type}
-                style={gridArea}
-              />
-            );
-
-          case "select":
-            return (
-              <FormControl style={gridArea}>
-                <InputLabel id={id}>{label}</InputLabel>
-                <Select key={id} labelId={id} value={value}>
-                  {options!.map((option) => (
-                    <MenuItem value={option}>{option}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            );
-          case "container":
-            return (
-              <Sheet key={id} fields={field.fields!} position={position} />
-            );
-        }
-      })}
-      <style jsx>{`
+                switch (type) {
+                  case "number":
+                  case "text":
+                  case "select":
+                    return (
+                      <TextField
+                        key={id}
+                        label={label}
+                        value={value}
+                        type={type}
+                        style={gridArea}
+                        select={type === "select"}
+                        onChange={handleChangeSheetValues(
+                          blockIndex,
+                          inputIndex
+                        )}
+                      >
+                        {options?.map((option, optionIndex) => (
+                          <MenuItem key={optionIndex} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )
+                }
+              })}
+            </Paper>
+          )
+        })}
+      </form>
+      <style jsx global>{`
         .sheet {
-          display: grid;
-          grid-gap: 1rem;
-          grid-template-columns: repeat(12, 1fr);
-          width: 50rem;
-          margin: 0 auto;
+          grid-area: main;
+          margin: 1rem;
 
-          ${!!position
-            ? `grid-area: ${position.rowStart} / ${position.columnStart} /
-            ${position.rowEnd} / ${position.columnEnd};`
-            : ""}
+          .sheet-block {
+            padding: 1rem;
+            display: grid;
+            grid-gap: 1rem;
+            grid-template-columns: repeat(12, 1fr);
+          }
         }
       `}</style>
-    </div>
-  );
+    </Paper>
+  )
 }
