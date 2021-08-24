@@ -15,9 +15,11 @@
   "dependencies": {
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
+    "material-ui-chip-input": "^2.0.0-beta.2",
     "next": "^11.0.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-use": "^17.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
@@ -25,6 +27,7 @@
     "@babel/preset-typescript": "^7.14.5",
     "@types/faker": "^5.5.7",
     "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.0",
     "babel-jest": "^27.0.6",
     "eslint": "^7.30.0",
     "eslint-config-next": "^11.0.1",
@@ -32,7 +35,7 @@
     "jest": "^27.0.6",
     "node-sass": "^6.0.1",
     "styled-jsx-plugin-sass": "^1.0.0",
-    "typescript": "^4.3.5",
-    "ts-node": "^10.1.0"
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
   }
 }
