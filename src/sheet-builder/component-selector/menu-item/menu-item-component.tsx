@@ -20,7 +20,7 @@ const MenuItem: FunctionComponent<MenuItemProps> = ({
     </li>
     <style jsx>{`
       .toolbar__li {
-        height: 6rem;
+        height: 3rem;
         margin: 0 0.5rem;
         &:first-child {
           margin-left: 1rem;
@@ -31,23 +31,20 @@ const MenuItem: FunctionComponent<MenuItemProps> = ({
 
         .toolbar__item {
           height: 100%;
-          width: 5.5rem;
+          width: 3.5rem;
           border: none;
           padding: 0;
           background: initial;
           text-align: center;
+          vertical-align: super;
           transition: color 150ms;
           cursor: pointer;
-
-          :global(svg) {
-            height: 100%;
-            font-size: 3rem;
-          }
+          color: ${theme.palette.text.primary};
 
           &:hover,
           &:focus {
             font-size: 1rem;
-            color: ${theme.palette.primary.main};
+            color: ${theme.palette.action.focus};
           }
         }
 

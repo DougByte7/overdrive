@@ -4,25 +4,12 @@ import AddIcon from "@material-ui/icons/Add"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import { makeStyles } from "@material-ui/core/styles"
-
-type MenuAction = {
-  name: string
-  icon: JSX.Element
-  func: VoidFunction
-}
+import { MenuAction } from "./popup-menu-types"
 
 interface PopupMenuProps {
   id: string
   actions: MenuAction[]
 }
-
-const useStyles = makeStyles({
-  root: {
-    "& > .MuiSvgIcon-root": {
-      marginRight: ".5rem",
-    },
-  },
-})
 
 export default function PopupMenu(props: PopupMenuProps) {
   const { id, actions } = props
@@ -60,11 +47,12 @@ export default function PopupMenu(props: PopupMenuProps) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {actions.map((action) => {
+        {actions.map((action, index) => {
           const { name, icon, func } = action
 
           return (
             <MenuItem
+              key={index}
               className={classes.root}
               onClick={handleActionClick(func)}
             >
@@ -76,3 +64,11 @@ export default function PopupMenu(props: PopupMenuProps) {
     </div>
   )
 }
+
+const useStyles = makeStyles({
+  root: {
+    "& > .MuiSvgIcon-root": {
+      marginRight: ".5rem",
+    },
+  },
+})
