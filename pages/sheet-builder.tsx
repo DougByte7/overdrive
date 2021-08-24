@@ -1,14 +1,16 @@
 import { Sheet } from "@/common/sheet"
 import {
   SheetInputField,
-  SheetFiledType,
+  SheetFieldType,
   SheetDataBlock,
-} from "@/common/sheet/sheet-container"
+} from "@/common/sheet/sheet-types"
 import { newArray } from "@/helpers/array"
+import ComponentEditorDialog from "@/sheet-builder/component-editor-dialog/component-editor-dialog-container"
 import ComponentSelector from "@/sheet-builder/component-selector/component-selector-container"
-import { timeEnd } from "console"
+import SheetBuilderContextProvider from "@/sheet-builder/sheet-builder-context"
 import faker from "faker"
-import { useState } from "react"
+import React, { useState } from "react"
+
 faker.seed(1)
 
 const positions = [
@@ -58,7 +60,7 @@ const positions = [
 
 // TODO Backend /////////////////////////////////////////////////////////
 function fakeField(_: never, i: number): SheetInputField {
-  const type: SheetFiledType = faker.random.arrayElement([
+  const type: SheetFieldType = faker.random.arrayElement([
     "text",
     "number",
     "select",
@@ -91,67 +93,65 @@ export default function SheetBuilder() {
       },
       inputFields: newArray(positions.length, fakeField),
     },
-    {
-      position: {
-        rowStart: 2,
-        columnStart: 1,
-        rowEnd: 3,
-        columnEnd: 7,
-      },
-      inputFields: newArray(positions.length, fakeField),
-    },
-    {
-      position: {
-        rowStart: 2,
-        columnStart: 7,
-        rowEnd: 3,
-        columnEnd: 13,
-      },
-      inputFields: newArray(positions.length, fakeField),
-    },
   ])
 
-  const addSheetElement = (
+  const handleAddSheetElement = (
     newField: SheetInputField,
-    position?: number,
-    selectedBlock = Math.max(0, fields.length - 1)
+    selectedBlockIndex: number,
+    insertAt?: number
   ) => {
     const data = Array.from(fields)
 
-    const insertAt =
-      position === undefined ? data[selectedBlock].inputFields.length : position
-    data[selectedBlock].inputFields.splice(insertAt, 0, newField)
+    const lastIndex = data[selectedBlockIndex].inputFields.length
+
+    data[selectedBlockIndex].inputFields.splice(
+      insertAt ?? lastIndex,
+      0,
+      newField
+    )
 
     setFields(data)
   }
 
-  const handleChangeSheetValues = (
-    dataBlockIndex: number,
-    fieldIndex: number
-  ) => ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-    const newFields = Array.from(fields)
-    newFields[dataBlockIndex].inputFields[fieldIndex].value = value
-    setFields(newFields)
-  }
+  const handleChangeSheetValues =
+    (dataBlockIndex: number, fieldIndex: number) =>
+    ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+      const newFields = Array.from(fields)
+
+      newFields[dataBlockIndex].inputFields[fieldIndex].value = value
+      setFields(newFields)
+    }
 
   return (
-    <main className="main">
-      <ComponentSelector sheetData={fields} addSheetElement={addSheetElement} />
-      <Sheet data={fields} onChangeSheetValues={handleChangeSheetValues} />
-
-      <style jsx>
-        {`
-          .main {
-            font-size: 3rem;
+    <SheetBuilderContextProvider>
+      <main className="main">
+        <Sheet
+          data={fields}
+          onChangeSheetValues={handleChangeSheetValues}
+          edit
+        />
+        {
+          // Floating Menu, need to rename
+          <ComponentSelector />
+        }
+        <ComponentEditorDialog onAddSheetElement={handleAddSheetElement} />
+        <style jsx>
+          {`
+            .main {
+              padding-bottom: 6rem;
+              font-size: 3rem;
+            }
 
             @media screen and (min-width: 640px) {
-              display: grid;
-              grid-template-areas: "toolbar main";
-              grid-template-columns: 3rem 1fr;
+              .main {
+                display: grid;
+                grid-template-areas: "toolbar main";
+                grid-template-columns: 3rem 1fr;
+              }
             }
-          }
-        `}
-      </style>
-    </main>
+          `}
+        </style>
+      </main>
+    </SheetBuilderContextProvider>
   )
 }
