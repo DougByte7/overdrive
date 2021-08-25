@@ -103,6 +103,7 @@ export default function SheetBuilder() {
     const data = Array.from(fields)
 
     const lastIndex = data[selectedBlockIndex].inputFields.length
+    console.log(newField)
 
     data[selectedBlockIndex].inputFields.splice(
       insertAt ?? lastIndex,

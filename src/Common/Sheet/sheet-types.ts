@@ -11,8 +11,9 @@ export type SheetInputField = {
   type: SheetFieldType
   position: GridPosition
   label: string
-  value: string | number
+  value: string | number | string[]
   options?: string[]
+  isMultiSelect?: boolean
 }
 
 export interface SheetDataBlock {

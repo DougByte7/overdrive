@@ -27,9 +27,10 @@ import Typography from "@material-ui/core/Typography"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import { useSharedSheetInfo } from "@/shared-states/shared-sheet-info"
 import { isBlank } from "@/helpers/array"
+import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 
 interface FormSelectState {
-  selectedDictionaryName: string
+  selectedDictionaryIndex: number
   isMultiSelect: boolean
   showDictionaryEditor: boolean
   dictionaryName: string
@@ -38,9 +39,10 @@ interface FormSelectState {
 
 const DialogFormSelectView: FunctionComponent = () => {
   const { getItems } = useIndexedDB()
+  const { handleChangeNewComponent } = useSheetBuilderContext()
   const classes = useStyles()
   const [sheetInfo, setSheetInfo] = useSharedSheetInfo()
-  // TODO IMPLEMENT WITH handleChangeState:53 like function to this thing to add, replace, remove
+
   const handleChangeDictionaries = (dictionary: Dictionary | Dictionary[]) =>
     setSheetInfo({
       ...sheetInfo,
@@ -51,7 +53,7 @@ const DialogFormSelectView: FunctionComponent = () => {
     })
 
   const initialState: FormSelectState = {
-    selectedDictionaryName: "",
+    selectedDictionaryIndex: -1,
     isMultiSelect: false,
     showDictionaryEditor: false,
     dictionaryName: "",
@@ -81,10 +83,19 @@ const DialogFormSelectView: FunctionComponent = () => {
       value: unknown
     }>,
     _child: React.ReactNode
-  ) => handleChangeState("selectedDictionaryName", event.target.value)
+  ) => {
+    const index = event.target.value
+    handleChangeState("selectedDictionaryIndex", index)
+
+    handleChangeNewComponent({
+      options: sheetInfo.dictionaries[index as number].entries,
+    })
+  }
 
   const handleChangeIsMultiSelect = () => {
-    handleChangeState("isMultiSelect", !state.isMultiSelect)
+    const newValue = !state.isMultiSelect
+    handleChangeState("isMultiSelect", newValue)
+    handleChangeNewComponent({ isMultiSelect: newValue, value: [] })
   }
 
   const handleChangeShowDictionaryEditor = () => {
@@ -127,14 +138,14 @@ const DialogFormSelectView: FunctionComponent = () => {
         <Select
           id="dictionary-select"
           labelId="dictionary-select-label"
-          value={state.selectedDictionaryName}
+          value={sheetInfo.dictionaries[state.selectedDictionaryIndex]}
           error={isBlank(sheetInfo.dictionaries)}
           onChange={handleChangeSelectedDictionary}
           disabled={isBlank(sheetInfo.dictionaries)}
           fullWidth
         >
-          {sheetInfo.dictionaries?.map((option) => (
-            <MenuItem key={option.name} value={option.name}>
+          {sheetInfo.dictionaries?.map((option, i) => (
+            <MenuItem key={option.name} value={i}>
               {option.name}
             </MenuItem>
           ))}

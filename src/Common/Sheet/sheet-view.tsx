@@ -69,7 +69,8 @@ export default function SheetView(props: SheetViewProps) {
             elevation={3}
           >
             {block.inputFields.map((input, inputIndex) => {
-              const { label, type, position, value, options } = input
+              const { label, type, position, value, options, isMultiSelect } =
+                input
               const id = `${label}_${type}_${blockIndex}`
               const gridArea = getGridArea(position)
 
@@ -85,6 +86,9 @@ export default function SheetView(props: SheetViewProps) {
                       type={type}
                       style={gridArea}
                       select={type === "select"}
+                      SelectProps={
+                        isMultiSelect ? { multiple: true } : undefined
+                      }
                       onChange={handleChangeSheetValues(blockIndex, inputIndex)}
                     >
                       {options?.map((option, optionIndex) => (

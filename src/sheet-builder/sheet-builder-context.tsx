@@ -7,11 +7,7 @@ import React, {
 } from "react"
 import DialogFormInputView from "./dialog-forms/dialog-form-input-view"
 import DialogFormSelectView from "./dialog-forms/dialog-form-select-view"
-import {
-  DialogData,
-  ISheetBuilderContextData,
-  ISheetBuilderContextState,
-} from "./sheet-builder-types"
+import { DialogData, ISheetBuilderContextData } from "./sheet-builder-types"
 
 const initialDialogData: DialogData = Object.freeze({
   title: "",
@@ -29,38 +25,36 @@ const initialNewComponent: SheetInputField = Object.freeze({
   options: undefined,
 })
 
-const initialState: ISheetBuilderContextState = Object.freeze({
-  dialogData: initialDialogData,
-  newComponent: initialNewComponent,
-})
-
 const SheetBuilderContext = createContext<ISheetBuilderContextData>({
   dialogData: initialDialogData,
   newComponent: initialNewComponent,
   openDialog: () => () => console.debug("openDialog fn called"),
   closeDialog: () => console.debug("closeDialog fn called"),
-  setNewComponent: () => console.debug("setNewComponent fn called"),
+  handleChangeNewComponent: () => console.debug("setNewComponent fn called"),
 })
 
 const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
-  const [state, setState] = useState<ISheetBuilderContextState>(initialState)
+  const [dialogData, setDialogData] = useState<DialogData>(initialDialogData)
+  const [newComponent, setNewComponent] =
+    useState<SheetInputField>(initialNewComponent)
 
-  const setDialogData = (newValues: Partial<DialogData>) => {
-    setState({
-      ...state,
-      dialogData: { ...state.dialogData, ...newValues },
+  const handleChangeDialogData = (newValues: Partial<DialogData>) => {
+    setDialogData({
+      ...dialogData,
+      ...newValues,
     })
   }
 
-  const setNewComponent = (newValues: Partial<SheetInputField>) => {
-    setState({
-      ...state,
-      newComponent: { ...state.newComponent, ...newValues },
+  const handleChangeNewComponent = (newValues: Partial<SheetInputField>) => {
+    setNewComponent({
+      ...newComponent,
+      ...newValues,
     })
   }
 
   const closeDialog = () => {
-    setState(initialState)
+    setDialogData(initialDialogData)
+    setNewComponent(initialNewComponent)
   }
 
   const openDialog = (type: SheetFieldType, blockIndex: number) => () => {
@@ -81,6 +75,8 @@ const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
         newDialogData.description =
           "Use for multiple options, e.g., race, class, occupation, spells."
         newDialogData.content = <DialogFormSelectView />
+        handleChangeNewComponent({ type: "select" })
+
         break
       case "checkbox":
         newDialogData.title = "Checkbox"
@@ -91,15 +87,15 @@ const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
       default:
         break
     }
-    setDialogData(newDialogData)
+    handleChangeDialogData(newDialogData)
   }
 
   const data: ISheetBuilderContextData = {
-    dialogData: state.dialogData,
-    newComponent: state.newComponent,
+    dialogData,
+    newComponent,
     openDialog,
     closeDialog,
-    setNewComponent,
+    handleChangeNewComponent,
   }
 
   return (

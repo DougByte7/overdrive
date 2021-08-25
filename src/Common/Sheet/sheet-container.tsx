@@ -16,7 +16,7 @@ export default function Sheet(props: SheetProps) {
   return (
     <SheetView
       data={data}
-      edit={Boolean(edit)}
+      edit={!!edit}
       onChangeSheetValues={handleChangeSheetValues}
     />
   )

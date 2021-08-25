@@ -20,7 +20,7 @@ export default function ComponentEditorDialog(
   props: IComponentEditorDialogProps
 ) {
   const { onAddSheetElement: handleAddSheetElement } = props
-  const { dialogData, newComponent, closeDialog, setNewComponent } =
+  const { dialogData, newComponent, closeDialog, handleChangeNewComponent } =
     useSheetBuilderContext()
 
   const handleAddComponent = () => {
@@ -29,7 +29,7 @@ export default function ComponentEditorDialog(
   }
 
   const handleChangeLabel = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewComponent({ label: event.currentTarget.value })
+    handleChangeNewComponent({ label: event.currentTarget.value })
   }
 
   return (

@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const DialogFormInputView: FunctionComponent = () => {
   const {
     newComponent: { type },
-    setNewComponent,
+    handleChangeNewComponent,
   } = useSheetBuilderContext()
   const classes = useStyles()
 
@@ -30,7 +30,7 @@ const DialogFormInputView: FunctionComponent = () => {
     _event: React.ChangeEvent<HTMLInputElement>,
     value: string
   ) => {
-    setNewComponent({ type: value as SheetFieldType })
+    handleChangeNewComponent({ type: value as SheetFieldType })
   }
 
   return (

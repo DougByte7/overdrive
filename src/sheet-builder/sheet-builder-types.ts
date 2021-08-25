@@ -8,13 +8,10 @@ export type DialogData = {
   blockIndex: number
 }
 
-export interface ISheetBuilderContextState {
+export interface ISheetBuilderContextData {
   dialogData: DialogData
   newComponent: SheetInputField
-}
-
-export interface ISheetBuilderContextData extends ISheetBuilderContextState {
   openDialog: (type: SheetFieldType, blockIndex: number) => VoidFunction
   closeDialog: VoidFunction
-  setNewComponent: (newValues: Partial<SheetInputField>) => void
+  handleChangeNewComponent: (newValues: Partial<SheetInputField>) => void
 }
