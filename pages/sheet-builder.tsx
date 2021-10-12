@@ -1,99 +1,32 @@
+import { useState } from "react"
 import { Sheet } from "@/common/sheet"
 import {
   SheetInputField,
-  SheetFieldType,
   SheetDataBlock,
+  SheetInputFieldKey,
 } from "@/common/sheet/sheet-types"
-import { newArray } from "@/helpers/array"
 import ComponentEditorDialog from "@/sheet-builder/component-editor-dialog/component-editor-dialog-container"
 import ComponentSelector from "@/sheet-builder/component-selector/component-selector-container"
 import SheetBuilderContextProvider from "@/sheet-builder/sheet-builder-context"
-import faker from "faker"
-import React, { useState } from "react"
-
-faker.seed(1)
-
-const positions = [
-  {
-    rowStart: 1,
-    columnStart: 1,
-    rowEnd: 2,
-    columnEnd: 5,
-  },
-  {
-    rowStart: 1,
-    columnStart: 5,
-    rowEnd: 2,
-    columnEnd: 9,
-  },
-  {
-    rowStart: 1,
-    columnStart: 9,
-    rowEnd: 2,
-    columnEnd: 13,
-  },
-  {
-    rowStart: 2,
-    columnStart: 1,
-    rowEnd: 3,
-    columnEnd: 13,
-  },
-  {
-    rowStart: 4,
-    columnStart: 1,
-    rowEnd: 5,
-    columnEnd: 5,
-  },
-  {
-    rowStart: 4,
-    columnStart: 5,
-    rowEnd: 5,
-    columnEnd: 9,
-  },
-  {
-    rowStart: 4,
-    columnStart: 9,
-    rowEnd: 5,
-    columnEnd: 13,
-  },
-]
-
-// TODO Backend /////////////////////////////////////////////////////////
-function fakeField(_: never, i: number): SheetInputField {
-  const type: SheetFieldType = faker.random.arrayElement([
-    "text",
-    "number",
-    "select",
-  ])
-
-  const field: SheetInputField = {
-    type,
-    position: positions[i],
-    label: faker.internet.userName(),
-    value: "",
-  }
-
-  if (type === "select") {
-    field.options = faker.random.words(5).split(" ")
-  }
-
-  return field
-}
-
-////////////////////////////////////////////////////////////////////////
+import { Button } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add';
 
 export default function SheetBuilder() {
-  const [fields, setFields] = useState<SheetDataBlock[]>([
-    {
-      position: {
-        rowStart: 1,
-        columnStart: 1,
-        rowEnd: 2,
-        columnEnd: 13,
-      },
-      inputFields: newArray(positions.length, fakeField),
+  const emptySheetBock = {
+    position: {
+      rowStart: 1,
+      columnStart: 1,
+      rowEnd: 2,
+      columnEnd: 13,
     },
-  ])
+    inputFields: []
+  }
+
+  const [fields, setFields] = useState<SheetDataBlock[]>([emptySheetBock])
+
+  const handleAddSheetBlock = () => {
+    setFields([...fields, emptySheetBock])
+  }
 
   const handleAddSheetElement = (
     newField: SheetInputField,
@@ -103,7 +36,6 @@ export default function SheetBuilder() {
     const data = Array.from(fields)
 
     const lastIndex = data[selectedBlockIndex].inputFields.length
-    console.log(newField)
 
     data[selectedBlockIndex].inputFields.splice(
       insertAt ?? lastIndex,
@@ -115,13 +47,18 @@ export default function SheetBuilder() {
   }
 
   const handleChangeSheetValues =
-    (dataBlockIndex: number, fieldIndex: number) =>
-    ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-      const newFields = Array.from(fields)
+    (dataBlockIndex: number, fieldIndex: number, inputField: SheetInputFieldKey = 'value') =>
+      ({ currentTarget }: React.ChangeEvent<HTMLInputElement> | React.SyntheticEvent<Element, Event>, value: any) => {
+        const newFields: any = Array.from(fields)
 
-      newFields[dataBlockIndex].inputFields[fieldIndex].value = value
-      setFields(newFields)
-    }
+        const type = newFields[dataBlockIndex].inputFields[fieldIndex].type
+
+        newFields[dataBlockIndex].inputFields[fieldIndex][inputField] =
+          type === "checkbox" && inputField === 'value'
+            ? value
+            : (currentTarget as EventTarget & HTMLInputElement).value
+        setFields(newFields)
+      }
 
   return (
     <SheetBuilderContextProvider>
@@ -131,6 +68,15 @@ export default function SheetBuilder() {
           onChangeSheetValues={handleChangeSheetValues}
           edit
         />
+        <Button
+          className="add-block-btn"
+          variant="contained"
+          endIcon={<AddIcon />}
+          style={{ margin: '0 1rem', width: 'calc(100% - 2rem)' }}
+          onClick={handleAddSheetBlock}
+        >
+          Add block
+        </Button>
         {
           // Floating Menu, need to rename
           <ComponentSelector />
@@ -140,11 +86,11 @@ export default function SheetBuilder() {
           {`
             .main {
               padding-bottom: 6rem;
-              font-size: 3rem;
+              font-size: 3rem;              
             }
 
             @media screen and (min-width: 640px) {
-              .main {
+              .main { 
                 display: grid;
                 grid-template-areas: "toolbar main";
                 grid-template-columns: 3rem 1fr;
