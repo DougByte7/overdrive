@@ -1,10 +1,12 @@
-import { SheetFieldType, SheetInputField } from "@/common/sheet/sheet-types"
-import React, {
+import {
   createContext,
   FunctionComponent,
+  ReactNode,
   useContext,
   useState,
 } from "react"
+import { SheetFieldType, SheetInputField } from "@/common/sheet/sheet-types"
+import DialogFormCheckboxView from "./dialog-forms/dialog-form-checkbox-view"
 import DialogFormInputView from "./dialog-forms/dialog-form-input-view"
 import DialogFormSelectView from "./dialog-forms/dialog-form-select-view"
 import { DialogData, ISheetBuilderContextData } from "./sheet-builder-types"
@@ -22,15 +24,14 @@ const initialNewComponent: SheetInputField = Object.freeze({
   position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
   label: "",
   value: "",
-  options: undefined,
 })
 
 const SheetBuilderContext = createContext<ISheetBuilderContextData>({
   dialogData: initialDialogData,
   newComponent: initialNewComponent,
-  openDialog: () => () => console.debug("openDialog fn called"),
-  closeDialog: () => console.debug("closeDialog fn called"),
-  handleChangeNewComponent: () => console.debug("setNewComponent fn called"),
+  openDialog: () => () => console.warn("openDialog fn called"),
+  closeDialog: () => console.warn("closeDialog fn called"),
+  handleChangeNewComponent: () => console.warn("setNewComponent fn called"),
 })
 
 const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
@@ -48,7 +49,7 @@ const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
   const handleChangeNewComponent = (newValues: Partial<SheetInputField>) => {
     setNewComponent({
       ...newComponent,
-      ...newValues,
+      ...(newValues as any),
     })
   }
 
@@ -61,27 +62,39 @@ const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
     const newDialogData = Object.assign({}, initialDialogData)
     newDialogData.isOpen = true
     newDialogData.blockIndex = blockIndex
+    const setNewDialogContents = (
+      title: string,
+      description: string,
+      content: ReactNode
+    ) => {
+      Object.assign(newDialogData, { title, description, content })
+    }
 
     switch (type) {
       case "number":
       case "text":
-        newDialogData.title = "Input"
-        newDialogData.description =
-          "Use for key / value pairs, e.g., skills, attributes, HP, descriptions"
-        newDialogData.content = <DialogFormInputView />
+        setNewDialogContents(
+          "Input",
+          "Use for text / number values, e.g., Name, Life points, Descriptions",
+          <DialogFormInputView />
+        )
         break
       case "select":
-        newDialogData.title = "Select"
-        newDialogData.description =
-          "Use for multiple options, e.g., race, class, occupation, spells."
-        newDialogData.content = <DialogFormSelectView />
+        setNewDialogContents(
+          "Select",
+          "Use for multiple options, e.g., Class, Occupation, Race.",
+          <DialogFormSelectView />
+        )
         handleChangeNewComponent({ type: "select" })
 
         break
       case "checkbox":
-        newDialogData.title = "Checkbox"
-        newDialogData.description =
-          "Use for opposing states, or rank e.g., inspiration, death saves, hunger."
+        setNewDialogContents(
+          "Checkbox",
+          "Use for opposing states, or ranking e.g., Skill, Hunger, Attributes.",
+          <DialogFormCheckboxView />
+        )
+        handleChangeNewComponent({ type: "checkbox", quantity: 1, isPrecisionRating: false })
         break
 
       default:
