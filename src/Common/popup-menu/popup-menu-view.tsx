@@ -1,10 +1,8 @@
-import { useState } from "react"
-import Fab from "@material-ui/core/Fab"
-import AddIcon from "@material-ui/icons/Add"
-import Menu from "@material-ui/core/Menu"
-import MenuItem from "@material-ui/core/MenuItem"
-import { makeStyles } from "@material-ui/core/styles"
+import React, { useState } from "react"
 import { MenuAction } from "./popup-menu-types"
+import { Fab, Menu, MenuItem } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add';
+import { makeStyles, } from "@mui/styles"
 
 interface PopupMenuProps {
   id: string
@@ -71,4 +69,4 @@ const useStyles = makeStyles({
       marginRight: ".5rem",
     },
   },
-})
+}) as any

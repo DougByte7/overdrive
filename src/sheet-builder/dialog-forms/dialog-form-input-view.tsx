@@ -1,12 +1,15 @@
 import { FunctionComponent } from "react"
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
-import RadioGroup from "@material-ui/core/RadioGroup"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Radio from "@material-ui/core/Radio"
-import FormControl from "@material-ui/core/FormControl"
-import FormLabel from "@material-ui/core/FormLabel"
-import { useSheetBuilderContext } from "../sheet-builder-context"
+import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 import { SheetFieldType } from "@/common/sheet/sheet-types"
+import {
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Theme,
+} from "@mui/material"
+import { createStyles, makeStyles, } from "@mui/styles"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "row",
     },
   })
-)
+) as any
 
 const DialogFormInputView: FunctionComponent = () => {
   const {

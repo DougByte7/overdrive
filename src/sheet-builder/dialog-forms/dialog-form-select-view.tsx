@@ -1,33 +1,32 @@
-import { ChangeEvent, FunctionComponent, useState } from "react"
-import FormGroup from "@material-ui/core/FormGroup"
-import InputLabel from "@material-ui/core/InputLabel"
-import Select from "@material-ui/core/Select"
-import MenuItem from "@material-ui/core/MenuItem"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Switch from "@material-ui/core/Switch"
-import TextField from "@material-ui/core/TextField"
-import ChipInput from "material-ui-chip-input"
+import React, { ChangeEvent, FunctionComponent, useState } from "react"
 import { useIndexedDB } from "@/indexed-db/indexed-db-context"
 import { OverdriveDBStores } from "@/indexed-db/types"
-import {
-  Button,
-  createStyles,
-  FormControl,
-  FormHelperText,
-  makeStyles,
-  Theme,
-} from "@material-ui/core"
 import { Dictionary } from "@/common/types"
 import { useCallback } from "react"
 import { useEffectOnce } from "react-use"
-import Accordion from "@material-ui/core/Accordion"
-import AccordionDetails from "@material-ui/core/AccordionDetails"
-import AccordionSummary from "@material-ui/core/AccordionSummary"
-import Typography from "@material-ui/core/Typography"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import { useSharedSheetInfo } from "@/shared-states/shared-sheet-info"
 import { isBlank } from "@/helpers/array"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
+import ChipInput from "material-ui-chip-input"
+import { createStyles, makeStyles, } from "@mui/styles"
+import {
+  Theme,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  Switch,
+  TextField,
+  Typography,
+} from "@mui/material"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 
 interface FormSelectState {
   selectedDictionaryIndex: number
@@ -185,6 +184,7 @@ const DialogFormSelectView: FunctionComponent = () => {
         </AccordionSummary>
         <AccordionDetails className={classes.details}>
           <TextField
+            variant="standard"
             label="Dictionary name"
             placeholder="Class, Spells, Weapons"
             type="text"

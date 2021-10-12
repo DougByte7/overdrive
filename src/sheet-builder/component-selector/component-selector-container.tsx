@@ -1,11 +1,11 @@
 import React, { ComponentType } from "react"
-import MenuRoundedIcon from "@material-ui/icons/MenuRounded"
-import ListAltRoundedIcon from "@material-ui/icons/ListAltRounded"
-import AccountTreeRoundedIcon from "@material-ui/icons/AccountTreeRounded"
-import BuildRoundedIcon from "@material-ui/icons/BuildRounded"
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded"
+import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded"
+import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded"
+import BuildRoundedIcon from "@mui/icons-material/BuildRounded"
 import theme from "@/theme"
-import { darken } from "@material-ui/core/styles"
 import MenuItem from "./menu-item/menu-item-component"
+import { darken } from "@mui/material"
 
 export default function ComponentSelector() {
   const createMenuIcon = (icon: JSX.Element) => () =>

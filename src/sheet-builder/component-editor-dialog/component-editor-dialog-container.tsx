@@ -1,12 +1,14 @@
-import Dialog from "@material-ui/core/Dialog"
-import DialogActions from "@material-ui/core/DialogActions"
-import DialogContent from "@material-ui/core/DialogContent"
-import DialogContentText from "@material-ui/core/DialogContentText"
-import DialogTitle from "@material-ui/core/DialogTitle"
-import TextField from "@material-ui/core/TextField"
-import Button from "@material-ui/core/Button"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 import { SheetInputField } from "@/common/sheet/sheet-types"
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
+  Button,
+} from "@mui/material"
 
 interface IComponentEditorDialogProps {
   onAddSheetElement: (
@@ -43,13 +45,15 @@ export default function ComponentEditorDialog(
         <DialogContentText>{dialogData.description}</DialogContentText>
 
         <TextField
+          fullWidth
           id="label-input"
           label="Label"
           type="text"
+          margin="dense"
+          autoComplete="off"
+          variant="standard"
           value={newComponent.label}
           onChange={handleChangeLabel}
-          margin="dense"
-          fullWidth
         />
 
         {dialogData.content}

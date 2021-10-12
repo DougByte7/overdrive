@@ -1,10 +1,9 @@
 import React, { FunctionComponent } from "react"
 import Head from "next/head"
 import dynamic from "next/dynamic"
-import { ThemeProvider } from "@material-ui/core/styles"
 import theme from "@/theme"
-import CssBaseline from "@material-ui/core/CssBaseline"
 import { SharedSheetInfoProvider } from "@/shared-states/shared-sheet-info"
+import { CssBaseline, ThemeProvider } from "@mui/material"
 
 const IndexedDBContextProvider = dynamic(
   () => import("@/indexed-db/indexed-db-context"),
