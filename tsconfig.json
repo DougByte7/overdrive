@@ -23,7 +23,7 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "lib": ["esnext", "dom", "dom.iterable"],
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "noEmit": true,
     "module": "esnext",
     "resolveJsonModule": true
