@@ -24,7 +24,7 @@ export interface SheetInputNumberField extends BaseSheetInputField {
 
 export interface SheetInputSelectField extends BaseSheetInputField {
   type: "select"
-  value: string
+  value: string | string[]
   options: string[]
   isMultiSelect: boolean
 }
@@ -54,14 +54,3 @@ export interface SheetDataBlock {
   position: GridPosition
   inputFields: SheetInputField[]
 }
-
-export type ChangeSheetValuesEvent = (
-  dataBlockIndex: number,
-  fieldIndex: number,
-  subValues?: SheetInputFieldKey
-) => (
-  event:
-    | React.ChangeEvent<HTMLInputElement>
-    | React.SyntheticEvent<Element, Event>,
-  value?: any
-) => void

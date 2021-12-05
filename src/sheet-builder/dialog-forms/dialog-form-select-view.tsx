@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FunctionComponent, useState } from "react"
+import { ChangeEvent, FunctionComponent, useState } from "react"
 import { useIndexedDB } from "@/indexed-db/indexed-db-context"
 import { OverdriveDBStores } from "@/indexed-db/types"
 import { Dictionary } from "@/common/types"
@@ -8,9 +8,7 @@ import { useSharedSheetInfo } from "@/shared-states/shared-sheet-info"
 import { isBlank } from "@/helpers/array"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 import ChipInput from "material-ui-chip-input"
-import { createStyles, makeStyles, } from "@mui/styles"
 import {
-  Theme,
   Accordion,
   AccordionDetails,
   AccordionSummary,
@@ -25,6 +23,7 @@ import {
   Switch,
   TextField,
   Typography,
+  SelectChangeEvent,
 } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 
@@ -39,7 +38,6 @@ interface FormSelectState {
 const DialogFormSelectView: FunctionComponent = () => {
   const { getItems } = useIndexedDB()
   const { handleChangeNewComponent } = useSheetBuilderContext()
-  const classes = useStyles()
   const [sheetInfo, setSheetInfo] = useSharedSheetInfo()
 
   const handleChangeDictionaries = (dictionary: Dictionary | Dictionary[]) =>
@@ -77,17 +75,14 @@ const DialogFormSelectView: FunctionComponent = () => {
   })
 
   const handleChangeSelectedDictionary = (
-    event: React.ChangeEvent<{
-      name?: string | undefined
-      value: unknown
-    }>,
+    event: SelectChangeEvent<Dictionary>,
     _child: React.ReactNode
   ) => {
     const index = event.target.value
     handleChangeState("selectedDictionaryIndex", index)
 
     handleChangeNewComponent({
-      options: sheetInfo.dictionaries[index as number].entries,
+      options: sheetInfo.dictionaries[index as unknown as number].entries,
     })
   }
 
@@ -137,7 +132,8 @@ const DialogFormSelectView: FunctionComponent = () => {
         <Select
           id="dictionary-select"
           labelId="dictionary-select-label"
-          value={sheetInfo.dictionaries[state.selectedDictionaryIndex]}
+          variant="standard"
+          value={sheetInfo.dictionaries[state.selectedDictionaryIndex] ?? ''}
           error={isBlank(sheetInfo.dictionaries)}
           onChange={handleChangeSelectedDictionary}
           disabled={isBlank(sheetInfo.dictionaries)}
@@ -177,12 +173,12 @@ const DialogFormSelectView: FunctionComponent = () => {
           aria-controls="dictionary-editor-content"
           id="dictionary-editor-header"
         >
-          <Typography className={classes.heading}>Dictionary Editor</Typography>
-          <Typography className={classes.secondaryHeading}>
+          <Typography sx={{ width: '40%', flexShrink: 0 }}>Dictionary Editor</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>
             Class, Spells, Weapons
           </Typography>
         </AccordionSummary>
-        <AccordionDetails className={classes.details}>
+        <AccordionDetails>
           <TextField
             variant="standard"
             label="Dictionary name"
@@ -216,23 +212,5 @@ const DialogFormSelectView: FunctionComponent = () => {
     </FormGroup>
   )
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      flexBasis: "33.33%",
-      flexShrink: 0,
-      marginRight: "1rem",
-    },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary,
-    },
-    details: {
-      flexWrap: "wrap",
-    },
-  })
-)
 
 export default DialogFormSelectView
