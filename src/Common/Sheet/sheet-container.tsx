@@ -25,8 +25,6 @@ export default function Sheet(props: SheetProps) {
   const [shouldChangeBlockTitle, setShouldChangeBlockTitle] = useState(false)
 
   const handleToggleAccordion = (isExpanded: boolean, blockIndex: number) => {
-    console.log({ isExpanded })
-
     if (!isExpanded)
       return setExpandedAccordions(
         expandedAccordions.filter((accordion) => accordion !== blockIndex)
@@ -79,7 +77,7 @@ export default function Sheet(props: SheetProps) {
       shouldChangeBlockTitle={shouldChangeBlockTitle}
       onChangeAccordion={handleClickOrDoubleClick}
       onChangeSheetValues={handleChangeSheetValues}
-      onChangeSheetBlockTitle={handleChangeSheetBlockTitle}
+      onChangeSheetBlockTitle={handleChangeSheetBlockTitle!}
       onFinishTitleEditing={handleFinishTitleEditing}
       onRemove={onRemove}
     />
