@@ -1,16 +1,19 @@
-import { GridPosition, SheetDataBlock, SheetInputFieldKey } from "./sheet-types"
+import type { FocusEventHandler } from "react"
+import type {
+  GridPosition,
+  SheetDataBlock,
+  SheetInputFieldKey,
+} from "./sheet-types"
 import { ExpandMore, Delete as DeleteIcon } from "@mui/icons-material"
 import {
-  Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
   IconButton,
-  TextField,
 } from "@mui/material"
 import { AddElementMenu } from "./components/add-element-menu"
 import { SheetInput } from "./components/sheet-input"
-import { ChangeEvent } from "react"
+import { BlockTitle } from "./components/block-title"
 
 interface SheetViewProps {
   data: SheetDataBlock[]
@@ -26,10 +29,7 @@ interface SheetViewProps {
     value: number | string,
     inputField?: SheetInputFieldKey
   ) => void
-  onChangeSheetBlockTitle: (
-    blockIndex: number
-  ) => (e: ChangeEvent<HTMLInputElement>) => void
-  onFinishTitleEditing: VoidFunction
+  onSaveBlockTitle?: FocusEventHandler
   onRemove?: (blockIndex: number) => VoidFunction
 }
 
@@ -41,8 +41,7 @@ export default function SheetView(props: SheetViewProps) {
     shouldChangeBlockTitle,
     onChangeAccordion,
     onChangeSheetValues: handleChangeSheetValues,
-    onChangeSheetBlockTitle: handleChangeSheetBlockTitle,
-    onFinishTitleEditing: handleFinishTitleEditing,
+    onSaveBlockTitle: handleSaveBlockTitle,
     onRemove: handleRemove,
   } = props
 
@@ -80,17 +79,13 @@ export default function SheetView(props: SheetViewProps) {
                   <DeleteIcon />
                 </IconButton>
               )}
-
-              {edit && shouldChangeBlockTitle ? (
-                <TextField
-                  autoFocus
-                  id={`block-title-${blockIndex}`}
-                  value={block.title ?? `Block ${blockIndex}`}
-                  onChange={handleChangeSheetBlockTitle(blockIndex)}
-                  onBlur={handleFinishTitleEditing}
+              {edit && (
+                <BlockTitle
+                  isEditMode={shouldChangeBlockTitle}
+                  blockIndex={blockIndex}
+                  title={block.title}
+                  onSaveBlockTitle={handleSaveBlockTitle!}
                 />
-              ) : (
-                <Typography>{block.title ?? `Block ${blockIndex}`}</Typography>
               )}
             </AccordionSummary>
 
@@ -99,10 +94,10 @@ export default function SheetView(props: SheetViewProps) {
                 <SheetInput
                   key={`field_${input.label}_${input.type}_${inputIndex}`}
                   input={input}
+                  blockIndex={blockIndex}
                   inputIndex={inputIndex}
                   getGridArea={getGridArea}
                   handleChangeSheetValues={handleChangeSheetValues}
-                  blockIndex={blockIndex}
                 />
               ))}
               {edit && <AddElementMenu blockIndex={blockIndex} />}

@@ -1,14 +1,18 @@
 import SheetView from "./sheet-view"
 import { SheetDataBlock, SheetInputFieldKey } from "./sheet-types"
-import { ChangeEvent, MutableRefObject, useMemo, useState } from "react"
+import {
+  ChangeEvent,
+  FocusEventHandler,
+  MutableRefObject,
+  useMemo,
+  useState,
+} from "react"
 
 interface SheetProps {
   template: SheetDataBlock[]
   edit?: boolean
   sheetDataRef?: MutableRefObject<SheetDataBlock[]>
-  onChangeSheetBlockTitle?: (
-    blockIndex: number
-  ) => (e: ChangeEvent<HTMLInputElement>) => void
+  onChangeSheetBlockTitle?: (blockIndex: number, value: string) => void
   onRemove?: (blockIndex: number) => VoidFunction
 }
 
@@ -65,8 +69,12 @@ export default function Sheet(props: SheetProps) {
     sheetDataRef.current = templateWithValues
   }
 
-  const handleFinishTitleEditing = () => {
+  const handleSaveBlockTitle: FocusEventHandler<HTMLInputElement> = (e) => {
     setShouldChangeBlockTitle(false)
+
+    const element = e.target
+    const blockIndex = Number(element.id.replace("block-title-", ""))
+    handleChangeSheetBlockTitle?.(blockIndex, element.value)
   }
 
   return (
@@ -77,8 +85,7 @@ export default function Sheet(props: SheetProps) {
       shouldChangeBlockTitle={shouldChangeBlockTitle}
       onChangeAccordion={handleClickOrDoubleClick}
       onChangeSheetValues={handleChangeSheetValues}
-      onChangeSheetBlockTitle={handleChangeSheetBlockTitle!}
-      onFinishTitleEditing={handleFinishTitleEditing}
+      onSaveBlockTitle={handleSaveBlockTitle}
       onRemove={onRemove}
     />
   )

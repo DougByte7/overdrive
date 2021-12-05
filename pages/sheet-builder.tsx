@@ -45,12 +45,11 @@ export default function SheetBuilder() {
     setSheetTemplate(data)
   }
 
-  const handleChangeSheetBlockTitle =
-    (blockIndex: number) => (e: ChangeEvent<HTMLInputElement>) => {
-      const newTemplate = Array.from(sheetTemplate)
-      newTemplate[blockIndex].title = e.target.value
-      setSheetTemplate(newTemplate)
-    }
+  const handleChangeSheetBlockTitle = (blockIndex: number, value: string) => {
+    const newTemplate = Array.from(sheetTemplate)
+    newTemplate[blockIndex].title = value
+    setSheetTemplate(newTemplate)
+  }
 
   const handleRemoveSheetBlock = (blockIndex: number) => () => {
     const newSheetTemplate = Array.from(sheetTemplate)
