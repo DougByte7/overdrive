@@ -1,12 +1,6 @@
 import SheetView from "./sheet-view"
 import { SheetDataBlock, SheetInputFieldKey } from "./sheet-types"
-import {
-  ChangeEvent,
-  FocusEventHandler,
-  MutableRefObject,
-  useMemo,
-  useState,
-} from "react"
+import { FocusEventHandler, MutableRefObject, useMemo, useState } from "react"
 
 interface SheetProps {
   template: SheetDataBlock[]
