@@ -8,7 +8,7 @@ import {
 } from "@mui/material"
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
 import CheckBoxIcon from "@mui/icons-material/CheckBox"
-import { isNil } from "lodash"
+import isNil from "lodash/isNil"
 import type {
   GridPosition,
   SheetInputCheckboxField,

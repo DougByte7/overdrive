@@ -1,13 +1,11 @@
-import { ChangeEvent, FunctionComponent, useState } from "react"
+import React, { ChangeEvent, FunctionComponent, useState, useCallback } from "react"
 import { useIndexedDB } from "@/indexed-db/indexed-db-context"
 import { OverdriveDBStores } from "@/indexed-db/types"
 import { Dictionary } from "@/common/types"
-import { useCallback } from "react"
 import { useEffectOnce } from "react-use"
 import { useSharedSheetInfo } from "@/shared-states/shared-sheet-info"
 import { isBlank } from "@/helpers/array"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
-import ChipInput from "material-ui-chip-input"
 import {
   Accordion,
   AccordionDetails,
@@ -26,6 +24,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import ChipInput from "@/common/form-elements/chip-input"
 
 interface FormSelectState {
   selectedDictionaryIndex: number
@@ -133,7 +132,7 @@ const DialogFormSelectView: FunctionComponent = () => {
           id="dictionary-select"
           labelId="dictionary-select-label"
           variant="standard"
-          value={sheetInfo.dictionaries[state.selectedDictionaryIndex] ?? ''}
+          value={sheetInfo.dictionaries[state.selectedDictionaryIndex] ?? ""}
           error={isBlank(sheetInfo.dictionaries)}
           onChange={handleChangeSelectedDictionary}
           disabled={isBlank(sheetInfo.dictionaries)}
@@ -173,8 +172,10 @@ const DialogFormSelectView: FunctionComponent = () => {
           aria-controls="dictionary-editor-content"
           id="dictionary-editor-header"
         >
-          <Typography sx={{ width: '40%', flexShrink: 0 }}>Dictionary Editor</Typography>
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ width: "40%", flexShrink: 0 }}>
+            Dictionary Editor
+          </Typography>
+          <Typography sx={{ color: "text.secondary" }}>
             Class, Spells, Weapons
           </Typography>
         </AccordionSummary>

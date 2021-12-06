@@ -3,7 +3,8 @@ import Head from "next/head"
 import dynamic from "next/dynamic"
 import theme from "@/theme"
 import { SharedSheetInfoProvider } from "@/shared-states/shared-sheet-info"
-import { CssBaseline, ThemeProvider } from "@mui/material"
+import { ThemeProvider } from "@mui/material/styles"
+import CssBaseline from '@mui/material/CssBaseline';
 
 const IndexedDBContextProvider = dynamic(
   () => import("@/indexed-db/indexed-db-context"),

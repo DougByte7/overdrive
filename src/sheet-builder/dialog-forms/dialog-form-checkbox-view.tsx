@@ -8,7 +8,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material"
-import { isNil } from "lodash"
+import isNil from "lodash/isNil"
 
 const DialogFormCheckboxView: FunctionComponent = () => {
   const { newComponent, handleChangeNewComponent } = useSheetBuilderContext()
@@ -45,7 +45,7 @@ const DialogFormCheckboxView: FunctionComponent = () => {
             min: 1,
             max: 10,
           }}
-          value={(newComponent as SheetInputCheckboxField).quantity || ''}
+          value={(newComponent as SheetInputCheckboxField).quantity || ""}
           onChange={handleChangeNumberOfBoxes}
         />
       </FormControl>
