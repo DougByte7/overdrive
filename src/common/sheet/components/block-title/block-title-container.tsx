@@ -43,7 +43,17 @@ export default function BlockTitle(props: BlockTitleProps) {
   ) : (
     <>
       <Typography>{value}</Typography>
-      <Typography variant="body2" color="GrayText" marginLeft={1}>
+      <Typography
+        variant="body2"
+        color="GrayText"
+        sx={{
+          marginLeft: "8px",
+          fontSize: ".6rem",
+          position: "absolute",
+          top: "70%",
+          left: "15%",
+        }}
+      >
         Double tap to edit
       </Typography>
     </>
