@@ -30,6 +30,11 @@ export default function BlockTitle(props: BlockTitleProps) {
       onBlur={handleSaveBlockTitle}
     />
   ) : (
-    <Typography>{value}</Typography>
+    <>
+      <Typography>{value}</Typography>
+      <Typography variant="body2" color="GrayText" marginLeft={1}>
+        Double tap to edit
+      </Typography>
+    </>
   )
 }

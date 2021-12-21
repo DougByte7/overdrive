@@ -79,14 +79,13 @@ export default function SheetView(props: SheetViewProps) {
                   <DeleteIcon />
                 </IconButton>
               )}
-              {edit && (
-                <BlockTitle
-                  isEditMode={shouldChangeBlockTitle}
-                  blockIndex={blockIndex}
-                  title={block.title}
-                  onSaveBlockTitle={handleSaveBlockTitle!}
-                />
-              )}
+
+              <BlockTitle
+                isEditMode={edit && shouldChangeBlockTitle}
+                blockIndex={blockIndex}
+                title={block.title}
+                onSaveBlockTitle={handleSaveBlockTitle!}
+              />
             </AccordionSummary>
 
             <AccordionDetails>
