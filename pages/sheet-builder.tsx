@@ -2,7 +2,6 @@ import { useState } from "react"
 import { Sheet } from "@/common/sheet"
 import { SheetInputField, SheetDataBlock } from "@/common/sheet/sheet-types"
 import ComponentEditorDialog from "@/sheet-builder/component-editor-dialog/component-editor-dialog-container"
-import ComponentSelector from "@/sheet-builder/component-selector/component-selector-container"
 import SheetBuilderContextProvider from "@/sheet-builder/sheet-builder-context"
 import { Button } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
@@ -84,10 +83,6 @@ export default function SheetBuilder() {
         >
           Save
         </Button>
-        {
-          // Floating Menu, need to rename
-          <ComponentSelector />
-        }
         <ComponentEditorDialog onAddSheetElement={handleAddSheetElement} />
         <style jsx>
           {`
