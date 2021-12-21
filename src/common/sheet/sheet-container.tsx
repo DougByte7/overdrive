@@ -20,7 +20,8 @@ export default function Sheet(props: SheetProps) {
   } = props
   const templateWithValues = useMemo(() => template, [template])
   const [expandedAccordions, setExpandedAccordions] = useState<number[]>([])
-  const [shouldChangeBlockTitle, setShouldChangeBlockTitle] = useState(false)
+  const [shouldChangeBlockTitle, setShouldChangeBlockTitle] =
+    useState<number>(-1)
 
   const handleToggleAccordion = (isExpanded: boolean, blockIndex: number) => {
     if (!isExpanded)
@@ -31,8 +32,8 @@ export default function Sheet(props: SheetProps) {
     return setExpandedAccordions([...expandedAccordions, blockIndex])
   }
 
-  const handleEditBlockTitle = () => {
-    setShouldChangeBlockTitle(true)
+  const handleEditBlockTitle = (blockIndex: number) => {
+    setShouldChangeBlockTitle(blockIndex)
   }
 
   let clickCount = 0
@@ -42,7 +43,7 @@ export default function Sheet(props: SheetProps) {
 
       setTimeout(() => {
         if (clickCount === 1) handleToggleAccordion(isExpanded, blockIndex)
-        else if (clickCount === 2) handleEditBlockTitle()
+        else if (clickCount === 2) handleEditBlockTitle(blockIndex)
 
         clickCount = 0
       }, 250)
@@ -64,10 +65,11 @@ export default function Sheet(props: SheetProps) {
   }
 
   const handleSaveBlockTitle: FocusEventHandler<HTMLInputElement> = (e) => {
-    setShouldChangeBlockTitle(false)
+    setShouldChangeBlockTitle(-1)
 
     const element = e.target
     const blockIndex = Number(element.id.replace("block-title-", ""))
+
     handleChangeSheetBlockTitle?.(blockIndex, element.value)
   }
 
@@ -77,7 +79,7 @@ export default function Sheet(props: SheetProps) {
       edit={!!edit}
       expandedAccordions={expandedAccordions}
       shouldChangeBlockTitle={shouldChangeBlockTitle}
-      onChangeAccordion={handleClickOrDoubleClick}
+      onEditTitleOrChangeAccordion={handleClickOrDoubleClick}
       onChangeSheetValues={handleChangeSheetValues}
       onSaveBlockTitle={handleSaveBlockTitle}
       onRemove={onRemove}

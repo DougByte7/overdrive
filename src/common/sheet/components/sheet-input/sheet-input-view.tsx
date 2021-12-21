@@ -44,9 +44,11 @@ export default function SheetInput(props: SheetInputProps) {
 
   const Input: FunctionComponent<TextFieldProps> = ({ children, ...rest }) => {
     const [value, setValue] = useState(templateValue)
+
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setValue(event.currentTarget.value)
-      handleChangeSheetValues(blockIndex, inputIndex, event.currentTarget.value)
+      const eventValue = event.target.value
+      setValue(eventValue)
+      handleChangeSheetValues(blockIndex, inputIndex, eventValue)
     }
     const defaultProps: TextFieldProps = {
       label,

@@ -1,4 +1,9 @@
-import React, { ChangeEvent, FunctionComponent, useState, useCallback } from "react"
+import React, {
+  ChangeEvent,
+  FunctionComponent,
+  useState,
+  useCallback,
+} from "react"
 import { useIndexedDB } from "@/indexed-db/indexed-db-context"
 import { OverdriveDBStores } from "@/indexed-db/types"
 import { Dictionary } from "@/common/types"
@@ -129,14 +134,18 @@ const DialogFormSelectView: FunctionComponent = () => {
           Dictionary
         </InputLabel>
         <Select
+          fullWidth
           id="dictionary-select"
           labelId="dictionary-select-label"
           variant="standard"
-          value={sheetInfo.dictionaries[state.selectedDictionaryIndex] ?? ""}
-          error={isBlank(sheetInfo.dictionaries)}
-          onChange={handleChangeSelectedDictionary}
           disabled={isBlank(sheetInfo.dictionaries)}
-          fullWidth
+          error={isBlank(sheetInfo.dictionaries)}
+          value={
+            state.selectedDictionaryIndex === -1
+              ? ""
+              : (state.selectedDictionaryIndex as any)
+          }
+          onChange={handleChangeSelectedDictionary}
         >
           {sheetInfo.dictionaries?.map((option, i) => (
             <MenuItem key={option.name} value={i}>
@@ -181,13 +190,13 @@ const DialogFormSelectView: FunctionComponent = () => {
         </AccordionSummary>
         <AccordionDetails>
           <TextField
+            fullWidth
             variant="standard"
             label="Dictionary name"
             placeholder="Class, Spells, Weapons"
             type="text"
-            value={state.dictionaryName}
-            fullWidth
             margin="dense"
+            value={state.dictionaryName}
             onChange={handleChangeDictionaryName}
           />
           <ChipInput
