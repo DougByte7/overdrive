@@ -1,5 +1,10 @@
+import {
+  ChangeEvent,
+  FocusEventHandler,
+  KeyboardEventHandler,
+  useState,
+} from "react"
 import { TextField, Typography } from "@mui/material"
-import { ChangeEvent, FocusEventHandler, useState } from "react"
 
 interface BlockTitleProps {
   isEditMode: boolean
@@ -21,12 +26,18 @@ export default function BlockTitle(props: BlockTitleProps) {
     setValue(e.target.value)
   }
 
+  const handleEnterKey: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key !== "Enter") return
+    ;(e.target as any).blur()
+  }
+
   return isEditMode ? (
     <TextField
       autoFocus
       id={`block-title-${blockIndex}`}
       value={value}
       onChange={handleChangeValue}
+      onKeyDown={handleEnterKey}
       onBlur={handleSaveBlockTitle}
     />
   ) : (
