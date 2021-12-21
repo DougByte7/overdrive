@@ -19,8 +19,8 @@ interface SheetViewProps {
   data: SheetDataBlock[]
   edit: boolean
   expandedAccordions: number[]
-  shouldChangeBlockTitle: boolean
-  onChangeAccordion: (
+  shouldChangeBlockTitle: number
+  onEditTitleOrChangeAccordion: (
     blockIndex: number
   ) => (_: any, isExpanded: boolean) => void
   onChangeSheetValues: (
@@ -39,7 +39,7 @@ export default function SheetView(props: SheetViewProps) {
     edit = false,
     expandedAccordions,
     shouldChangeBlockTitle,
-    onChangeAccordion,
+    onEditTitleOrChangeAccordion,
     onChangeSheetValues: handleChangeSheetValues,
     onSaveBlockTitle: handleSaveBlockTitle,
     onRemove: handleRemove,
@@ -59,7 +59,7 @@ export default function SheetView(props: SheetViewProps) {
             style={getGridArea(block.position)}
             elevation={3}
             expanded={expandedAccordions.includes(blockIndex)}
-            onChange={onChangeAccordion(blockIndex)}
+            onChange={onEditTitleOrChangeAccordion(blockIndex)}
           >
             <AccordionSummary
               expandIcon={<ExpandMore />}
@@ -81,7 +81,7 @@ export default function SheetView(props: SheetViewProps) {
               )}
 
               <BlockTitle
-                isEditMode={edit && shouldChangeBlockTitle}
+                isEditMode={edit && shouldChangeBlockTitle === blockIndex}
                 blockIndex={blockIndex}
                 title={block.title}
                 onSaveBlockTitle={handleSaveBlockTitle!}
