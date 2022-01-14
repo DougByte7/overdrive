@@ -17,6 +17,7 @@ import type {
   SheetInputSelectField,
 } from "@/common/sheet/sheet-types"
 import { ChangeEvent, FunctionComponent, useState } from "react"
+import { StatInput } from "@/common/form-elements/stat-input"
 
 interface SheetInputProps {
   input: SheetInputField
@@ -42,38 +43,25 @@ export default function SheetInput(props: SheetInputProps) {
   } = props
   const { label, type, position, value: templateValue } = input
 
-  const Input: FunctionComponent<TextFieldProps> = ({ children, ...rest }) => {
-    const [value, setValue] = useState(templateValue)
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const eventValue = event.target.value
-      setValue(eventValue)
-      handleChangeSheetValues(blockIndex, inputIndex, eventValue)
-    }
-    const defaultProps: TextFieldProps = {
-      label,
-      value,
-      type,
-      style: getGridArea(position),
-      variant: "standard",
-      fullWidth: true,
-      onChange: handleChange,
-    }
-    return (
-      <TextField {...defaultProps} {...rest}>
-        {children}
-      </TextField>
-    )
+  const commonInputProps = {
+    templateValue,
+    blockIndex,
+    inputIndex,
+    handleChangeSheetValues,
+    label,
+    type,
+    position: getGridArea(position),
   }
 
   switch (type) {
     case "number":
     case "text":
-      return <Input />
+      return <Input {...commonInputProps} />
     case "select": {
       const { options, isMultiSelect } = input as SheetInputSelectField
       return (
         <Input
+          {...commonInputProps}
           select
           SelectProps={isMultiSelect ? { multiple: true } : undefined}
         >
@@ -149,5 +137,49 @@ export default function SheetInput(props: SheetInputProps) {
         </Box>
       )
     }
+    case "textarea": {
+      return <Input {...commonInputProps} multiline minRows={4} maxRows={10} />
+    }
+
+    case "numberWithModifier": {
+      //terminar controle de estado
+      return <StatInput statData={{ main: 10, modifier: 5 }} onChange={null} />
+    }
   }
+}
+
+// TODO: move this to its own file
+const Input: FunctionComponent<TextFieldProps & any> = ({
+  templateValue,
+  blockIndex,
+  inputIndex,
+  handleChangeSheetValues,
+  label,
+  type,
+  position,
+  children,
+  ...rest
+}) => {
+  const [value, setValue] = useState(templateValue)
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const eventValue = event.target.value
+    setValue(eventValue)
+    handleChangeSheetValues(blockIndex, inputIndex, eventValue)
+  }
+
+  const defaultProps: TextFieldProps = {
+    label,
+    value,
+    type,
+    style: position,
+    variant: type === "number" ? "outlined" : "standard",
+    fullWidth: true,
+    onChange: handleChange,
+  }
+  return (
+    <TextField {...defaultProps} {...rest}>
+      {children}
+    </TextField>
+  )
 }

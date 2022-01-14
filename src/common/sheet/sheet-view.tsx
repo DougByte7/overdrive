@@ -99,6 +99,7 @@ export default function SheetView(props: SheetViewProps) {
                   handleChangeSheetValues={handleChangeSheetValues}
                 />
               ))}
+
               {edit && <AddElementMenu blockIndex={blockIndex} />}
             </AccordionDetails>
           </Accordion>
