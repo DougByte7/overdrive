@@ -1,17 +1,27 @@
 import { SheetFieldType, SheetInputField } from "@/common/sheet/sheet-types"
 
-export type DialogData = {
+export interface DialogData {
   title: string
   description: string
-  content: JSX.Element | null
   isOpen: boolean
   blockIndex: number
+  content?: JSX.Element
 }
+
+export type SheetBuilderHandleOpenDialog = (
+  type: SheetFieldType,
+  blockIndex: number,
+  inputIndex?: number
+) => VoidFunction
+
+export type SheetBuilderHandleChangeNewComponent = (
+  newValues: Partial<SheetInputField>
+) => void
 
 export interface ISheetBuilderContextData {
   dialogData: DialogData
   newComponent: SheetInputField
-  openDialog: (type: SheetFieldType, blockIndex: number) => VoidFunction
+  openDialog: SheetBuilderHandleOpenDialog
   closeDialog: VoidFunction
-  handleChangeNewComponent: (newValues: Partial<SheetInputField>) => void
+  handleChangeNewComponent: SheetBuilderHandleChangeNewComponent
 }

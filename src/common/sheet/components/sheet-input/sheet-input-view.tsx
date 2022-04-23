@@ -5,12 +5,14 @@ import {
   Box,
   MenuItem,
   Typography,
+  useMediaQuery,
 } from "@mui/material"
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
 import CheckBoxIcon from "@mui/icons-material/CheckBox"
 import isNil from "lodash/isNil"
 import type {
   GridPosition,
+  SheetFieldType,
   SheetInputCheckboxField,
   SheetInputField,
   SheetInputFieldKey,
@@ -18,6 +20,8 @@ import type {
 } from "@/common/sheet/sheet-types"
 import { ChangeEvent, FunctionComponent, useState } from "react"
 import { StatInput } from "@/common/form-elements/stat-input"
+import { StatData } from "@/common/form-elements/stat-input/stat-input-types"
+import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 
 interface SheetInputProps {
   input: SheetInputField
@@ -29,7 +33,7 @@ interface SheetInputProps {
   handleChangeSheetValues: (
     dataBlockIndex: number,
     fieldIndex: number,
-    value: number | string,
+    value: number | string | StatData, // TODO create a type alias AND a function type
     inputField?: SheetInputFieldKey
   ) => void
 }
@@ -42,6 +46,23 @@ export default function SheetInput(props: SheetInputProps) {
     handleChangeSheetValues,
   } = props
   const { label, type, position, value: templateValue } = input
+  const minWidth768 = useMediaQuery("min-width: 768")
+  const { openDialog } = useSheetBuilderContext()
+
+  let clickCount = 0
+  const handleEdit =
+    (fieldType: SheetFieldType, blockIndex: number, inputIndex: number) =>
+    () => {
+      clickCount++
+
+      setTimeout(() => {
+        if (clickCount === 2) {
+          openDialog(fieldType, blockIndex, inputIndex)()
+        }
+
+        clickCount = 0
+      }, 250)
+    }
 
   const commonInputProps = {
     templateValue,
@@ -50,7 +71,7 @@ export default function SheetInput(props: SheetInputProps) {
     handleChangeSheetValues,
     label,
     type,
-    position: getGridArea(position),
+    position: minWidth768 ? getGridArea(position) : "auto / span 3 ",
   }
 
   switch (type) {
@@ -127,7 +148,14 @@ export default function SheetInput(props: SheetInputProps) {
       }
 
       return (
-        <Box sx={{ display: "flex", marginTop: "1rem" }}>
+        <Box
+          onClick={handleEdit(type, blockIndex, inputIndex)}
+          sx={{
+            display: "flex",
+            marginTop: "1rem",
+            gridArea: commonInputProps.position,
+          }}
+        >
           {quantity === 1 && <RenderRating />}
           <Typography flexGrow={1} component="legend">
             {label}
@@ -142,8 +170,17 @@ export default function SheetInput(props: SheetInputProps) {
     }
 
     case "numberWithModifier": {
-      //terminar controle de estado
-      return <StatInput statData={{ main: 10, modifier: 5 }} onChange={null} />
+      const handleChange = (statData: StatData) => {
+        handleChangeSheetValues(blockIndex, inputIndex, statData)
+      }
+      return (
+        <StatInput
+          position={getGridArea(position)}
+          label={label}
+          statData={templateValue as StatData}
+          onChange={handleChange}
+        />
+      )
     }
   }
 }
@@ -172,13 +209,12 @@ const Input: FunctionComponent<TextFieldProps & any> = ({
     label,
     value,
     type,
-    style: position,
     variant: type === "number" ? "outlined" : "standard",
     fullWidth: true,
     onChange: handleChange,
   }
   return (
-    <TextField {...defaultProps} {...rest}>
+    <TextField sx={{ gridArea: position }} {...defaultProps} {...rest}>
       {children}
     </TextField>
   )

@@ -6,12 +6,17 @@ const border = css`
 `
 
 const borderRadius = css`
-  border-radius: 5px;
+  border-radius: 4px;
 `
 
-export const StatModifierContainer = styled.div`
+interface StatModifierContainerProps {
+  gridPosition: string
+}
+export const StatModifierContainer = styled.div<StatModifierContainerProps>`
   ${border}
+  ${borderRadius}
 
+  grid-area: ${props => props.gridPosition};
   padding: 5px;
   padding-bottom: 0;
   position: relative;

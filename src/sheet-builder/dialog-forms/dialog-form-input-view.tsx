@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
-import { SheetFieldType } from "@/common/sheet/sheet-types"
+import { SheetFieldType, SheetInputField } from "@/common/sheet/sheet-types"
 import {
   FormControl,
   FormControlLabel,
@@ -9,15 +9,13 @@ import {
   RadioGroup,
   Theme,
 } from "@mui/material"
-import { createStyles, makeStyles, } from "@mui/styles"
+import { createStyles, makeStyles } from "@mui/styles"
+import { StatData } from "@/common/form-elements/stat-input/stat-input-types"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       marginTop: theme.spacing(2),
-    },
-    radioGroup: {
-      flexDirection: "row",
     },
   })
 ) as any
@@ -31,9 +29,18 @@ const DialogFormInputView: FunctionComponent = () => {
 
   const handleChangeType = (
     _event: React.ChangeEvent<HTMLInputElement>,
-    value: string
+    value: SheetFieldType
   ) => {
-    handleChangeNewComponent({ type: value as SheetFieldType })
+    const newComponent: Partial<SheetInputField> = { type: value }
+
+    if (value === "numberWithModifier") {
+      newComponent.value = {
+        main: 0,
+        modifier: 0,
+      } as StatData
+    }
+
+    handleChangeNewComponent(newComponent)
   }
 
   return (
@@ -44,7 +51,7 @@ const DialogFormInputView: FunctionComponent = () => {
         aria-label="input-type"
         name="input-type"
         value={type}
-        onChange={handleChangeType}
+        onChange={handleChangeType as (...args: any[]) => void}
       >
         <FormControlLabel
           value="text"
@@ -52,9 +59,19 @@ const DialogFormInputView: FunctionComponent = () => {
           label="Text"
         />
         <FormControlLabel
+          value="textarea"
+          control={<Radio color="primary" />}
+          label="Text area"
+        />
+        <FormControlLabel
           value="number"
           control={<Radio color="primary" />}
           label="Number"
+        />
+        <FormControlLabel
+          value="numberWithModifier"
+          control={<Radio color="primary" />}
+          label="Number with modifier"
         />
       </RadioGroup>
     </FormControl>

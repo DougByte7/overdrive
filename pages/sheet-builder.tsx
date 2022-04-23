@@ -6,6 +6,7 @@ import SheetBuilderContextProvider from "@/sheet-builder/sheet-builder-context"
 import { Button } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import SaveIcon from "@mui/icons-material/Save"
+import dedTemplate from "@/sheet-builder/sheet-templates/dungeons-and-dragons-5e"
 
 export default function SheetBuilder() {
   const emptySheetBlock: SheetDataBlock = {
@@ -19,7 +20,8 @@ export default function SheetBuilder() {
   }
 
   const [sheetTemplate, setSheetTemplate] = useState<SheetDataBlock[]>([
-    emptySheetBlock,
+    //emptySheetBlock,
+    ...(dedTemplate as any),
   ])
 
   const handleAddSheetBlock = () => {
@@ -46,6 +48,7 @@ export default function SheetBuilder() {
 
   const handleChangeSheetBlockTitle = (blockIndex: number, value: string) => {
     const newTemplate = Array.from(sheetTemplate)
+
     newTemplate[blockIndex].title = value
     setSheetTemplate(newTemplate)
   }
@@ -93,9 +96,9 @@ export default function SheetBuilder() {
 
             @media screen and (min-width: 640px) {
               .main {
-                display: grid;
-                grid-template-areas: "toolbar main";
-                grid-template-columns: 3rem 1fr;
+                //display: grid;
+                //grid-template-areas: "toolbar main";
+                //grid-template-columns: 3rem 1fr;
               }
             }
           `}

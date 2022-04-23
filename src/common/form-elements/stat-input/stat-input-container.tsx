@@ -9,6 +9,8 @@ import { StatData, StatInputProps } from "./stat-input-types"
 
 export default function StatInput(props: StatInputProps) {
   const {
+    position,
+    label,
     statData: { main, modifier },
     onChange,
   } = props
@@ -20,9 +22,9 @@ export default function StatInput(props: StatInputProps) {
     }
 
   return (
-    <StatModifierContainer>
+    <StatModifierContainer gridPosition={position.gridArea}>
       <StatLabel>
-        Strength
+        {label}
         <StatMainInput
           type="number"
           value={main}

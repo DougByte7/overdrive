@@ -1,4 +1,12 @@
-export type SheetFieldType = "text" | "number" | "select" | "checkbox"
+import { StatData } from "@/common/form-elements/stat-input/stat-input-types"
+
+export type SheetFieldType =
+  | "text"
+  | "number"
+  | "select"
+  | "checkbox"
+  | "textarea"
+  | "numberWithModifier"
 
 export type GridPosition = {
   rowStart: number
@@ -17,9 +25,19 @@ export interface SheetInputTextField extends BaseSheetInputField {
   value: string
 }
 
+export interface SheetInputTextArea extends BaseSheetInputField {
+  type: "textarea"
+  value: string
+}
+
 export interface SheetInputNumberField extends BaseSheetInputField {
   type: "number"
   value: number
+}
+
+export interface SheetInputNumberWithModifierField extends BaseSheetInputField {
+  type: "numberWithModifier"
+  value: StatData
 }
 
 export interface SheetInputSelectField extends BaseSheetInputField {
@@ -42,6 +60,8 @@ export type SheetInputField =
   | SheetInputNumberField
   | SheetInputSelectField
   | SheetInputCheckboxField
+  | SheetInputTextArea
+  | SheetInputNumberWithModifierField
 
 export type SheetInputFieldKey =
   | keyof SheetInputTextField

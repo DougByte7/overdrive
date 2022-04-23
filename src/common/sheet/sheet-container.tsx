@@ -75,7 +75,7 @@ export default function Sheet(props: SheetProps) {
 
   return (
     <SheetView
-      data={template}
+      sheetDataBlocks={template}
       edit={!!edit}
       expandedAccordions={expandedAccordions}
       shouldChangeBlockTitle={shouldChangeBlockTitle}

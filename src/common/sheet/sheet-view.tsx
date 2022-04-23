@@ -16,7 +16,7 @@ import { SheetInput } from "./components/sheet-input"
 import { BlockTitle } from "./components/block-title"
 
 interface SheetViewProps {
-  data: SheetDataBlock[]
+  sheetDataBlocks: SheetDataBlock[]
   edit: boolean
   expandedAccordions: number[]
   shouldChangeBlockTitle: number
@@ -35,7 +35,7 @@ interface SheetViewProps {
 
 export default function SheetView(props: SheetViewProps) {
   const {
-    data,
+    sheetDataBlocks,
     edit = false,
     expandedAccordions,
     shouldChangeBlockTitle,
@@ -52,7 +52,7 @@ export default function SheetView(props: SheetViewProps) {
 
   return (
     <form className="sheet" noValidate autoComplete="off">
-      {data?.map((block, blockIndex) => {
+      {sheetDataBlocks?.map((block, blockIndex) => {
         return (
           <Accordion
             key={`block_${block.title}_${blockIndex}`}
@@ -88,7 +88,7 @@ export default function SheetView(props: SheetViewProps) {
               />
             </AccordionSummary>
 
-            <AccordionDetails>
+            <AccordionDetails className="sheet-block">
               {block.inputFields.map((input, inputIndex) => (
                 <SheetInput
                   key={`field_${input.label}_${input.type}_${inputIndex}`}
@@ -109,16 +109,22 @@ export default function SheetView(props: SheetViewProps) {
       <style jsx global>{`
         .sheet {
           margin: 1rem;
+
+          .sheet-block {
+            display: grid;
+            grid-gap: 1rem;
+            grid-template-columns: repeat(3, 1fr);
+          }
         }
 
         @media screen and (min-width: 640px) {
           .sheet {
+            display: grid;
+            grid-gap: 1rem;
             grid-area: main;
 
             &,
             .sheet-block {
-              display: grid;
-              grid-gap: 1rem;
               grid-template-columns: repeat(12, 1fr);
             }
           }

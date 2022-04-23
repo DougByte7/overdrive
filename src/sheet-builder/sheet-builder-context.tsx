@@ -9,19 +9,23 @@ import { SheetFieldType, SheetInputField } from "@/common/sheet/sheet-types"
 import DialogFormCheckboxView from "./dialog-forms/dialog-form-checkbox-view"
 import DialogFormInputView from "./dialog-forms/dialog-form-input-view"
 import DialogFormSelectView from "./dialog-forms/dialog-form-select-view"
-import { DialogData, ISheetBuilderContextData } from "./sheet-builder-types"
+import {
+  DialogData,
+  ISheetBuilderContextData,
+  SheetBuilderHandleOpenDialog,
+} from "./sheet-builder-types"
 
 const initialDialogData: DialogData = Object.freeze({
   title: "",
   description: "",
-  content: null,
+  content: undefined,
   isOpen: false,
   blockIndex: 0,
 })
 
 const initialNewComponent: SheetInputField = Object.freeze({
   type: "text",
-  position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+  position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 12 },
   label: "",
   value: "",
 })
@@ -58,50 +62,55 @@ const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
     setNewComponent(initialNewComponent)
   }
 
-  const openDialog = (type: SheetFieldType, blockIndex: number) => () => {
-    const newDialogData = Object.assign({}, initialDialogData)
-    newDialogData.isOpen = true
-    newDialogData.blockIndex = blockIndex
-    const setNewDialogContents = (
-      title: string,
-      description: string,
-      content: ReactNode
-    ) => {
-      Object.assign(newDialogData, { title, description, content })
+  const openDialog: SheetBuilderHandleOpenDialog =
+    (type: SheetFieldType, blockIndex: number, inputIndex?: number) => () => {
+      const newDialogData = Object.assign({}, initialDialogData)
+      newDialogData.isOpen = true
+      newDialogData.blockIndex = blockIndex
+      const setNewDialogContents = (
+        title: string,
+        description: string,
+        content: ReactNode
+      ) => {
+        Object.assign(newDialogData, { title, description, content })
+      }
+
+      switch (type) {
+        case "number":
+        case "text":
+          setNewDialogContents(
+            "Input",
+            "Use for text / number values, e.g., Name, Life points, Descriptions",
+            <DialogFormInputView />
+          )
+          break
+        case "select":
+          setNewDialogContents(
+            "Select",
+            "Use for multiple options, e.g., Class, Occupation, Race.",
+            <DialogFormSelectView />
+          )
+          handleChangeNewComponent({ type: "select" })
+
+          break
+        case "checkbox":
+          setNewDialogContents(
+            "Checkbox",
+            "Use for opposing states, or ranking e.g., Skill, Hunger, Attributes.",
+            <DialogFormCheckboxView />
+          )
+          handleChangeNewComponent({
+            type: "checkbox",
+            quantity: 1,
+            isPrecisionRating: false,
+          })
+          break
+
+        default:
+          break
+      }
+      handleChangeDialogData(newDialogData)
     }
-
-    switch (type) {
-      case "number":
-      case "text":
-        setNewDialogContents(
-          "Input",
-          "Use for text / number values, e.g., Name, Life points, Descriptions",
-          <DialogFormInputView />
-        )
-        break
-      case "select":
-        setNewDialogContents(
-          "Select",
-          "Use for multiple options, e.g., Class, Occupation, Race.",
-          <DialogFormSelectView />
-        )
-        handleChangeNewComponent({ type: "select" })
-
-        break
-      case "checkbox":
-        setNewDialogContents(
-          "Checkbox",
-          "Use for opposing states, or ranking e.g., Skill, Hunger, Attributes.",
-          <DialogFormCheckboxView />
-        )
-        handleChangeNewComponent({ type: "checkbox", quantity: 1, isPrecisionRating: false })
-        break
-
-      default:
-        break
-    }
-    handleChangeDialogData(newDialogData)
-  }
 
   const data: ISheetBuilderContextData = {
     dialogData,
