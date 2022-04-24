@@ -4,7 +4,8 @@ import dynamic from "next/dynamic"
 import theme from "@/theme"
 import { SharedSheetInfoProvider } from "@/shared-states/shared-sheet-info"
 import { ThemeProvider } from "@mui/material/styles"
-import CssBaseline from '@mui/material/CssBaseline';
+import CssBaseline from "@mui/material/CssBaseline"
+import Menu from "@/menu/menu-view"
 
 const IndexedDBContextProvider = dynamic(
   () => import("@/indexed-db/indexed-db-context"),
@@ -34,6 +35,7 @@ export default function MyApp({
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Component {...pageProps} />
+            <Menu />
           </ThemeProvider>
         </SharedSheetInfoProvider>
       </IndexedDBContextProvider>
