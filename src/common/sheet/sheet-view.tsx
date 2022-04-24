@@ -2,6 +2,7 @@ import type { FocusEventHandler } from "react"
 import type {
   GridPosition,
   SheetDataBlock,
+  SheetFieldType,
   SheetInputFieldKey,
 } from "./sheet-types"
 import { ExpandMore, Delete as DeleteIcon } from "@mui/icons-material"
@@ -23,6 +24,10 @@ interface SheetViewProps {
   onEditTitleOrChangeAccordion: (
     blockIndex: number
   ) => (_: any, isExpanded: boolean) => void
+  onSelectElement: (selectedElement: {
+    blockIndex: number
+    elementIndex: number
+  }) => (type: SheetFieldType) => VoidFunction
   onChangeSheetValues: (
     dataBlockIndex: number,
     fieldIndex: number,
@@ -40,6 +45,7 @@ export default function SheetView(props: SheetViewProps) {
     expandedAccordions,
     shouldChangeBlockTitle,
     onEditTitleOrChangeAccordion,
+    onSelectElement: handleSelectElement,
     onChangeSheetValues: handleChangeSheetValues,
     onSaveBlockTitle: handleSaveBlockTitle,
     onRemove: handleRemove,
@@ -96,6 +102,10 @@ export default function SheetView(props: SheetViewProps) {
                   blockIndex={blockIndex}
                   inputIndex={inputIndex}
                   getGridArea={getGridArea}
+                  onSelectElement={handleSelectElement({
+                    blockIndex,
+                    elementIndex: inputIndex,
+                  })}
                   handleChangeSheetValues={handleChangeSheetValues}
                 />
               ))}

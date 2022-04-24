@@ -21,7 +21,6 @@ import type {
 import { ChangeEvent, FunctionComponent, useState } from "react"
 import { StatInput } from "@/common/form-elements/stat-input"
 import { StatData } from "@/common/form-elements/stat-input/stat-input-types"
-import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 
 interface SheetInputProps {
   input: SheetInputField
@@ -30,6 +29,7 @@ interface SheetInputProps {
   getGridArea: (position: GridPosition) => {
     gridArea: string
   }
+  onSelectElement: (type: SheetFieldType) => VoidFunction
   handleChangeSheetValues: (
     dataBlockIndex: number,
     fieldIndex: number,
@@ -43,26 +43,11 @@ export default function SheetInput(props: SheetInputProps) {
     inputIndex,
     blockIndex,
     getGridArea,
+    onSelectElement,
     handleChangeSheetValues,
   } = props
   const { label, type, position, value: templateValue } = input
   const minWidth768 = useMediaQuery("min-width: 768")
-  const { openDialog } = useSheetBuilderContext()
-
-  let clickCount = 0
-  const handleEdit =
-    (fieldType: SheetFieldType, blockIndex: number, inputIndex: number) =>
-    () => {
-      clickCount++
-
-      setTimeout(() => {
-        if (clickCount === 2) {
-          openDialog(fieldType, blockIndex, inputIndex)()
-        }
-
-        clickCount = 0
-      }, 250)
-    }
 
   const commonInputProps = {
     templateValue,
@@ -71,6 +56,7 @@ export default function SheetInput(props: SheetInputProps) {
     handleChangeSheetValues,
     label,
     type,
+    onClick: onSelectElement(type),
     position: minWidth768 ? getGridArea(position) : "auto / span 3 ",
   }
 
@@ -95,6 +81,8 @@ export default function SheetInput(props: SheetInputProps) {
       )
     }
     case "checkbox": {
+      // TODO move to its own component
+
       const { quantity, isPrecisionRating, numberValue } =
         input as SheetInputCheckboxField
 
@@ -149,7 +137,7 @@ export default function SheetInput(props: SheetInputProps) {
 
       return (
         <Box
-          onClick={handleEdit(type, blockIndex, inputIndex)}
+          onClick={onSelectElement(type)}
           sx={{
             display: "flex",
             marginTop: "1rem",
@@ -178,6 +166,7 @@ export default function SheetInput(props: SheetInputProps) {
           position={getGridArea(position)}
           label={label}
           statData={templateValue as StatData}
+          onSelectElement={onSelectElement(type)}
           onChange={handleChange}
         />
       )

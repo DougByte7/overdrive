@@ -5,5 +5,6 @@ export interface StatInputProps {
   }
   label: string
   statData: StatData
+  onSelectElement: VoidFunction
   onChange: (statData: StatData) => void
 }

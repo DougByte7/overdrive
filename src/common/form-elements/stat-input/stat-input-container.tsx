@@ -12,6 +12,7 @@ export default function StatInput(props: StatInputProps) {
     position,
     label,
     statData: { main, modifier },
+    onSelectElement,
     onChange,
   } = props
 
@@ -22,7 +23,10 @@ export default function StatInput(props: StatInputProps) {
     }
 
   return (
-    <StatModifierContainer gridPosition={position.gridArea}>
+    <StatModifierContainer
+      gridPosition={position.gridArea}
+      onClick={onSelectElement}
+    >
       <StatLabel>
         {label}
         <StatMainInput

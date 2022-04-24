@@ -46,6 +46,17 @@ export default function SheetBuilder() {
     setSheetTemplate(data)
   }
 
+  const handleRemoveSheetElement = (
+    blockIndex: number,
+    elementIndex: number
+  ) => {
+    const data = Array.from(sheetTemplate)
+
+    data[blockIndex].inputFields.splice(elementIndex, 1)
+
+    setSheetTemplate(data)
+  }
+
   const handleChangeSheetBlockTitle = (blockIndex: number, value: string) => {
     const newTemplate = Array.from(sheetTemplate)
 
@@ -67,6 +78,7 @@ export default function SheetBuilder() {
           template={sheetTemplate}
           onChangeSheetBlockTitle={handleChangeSheetBlockTitle}
           onRemove={handleRemoveSheetBlock}
+          onRemoveElement={handleRemoveSheetElement}
         />
         <Button
           className="add-block-btn"
