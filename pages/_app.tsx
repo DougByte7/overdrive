@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react"
+import { FunctionComponent } from "react"
 import Head from "next/head"
 import dynamic from "next/dynamic"
 import theme from "@/theme"
@@ -28,7 +28,13 @@ export default function MyApp({
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <link rel="shortcut icon" href="D10 eletric.svg" />
+        <link rel="shortcut icon" href="/d10-electric.svg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <IndexedDBContextProvider>
         <SharedSheetInfoProvider>
