@@ -1,16 +1,16 @@
 const template = [
   {
-    position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 13 },
+    position: { rowStart: 1, columnStart: 1, rowEnd: 3, columnEnd: 13 },
     inputFields: [
       {
         type: "text",
-        position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+        position: { rowStart: 1, columnStart: 1, rowEnd: 3, columnEnd: 4 },
         label: "Character Name",
         value: "",
       },
       {
         type: "select",
-        position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+        position: { rowStart: 1, columnStart: 4, rowEnd: 2, columnEnd: 6 },
         label: "Class",
         value: [],
         isMultiSelect: true,
@@ -80,41 +80,41 @@ const template = [
     title: "Character Info",
   },
   {
-    position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 13 },
+    position: { rowStart: 3, columnStart: 1, rowEnd: 9, columnEnd: 2 },
     inputFields: [
       {
         type: "numberWithModifier",
-        position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+        position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd:2 },
         label: "Strength",
         value: { main: 0, modifier: 0 },
       },
       {
         type: "numberWithModifier",
-        position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+        position: { rowStart: 2, columnStart: 1, rowEnd: 3, columnEnd:2 },
         label: "Dexterity",
         value: { main: 0, modifier: 0 },
       },
       {
         type: "numberWithModifier",
-        position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+        position: { rowStart: 3, columnStart: 1, rowEnd: 4, columnEnd:2 },
         label: "Constitution",
         value: { main: 0, modifier: 0 },
       },
       {
         type: "numberWithModifier",
-        position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+        position: { rowStart: 4, columnStart: 1, rowEnd: 5, columnEnd:2 },
         label: "Intelligence",
         value: { main: 0, modifier: 0 },
       },
       {
         type: "numberWithModifier",
-        position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+        position: { rowStart: 5, columnStart: 1, rowEnd: 6, columnEnd:2 },
         label: "Wisdom",
         value: { main: 0, modifier: 0 },
       },
       {
         type: "numberWithModifier",
-        position: { rowStart: 0, columnStart: 0, rowEnd: 1, columnEnd: 12 },
+        position: { rowStart: 6, columnStart: 1, rowEnd: 7, columnEnd:2 },
         label: "Charisma",
         value: { main: 0, modifier: 0 },
       },
@@ -122,7 +122,7 @@ const template = [
     title: "Stats",
   },
   {
-    position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 13 },
+    position: { rowStart: 3, columnStart: 2, rowEnd: 9, columnEnd: 6 },
     inputFields: [
       {
         type: "checkbox",
@@ -290,7 +290,7 @@ const template = [
     title: "Skills",
   },
   {
-    position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 13 },
+    position: { rowStart: 3, columnStart: 6, rowEnd: 6, columnEnd: 10 },
     inputFields: [
       {
         type: "number",
@@ -354,7 +354,7 @@ const template = [
     title: "Combat",
   },
   {
-    position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 13 },
+    position: { rowStart: 6, columnStart: 6, rowEnd: 9, columnEnd: 10 },
     inputFields: [
       {
         type: "textarea",
@@ -366,7 +366,7 @@ const template = [
     title: "Attacks & Spellcasting",
   },
   {
-    position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 13 },
+    position: { rowStart: 3, columnStart: 10, rowEnd: 12, columnEnd: 13 },
     inputFields: [
       {
         type: "textarea",
@@ -378,7 +378,7 @@ const template = [
     title: "Features & Traits",
   },
   {
-    position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 13 },
+    position: { rowStart: 9, columnStart: 6, rowEnd: 12, columnEnd: 10 },
     inputFields: [
       {
         type: "textarea",
@@ -390,7 +390,7 @@ const template = [
     title: "Equipment",
   },
   {
-    position: { rowStart: 1, columnStart: 1, rowEnd: 2, columnEnd: 13 },
+    position: { rowStart: 9, columnStart: 1, rowEnd: 12, columnEnd: 6 },
     inputFields: [
       {
         type: "textarea",

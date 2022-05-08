@@ -7,6 +7,7 @@ import { Button } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import SaveIcon from "@mui/icons-material/Save"
 import dedTemplate from "@/sheet-builder/sheet-templates/dungeons-and-dragons-5e"
+import { Menu } from "@/menu"
 
 export default function SheetBuilder() {
   const emptySheetBlock: SheetDataBlock = {
@@ -73,44 +74,53 @@ export default function SheetBuilder() {
   return (
     <SheetBuilderContextProvider>
       <main className="main">
-        <Sheet
-          edit
-          template={sheetTemplate}
-          onChangeSheetBlockTitle={handleChangeSheetBlockTitle}
-          onRemove={handleRemoveSheetBlock}
-          onRemoveElement={handleRemoveSheetElement}
-        />
-        <Button
-          className="add-block-btn"
-          variant="contained"
-          endIcon={<AddIcon />}
-          style={{ margin: "0 1rem", width: "calc(100% - 2rem)" }}
-          onClick={handleAddSheetBlock}
-        >
-          New block
-        </Button>
-        <Button
-          className="save-template-btn"
-          variant="contained"
-          endIcon={<SaveIcon />}
-          style={{ margin: "0 1rem", width: "calc(100% - 2rem)" }}
-          onClick={() => console.log(JSON.stringify(sheetTemplate))}
-        >
-          Save
-        </Button>
-        <ComponentEditorDialog onAddSheetElement={handleAddSheetElement} />
+        <Menu />
+        <section className="sheet-section">
+          <Sheet
+            edit
+            template={sheetTemplate}
+            onChangeSheetBlockTitle={handleChangeSheetBlockTitle}
+            onRemove={handleRemoveSheetBlock}
+            onRemoveElement={handleRemoveSheetElement}
+          />
+          <Button
+            className="add-block-btn"
+            variant="contained"
+            endIcon={<AddIcon />}
+            style={{ margin: "0 1rem", width: "calc(100% - 2rem)" }}
+            onClick={handleAddSheetBlock}
+          >
+            New block
+          </Button>
+          <Button
+            className="save-template-btn"
+            variant="contained"
+            endIcon={<SaveIcon />}
+            style={{ margin: "0 1rem", width: "calc(100% - 2rem)" }}
+            onClick={() => console.log(JSON.stringify(sheetTemplate))}
+          >
+            Save
+          </Button>
+          <ComponentEditorDialog onAddSheetElement={handleAddSheetElement} />
+        </section>
         <style jsx>
           {`
             .main {
-              padding-bottom: 6rem;
               font-size: 3rem;
+
+              .sheet-section {
+                padding-bottom: 6rem;
+              }
             }
 
             @media screen and (min-width: 640px) {
               .main {
-                //display: grid;
-                //grid-template-areas: "toolbar main";
-                //grid-template-columns: 3rem 1fr;
+                display: grid;
+                grid-template-columns: 64px 1fr;
+
+                .sheet-section {
+                  padding: 0;
+                }
               }
             }
           `}

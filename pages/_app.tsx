@@ -5,7 +5,6 @@ import theme from "@/theme"
 import { SharedSheetInfoProvider } from "@/shared-states/shared-sheet-info"
 import { ThemeProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
-import Menu from "@/menu/menu-view"
 
 const IndexedDBContextProvider = dynamic(
   () => import("@/indexed-db/indexed-db-context"),
@@ -29,13 +28,13 @@ export default function MyApp({
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <link rel="shortcut icon" href="D10 eletric.svg" />
       </Head>
       <IndexedDBContextProvider>
         <SharedSheetInfoProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Component {...pageProps} />
-            <Menu />
           </ThemeProvider>
         </SharedSheetInfoProvider>
       </IndexedDBContextProvider>

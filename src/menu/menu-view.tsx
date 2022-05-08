@@ -16,12 +16,27 @@ export default function Menu() {
           bottom: 0;
           background: #272727;
           height: 64px;
+          z-index: 10000;
 
           .main-menu {
             list-style: none;
             margin: 0;
             padding: 16px;
             display: flex;
+
+            .menu-item {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+
+        @media screen and (min-width: 640px) {
+          .main-menu-container {
+            position: sticky;
+            top: 0;
+            height: 100vh;
           }
         }
       `}</style>
