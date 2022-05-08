@@ -11,10 +11,10 @@
     "chromatic": "npx chromatic --project-token=uir5a7azo0f"
   },
   "dependencies": {
-    "next": "^9.4.4",
+    "next": "12",
     "normalize.css": "^8.0.1",
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
@@ -30,6 +30,6 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "jest": "^26.1.0",
     "storybook-addon-specifications": "^2.1.5",
-    "typescript": "^3.9.7"
+    "typescript": "^4.6.4"
   }
 }
