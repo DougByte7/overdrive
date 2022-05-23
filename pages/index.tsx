@@ -13,6 +13,7 @@ export default function Home() {
 
         <Image
           aria-hidden={true}
+          alt="Dice Overdrive logo"
           src="/d10-electric.svg"
           width={194}
           height={222}
