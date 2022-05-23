@@ -83,7 +83,7 @@ export default function Home() {
           text-align: center;
           text-transform: uppercase;
           font-size: 2.5rem;
-          font-family: "Inter", sans-serif;
+          font-family: Inter, sans-serif;
           margin: 0;
         }
 
@@ -100,7 +100,7 @@ export default function Home() {
             display: initial;
           }
 
-          .warning: {
+          .warning {
             font-size: 3rem;
           }
         }
