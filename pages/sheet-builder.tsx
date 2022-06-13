@@ -103,28 +103,26 @@ export default function SheetBuilder() {
           </Button>
           <ComponentEditorDialog onAddSheetElement={handleAddSheetElement} />
         </section>
-        <style jsx>
-          {`
+        <style jsx>{`
+          .main {
+            .sheet-section {
+              padding-bottom: 6rem;
+            }
+          }
+
+          @media screen and (min-width: 850px) {
             .main {
-              font-size: 3rem;
+              display: grid;
+              grid-template-columns: 64px 1fr;
 
               .sheet-section {
-                padding-bottom: 6rem;
+                width: 850px;
+                font-size: .875rem;
+                padding: 0;
               }
             }
-
-            @media screen and (min-width: 640px) {
-              .main {
-                display: grid;
-                grid-template-columns: 64px 1fr;
-
-                .sheet-section {
-                  padding: 0;
-                }
-              }
-            }
-          `}
-        </style>
+          }
+        `}</style>
       </main>
     </SheetBuilderContextProvider>
   )

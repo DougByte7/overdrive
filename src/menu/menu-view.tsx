@@ -32,7 +32,7 @@ export default function Menu() {
           }
         }
 
-        @media screen and (min-width: 640px) {
+        @media screen and (min-width: 864px) {
           .main-menu-container {
             position: sticky;
             top: 0;

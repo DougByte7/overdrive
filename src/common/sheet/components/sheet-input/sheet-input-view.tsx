@@ -18,7 +18,7 @@ import type {
   SheetInputFieldKey,
   SheetInputSelectField,
 } from "@/common/sheet/sheet-types"
-import { ChangeEvent, FunctionComponent, useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { StatInput } from "@/common/form-elements/stat-input"
 import { StatData } from "@/common/form-elements/stat-input/stat-input-types"
 
@@ -47,7 +47,7 @@ export default function SheetInput(props: SheetInputProps) {
     handleChangeSheetValues,
   } = props
   const { label, type, position, value: templateValue } = input
-  const minWidth768 = useMediaQuery("min-width: 768")
+  const minWidth768 = useMediaQuery("(min-width:768px)")
 
   const commonInputProps = {
     templateValue,
@@ -94,6 +94,7 @@ export default function SheetInput(props: SheetInputProps) {
         }
         return (
           <Rating
+            size="small"
             value={value as number}
             max={quantity}
             precision={isPrecisionRating ? 0.5 : 1}
@@ -123,6 +124,7 @@ export default function SheetInput(props: SheetInputProps) {
               width: "2.5rem",
               input: { textAlign: "center", padding: ".25rem" },
             }}
+            size="small"
             type="number"
             inputProps={{
               min: -999,
@@ -140,8 +142,9 @@ export default function SheetInput(props: SheetInputProps) {
           onClick={onSelectElement(type)}
           sx={{
             display: "flex",
-            marginTop: "1rem",
+            flexWrap: "wrap",
             gridArea: commonInputProps.position,
+            alignItems: "center",
           }}
         >
           {quantity === 1 && <RenderRating />}
@@ -175,7 +178,7 @@ export default function SheetInput(props: SheetInputProps) {
 }
 
 // TODO: move this to its own file
-const Input: FunctionComponent<TextFieldProps & any> = ({
+function Input({
   templateValue,
   blockIndex,
   inputIndex,
@@ -185,7 +188,7 @@ const Input: FunctionComponent<TextFieldProps & any> = ({
   position,
   children,
   ...rest
-}) => {
+}: TextFieldProps & any) {
   const [value, setValue] = useState(templateValue)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -200,6 +203,7 @@ const Input: FunctionComponent<TextFieldProps & any> = ({
     type,
     variant: type === "number" ? "outlined" : "standard",
     fullWidth: true,
+    size: "small",
     onChange: handleChange,
   }
   return (

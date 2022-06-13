@@ -16,7 +16,7 @@ const theme = createTheme({
   },
   typography: {
     body1: {
-      fontSize: "1rem",
+      fontSize: "1em",
     },
   },
 })

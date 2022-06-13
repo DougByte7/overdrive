@@ -16,7 +16,7 @@ export const StatModifierContainer = styled.div<StatModifierContainerProps>`
   ${border}
   ${borderRadius}
 
-  grid-area: ${props => props.gridPosition};
+  grid-area: ${(props) => props.gridPosition};
   padding: 5px;
   padding-bottom: 0;
   position: relative;

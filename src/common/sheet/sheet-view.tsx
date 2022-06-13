@@ -1,4 +1,4 @@
-import type { FocusEventHandler } from "react"
+import { createElement, FocusEventHandler } from "react"
 import type {
   GridPosition,
   SheetDataBlock,
@@ -11,6 +11,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   IconButton,
+  Paper,
+  useMediaQuery,
 } from "@mui/material"
 import { AddElementMenu } from "./components/add-element-menu"
 import { SheetInput } from "./components/sheet-input"
@@ -56,11 +58,15 @@ export default function SheetView(props: SheetViewProps) {
           ${position?.rowEnd} / ${position?.columnEnd}`,
   })
 
+  const minWidth800 = useMediaQuery("(min-width:800px)")
+
+  const Container = minWidth800 ? (Paper as any) : Accordion
+
   return (
     <form className="sheet" noValidate autoComplete="off">
       {sheetDataBlocks?.map((block, blockIndex) => {
         return (
-          <Accordion
+          <Container
             key={`block_${block.title}_${blockIndex}`}
             style={getGridArea(block.position)}
             elevation={3}
@@ -68,7 +74,7 @@ export default function SheetView(props: SheetViewProps) {
             onChange={onEditTitleOrChangeAccordion(blockIndex)}
           >
             <AccordionSummary
-              expandIcon={<ExpandMore />}
+              expandIcon={!minWidth800 && <ExpandMore />}
               aria-controls={`panel${blockIndex}-content`}
               id={`panel${blockIndex}-header`}
               sx={{
@@ -94,7 +100,15 @@ export default function SheetView(props: SheetViewProps) {
               />
             </AccordionSummary>
 
-            <AccordionDetails className="sheet-block">
+            <AccordionDetails
+              className="sheet-block"
+              style={{
+                padding: 8,
+                gridTemplateColumns: `repeat(${
+                  block.position.columnEnd - block.position.columnStart
+                }, minmax(0, 1fr))`,
+              }}
+            >
               {block.inputFields.map((input, inputIndex) => (
                 <SheetInput
                   key={`field_${input.label}_${input.type}_${inputIndex}`}
@@ -112,30 +126,34 @@ export default function SheetView(props: SheetViewProps) {
 
               {edit && <AddElementMenu blockIndex={blockIndex} />}
             </AccordionDetails>
-          </Accordion>
+          </Container>
         )
       })}
 
       <style jsx global>{`
         .sheet {
-          margin: 1rem;
+          margin: 16px;
+
+          &,
+          .sheet-block {
+            display: flex;
+            flex-direction: column;
+          }
 
           .sheet-block {
-            display: grid;
-            grid-gap: 1rem;
-            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
           }
         }
 
-        @media screen and (min-width: 640px) {
+        @media screen and (min-width: 850px) {
           .sheet {
-            display: grid;
-            grid-gap: 1rem;
             grid-area: main;
+            grid-template-columns: repeat(16, minmax(0, 1fr));
+            gap: 16px;
 
             &,
             .sheet-block {
-              grid-template-columns: repeat(12, 1fr);
+              display: grid;
             }
           }
         }
