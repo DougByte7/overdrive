@@ -1,4 +1,4 @@
-import { createElement, FocusEventHandler } from "react"
+import { FocusEventHandler } from "react"
 import type {
   GridPosition,
   SheetDataBlock,
@@ -58,9 +58,9 @@ export default function SheetView(props: SheetViewProps) {
           ${position?.rowEnd} / ${position?.columnEnd}`,
   })
 
-  const minWidth800 = useMediaQuery("(min-width:800px)")
+  const minWidth850 = useMediaQuery("(min-width:850px)")
 
-  const Container = minWidth800 ? (Paper as any) : Accordion
+  const Container = minWidth850 ? (Paper as any) : Accordion
 
   return (
     <form className="sheet" noValidate autoComplete="off">
@@ -74,7 +74,7 @@ export default function SheetView(props: SheetViewProps) {
             onChange={onEditTitleOrChangeAccordion(blockIndex)}
           >
             <AccordionSummary
-              expandIcon={!minWidth800 && <ExpandMore />}
+              expandIcon={!minWidth850 && <ExpandMore />}
               aria-controls={`panel${blockIndex}-content`}
               id={`panel${blockIndex}-header`}
               sx={{
@@ -124,7 +124,9 @@ export default function SheetView(props: SheetViewProps) {
                 />
               ))}
 
-              {edit && <AddElementMenu blockIndex={blockIndex} />}
+              {edit && !minWidth850 && (
+                <AddElementMenu blockIndex={blockIndex} />
+              )}
             </AccordionDetails>
           </Container>
         )
