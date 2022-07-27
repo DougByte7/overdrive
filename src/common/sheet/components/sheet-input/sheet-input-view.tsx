@@ -6,6 +6,7 @@ import {
   MenuItem,
   Typography,
   useMediaQuery,
+  Tooltip,
 } from "@mui/material"
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
 import CheckBoxIcon from "@mui/icons-material/CheckBox"
@@ -207,8 +208,10 @@ function Input({
     onChange: handleChange,
   }
   return (
-    <TextField sx={{ gridArea: position }} {...defaultProps} {...rest}>
-      {children}
-    </TextField>
+    <Tooltip title={label}>
+      <TextField sx={{ gridArea: position }} {...defaultProps} {...rest}>
+        {children}
+      </TextField>
+    </Tooltip>
   )
 }
