@@ -2,6 +2,7 @@ import {
   ChangeEvent,
   FocusEventHandler,
   KeyboardEventHandler,
+  MouseEventHandler,
   useState,
 } from "react"
 import { TextField, Typography } from "@mui/material"
@@ -11,6 +12,7 @@ interface BlockTitleProps {
   blockIndex: number
   title: string | undefined
   onSaveBlockTitle: FocusEventHandler
+  onClick: MouseEventHandler<HTMLDivElement>
 }
 
 export default function BlockTitle(props: BlockTitleProps) {
@@ -19,6 +21,7 @@ export default function BlockTitle(props: BlockTitleProps) {
     blockIndex,
     title,
     onSaveBlockTitle: handleSaveBlockTitle,
+    onClick: handleClick,
   } = props
 
   const [value, setValue] = useState(title ?? `Block ${blockIndex}`)
@@ -34,14 +37,14 @@ export default function BlockTitle(props: BlockTitleProps) {
   return isEditMode ? (
     <TextField
       autoFocus
-      id={`block-title-${blockIndex}`}
+      data-id={blockIndex}
       value={value}
       onChange={handleChangeValue}
       onKeyDown={handleEnterKey}
       onBlur={handleSaveBlockTitle}
     />
   ) : (
-    <>
+    <div onClick={handleClick}>
       <Typography>{value}</Typography>
       <Typography
         variant="body2"
@@ -56,6 +59,6 @@ export default function BlockTitle(props: BlockTitleProps) {
       >
         Double tap to edit
       </Typography>
-    </>
+    </div>
   )
 }

@@ -1,4 +1,4 @@
-export function newArray<T>(
+export function newArray<T = number>(
   length: number,
   mapFn: (element: never, index: any) => T = (_, i) => i
 ): T[] {

@@ -5,15 +5,26 @@ import {
   useContext,
   useState,
 } from "react"
-import { SheetFieldType, SheetInputField } from "@/common/sheet/sheet-types"
-import DialogFormCheckboxView from "./dialog-forms/dialog-form-checkbox-view"
-import DialogFormInputView from "./dialog-forms/dialog-form-input-view"
-import DialogFormSelectView from "./dialog-forms/dialog-form-select-view"
 import {
+  SheetDataBlock,
+  SheetFieldType,
+  SheetInputField,
+} from "@/common/sheet/sheet-types"
+import CheckboxForm from "./tools/sheet-components/forms/checkbox-form"
+import InputForm from "./tools/sheet-components/forms/input-form"
+import SelectForm from "./tools/sheet-components/forms/select-form"
+import {
+  AddSheetBlockEvent,
+  AddSheetElementEvent,
   DialogData,
   ISheetBuilderContextData,
+  RemoveSheetBlockEvent,
+  RemoveSheetElementEvent,
+  RenameSheetBlockEvent,
   SheetBuilderHandleOpenDialog,
+  SheetElementsDescription,
 } from "./sheet-builder-types"
+import dedTemplate from "@/sheet-builder/sheet-templates/dungeons-and-dragons-5e"
 
 const initialDialogData: DialogData = Object.freeze({
   title: "",
@@ -30,15 +41,96 @@ const initialNewComponent: SheetInputField = Object.freeze({
   value: "",
 })
 
+const sheetElementsDescription: SheetElementsDescription = {
+  input: {
+    name: "Text field",
+    description:
+      "Text or number values like Name, Hit points, and Descriptions.",
+  },
+  select: {
+    name: "Select",
+    description: "List of values like Class, Occupation, and Race.",
+  },
+  checkbox: {
+    name: "Checkbox",
+    description:
+      "Opposing states, or ranking like Abilities, Hunger, and Attributes.",
+  },
+}
+
 const SheetBuilderContext = createContext<ISheetBuilderContextData>({
+  sheetTemplate: [],
   dialogData: initialDialogData,
   newComponent: initialNewComponent,
+  sheetElementsDescription,
   openDialog: () => () => console.warn("openDialog fn called"),
   closeDialog: () => console.warn("closeDialog fn called"),
   handleChangeNewComponent: () => console.warn("setNewComponent fn called"),
+  addSheetBlock: () => console.warn("addSheetBlock fn called"),
+  renameSheetBlock: () => console.warn("renameSheetBlock fn called"),
+  removeSheetBlock: () => () => console.warn("removeSheetBlock fn called"),
+  addSheetElement: () => console.warn("addSheetElement fn called"),
+  removeSheetElement: () => console.warn("removeSheetElement fn called"),
 })
 
 const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
+  const [sheetTemplate, setSheetTemplate] = useState<SheetDataBlock[]>([
+    //emptySheetBlock,
+    ...(dedTemplate as SheetDataBlock[]),
+  ])
+
+  const addSheetBlock: AddSheetBlockEvent = (position) => {
+    setSheetTemplate([
+      ...sheetTemplate,
+      {
+        position,
+        inputFields: [],
+      },
+    ])
+  }
+
+  const renameSheetBlock: RenameSheetBlockEvent = (blockIndex, value) => {
+    const newTemplate = Array.from(sheetTemplate)
+
+    newTemplate[blockIndex].title = value
+    setSheetTemplate(newTemplate)
+  }
+
+  const removeSheetBlock: RemoveSheetBlockEvent = (blockIndex) => () => {
+    const newSheetTemplate = Array.from(sheetTemplate)
+    newSheetTemplate.splice(blockIndex, 1)
+    setSheetTemplate(newSheetTemplate)
+  }
+
+  const addSheetElement: AddSheetElementEvent = (
+    newField,
+    selectedBlockIndex,
+    insertAt
+  ) => {
+    const data = Array.from(sheetTemplate)
+
+    const lastIndex = data[selectedBlockIndex].inputFields.length
+
+    data[selectedBlockIndex].inputFields.splice(
+      insertAt ?? lastIndex,
+      0,
+      newField
+    )
+
+    setSheetTemplate(data)
+  }
+
+  const removeSheetElement: RemoveSheetElementEvent = (
+    blockIndex,
+    elementIndex
+  ) => {
+    const data = Array.from(sheetTemplate)
+
+    data[blockIndex].inputFields.splice(elementIndex, 1)
+
+    setSheetTemplate(data)
+  }
+
   const [dialogData, setDialogData] = useState<DialogData>(initialDialogData)
   const [newComponent, setNewComponent] =
     useState<SheetInputField>(initialNewComponent)
@@ -63,7 +155,7 @@ const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
   }
 
   const openDialog: SheetBuilderHandleOpenDialog =
-    (type: SheetFieldType, blockIndex: number, inputIndex?: number) => () => {
+    (type: SheetFieldType, blockIndex: number) => () => {
       const newDialogData = Object.assign({}, initialDialogData)
       newDialogData.isOpen = true
       newDialogData.blockIndex = blockIndex
@@ -79,25 +171,25 @@ const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
         case "number":
         case "text":
           setNewDialogContents(
-            "Input",
-            "Use for text / number values, e.g., Name, Life points, Descriptions",
-            <DialogFormInputView />
+            sheetElementsDescription.input.name,
+            sheetElementsDescription.input.description,
+            <InputForm />
           )
           break
         case "select":
           setNewDialogContents(
-            "Select",
-            "Use for multiple options, e.g., Class, Occupation, Race.",
-            <DialogFormSelectView />
+            sheetElementsDescription.select.name,
+            sheetElementsDescription.select.description,
+            <SelectForm renderDictionaryEditor />
           )
           handleChangeNewComponent({ type: "select" })
 
           break
         case "checkbox":
           setNewDialogContents(
-            "Checkbox",
-            "Use for opposing states, or ranking e.g., Skill, Hunger, Attributes.",
-            <DialogFormCheckboxView />
+            sheetElementsDescription.checkbox.name,
+            sheetElementsDescription.checkbox.description,
+            <CheckboxForm />
           )
           handleChangeNewComponent({
             type: "checkbox",
@@ -113,11 +205,18 @@ const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
     }
 
   const data: ISheetBuilderContextData = {
+    sheetTemplate,
     dialogData,
     newComponent,
+    sheetElementsDescription,
     openDialog,
     closeDialog,
     handleChangeNewComponent,
+    addSheetBlock,
+    renameSheetBlock,
+    removeSheetBlock,
+    addSheetElement,
+    removeSheetElement,
   }
 
   return (

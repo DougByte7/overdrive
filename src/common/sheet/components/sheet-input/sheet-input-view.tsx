@@ -23,6 +23,14 @@ import { ChangeEvent, useState } from "react"
 import { StatInput } from "@/common/form-elements/stat-input"
 import { StatData } from "@/common/form-elements/stat-input/stat-input-types"
 
+export type SheetValue = number | string | StatData
+export type HandleChangeSheetValuesEvent = (
+  dataBlockIndex: number,
+  fieldIndex: number,
+  value: SheetValue,
+  inputField?: SheetInputFieldKey
+) => void
+
 interface SheetInputProps {
   input: SheetInputField
   inputIndex: number
@@ -31,12 +39,7 @@ interface SheetInputProps {
     gridArea: string
   }
   onSelectElement: (type: SheetFieldType) => VoidFunction
-  handleChangeSheetValues: (
-    dataBlockIndex: number,
-    fieldIndex: number,
-    value: number | string | StatData, // TODO create a type alias AND a function type
-    inputField?: SheetInputFieldKey
-  ) => void
+  handleChangeSheetValues: HandleChangeSheetValuesEvent
 }
 export default function SheetInput(props: SheetInputProps) {
   const {

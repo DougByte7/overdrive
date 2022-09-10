@@ -1,5 +1,4 @@
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
-import { SheetInputField } from "@/common/sheet/sheet-types"
 import {
   Dialog,
   DialogTitle,
@@ -10,23 +9,17 @@ import {
   Button,
 } from "@mui/material"
 
-interface IComponentEditorDialogProps {
-  onAddSheetElement: (
-    newField: SheetInputField,
-    selectedBlockIndex: number,
-    insertAt?: number
-  ) => void
-}
-
-export default function ComponentEditorDialog(
-  props: IComponentEditorDialogProps
-) {
-  const { onAddSheetElement: handleAddSheetElement } = props
-  const { dialogData, newComponent, closeDialog, handleChangeNewComponent } =
-    useSheetBuilderContext()
+export default function ComponentEditorDialog() {
+  const {
+    dialogData,
+    newComponent,
+    closeDialog,
+    handleChangeNewComponent,
+    addSheetElement,
+  } = useSheetBuilderContext()
 
   const handleAddComponent = () => {
-    handleAddSheetElement(newComponent, dialogData.blockIndex)
+    addSheetElement(newComponent, dialogData.blockIndex)
     closeDialog()
   }
 

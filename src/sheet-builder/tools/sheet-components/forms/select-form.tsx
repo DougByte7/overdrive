@@ -1,33 +1,25 @@
-import React, {
-  ChangeEvent,
-  FunctionComponent,
-  useState,
-  useCallback,
-} from "react"
+import React, { ChangeEvent, useState, useCallback } from "react"
 import { useIndexedDB } from "@/indexed-db/indexed-db-context"
 import { OverdriveDBStores } from "@/indexed-db/types"
 import { Dictionary } from "@/common/types"
-import { useEffectOnce } from "react-use"
+import { useAsync } from "react-use"
 import { useSharedSheetInfo } from "@/shared-states/shared-sheet-info"
 import { isBlank } from "@/helpers/array"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  Switch,
-  TextField,
-  Typography,
-  SelectChangeEvent,
-} from "@mui/material"
+import Accordion from "@mui/material/Accordion"
+import AccordionDetails from "@mui/material/AccordionDetails"
+import AccordionSummary from "@mui/material/AccordionSummary"
+import Button from "@mui/material/Button"
+import FormControl from "@mui/material/FormControl"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import FormGroup from "@mui/material/FormGroup"
+import FormHelperText from "@mui/material/FormHelperText"
+import InputLabel from "@mui/material/InputLabel"
+import MenuItem from "@mui/material/MenuItem"
+import Select, { SelectChangeEvent } from "@mui/material/Select"
+import Switch from "@mui/material/Switch"
+import TextField from "@mui/material/TextField"
+import Typography from "@mui/material/Typography"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import ChipInput from "@/common/form-elements/chip-input"
 
@@ -39,7 +31,13 @@ interface FormSelectState {
   chips: string[]
 }
 
-const DialogFormSelectView: FunctionComponent = () => {
+interface SelectFormProps {
+  renderDictionaryEditor?: boolean
+}
+
+export default function SelectForm({
+  renderDictionaryEditor = false,
+}: SelectFormProps) {
   const { getItems } = useIndexedDB()
   const { handleChangeNewComponent } = useSheetBuilderContext()
   const [sheetInfo, setSheetInfo] = useSharedSheetInfo()
@@ -71,11 +69,12 @@ const DialogFormSelectView: FunctionComponent = () => {
     },
     [state]
   )
-  useEffectOnce(() => {
+  useAsync(async () => {
+    console.log("useAsync called")
+
     if (sheetInfo.dictionaries.length) return
-    getItems(OverdriveDBStores.DICTIONARIES, (value: Dictionary[]) =>
-      handleChangeDictionaries(value)
-    )
+    const dictionaries = await getItems(OverdriveDBStores.DICTIONARIES)
+    handleChangeDictionaries(dictionaries)
   })
 
   const handleChangeSelectedDictionary = (
@@ -172,55 +171,55 @@ const DialogFormSelectView: FunctionComponent = () => {
         label="Multiple selection"
       />
 
-      <Accordion
-        expanded={state.showDictionaryEditor}
-        onChange={handleChangeShowDictionaryEditor}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="dictionary-editor-content"
-          id="dictionary-editor-header"
+      {renderDictionaryEditor && (
+        <Accordion
+          expanded={state.showDictionaryEditor}
+          onChange={handleChangeShowDictionaryEditor}
         >
-          <Typography sx={{ width: "40%", flexShrink: 0 }}>
-            Dictionary Editor
-          </Typography>
-          <Typography sx={{ color: "text.secondary" }}>
-            Class, Spells, Weapons
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <TextField
-            fullWidth
-            variant="standard"
-            label="Dictionary name"
-            placeholder="Class, Spells, Weapons"
-            type="text"
-            margin="dense"
-            value={state.dictionaryName}
-            onChange={handleChangeDictionaryName}
-          />
-          <ChipInput
-            label="Options"
-            placeholder="Warlock, Eldritch Blast, Scythe "
-            value={state.chips}
-            onAdd={handleAddDictionaryOption}
-            onDelete={handleDeleteDictionaryOption}
-          />
-          <FormHelperText>
-            After type an option press &lsquo;enter&rsquo; to add it.
-          </FormHelperText>
-          <Button
-            variant="contained"
-            title="Save"
-            disabled={!state.dictionaryName || isBlank(state.chips)}
-            onClick={handleSaveDictionary}
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="dictionary-editor-content"
+            id="dictionary-editor-header"
           >
-            Save
-          </Button>
-        </AccordionDetails>
-      </Accordion>
+            <Typography sx={{ width: "40%", flexShrink: 0 }}>
+              Dictionary Editor
+            </Typography>
+            <Typography sx={{ color: "text.secondary" }}>
+              Class, Spells, Weapons
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <TextField
+              fullWidth
+              variant="standard"
+              label="Dictionary name"
+              placeholder="Class, Spells, Weapons"
+              type="text"
+              margin="dense"
+              value={state.dictionaryName}
+              onChange={handleChangeDictionaryName}
+            />
+            <ChipInput
+              label="Options"
+              placeholder="Warlock, Eldritch Blast, Scythe "
+              value={state.chips}
+              onAdd={handleAddDictionaryOption}
+              onDelete={handleDeleteDictionaryOption}
+            />
+            <FormHelperText>
+              After type an option press &lsquo;enter&rsquo; to add it.
+            </FormHelperText>
+            <Button
+              variant="contained"
+              title="Save"
+              disabled={!state.dictionaryName || isBlank(state.chips)}
+              onClick={handleSaveDictionary}
+            >
+              Save
+            </Button>
+          </AccordionDetails>
+        </Accordion>
+      )}
     </FormGroup>
   )
 }
-
-export default DialogFormSelectView

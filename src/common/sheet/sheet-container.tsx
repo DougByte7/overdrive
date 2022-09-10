@@ -1,12 +1,7 @@
 import SheetView from "./sheet-view"
-import {
-  SheetDataBlock,
-  SheetFieldType,
-  SheetInputFieldKey,
-} from "./sheet-types"
+import { SheetFieldType } from "./sheet-types"
 import {
   FocusEventHandler,
-  MutableRefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -16,24 +11,13 @@ import { ElementSettingsMenu } from "./components/element-settings-menu"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 
 interface SheetProps {
-  template: SheetDataBlock[]
   edit?: boolean
-  sheetDataRef?: MutableRefObject<SheetDataBlock[]>
-  onChangeSheetBlockTitle?: (blockIndex: number, value: string) => void
-  onRemove?: (blockIndex: number) => VoidFunction
-  onRemoveElement: (blockIndex: number, elementIndex: number) => void
 }
 
 export default function Sheet(props: SheetProps) {
-  const {
-    template,
-    edit,
-    sheetDataRef,
-    onChangeSheetBlockTitle: handleChangeSheetBlockTitle,
-    onRemove,
-    onRemoveElement: handleRemoveElement,
-  } = props
-  const templateWithValues = useMemo(() => template, [template])
+  const { sheetTemplate, openDialog, renameSheetBlock, removeSheetElement } =
+    useSheetBuilderContext()
+  const { edit } = props
   const [expandedAccordions, setExpandedAccordions] = useState<number[]>([])
   const [shouldChangeBlockTitle, setShouldChangeBlockTitle] =
     useState<number>(-1)
@@ -62,59 +46,42 @@ export default function Sheet(props: SheetProps) {
     return () => window.removeEventListener("scroll", handleUnselectElement)
   }, [handleUnselectElement])
 
-  const handleToggleAccordion = (isExpanded: boolean, blockIndex: number) => {
-    if (!isExpanded)
-      return setExpandedAccordions(
-        expandedAccordions.filter((accordion) => accordion !== blockIndex)
-      )
+  const handleToggleAccordion =
+    (blockIndex: number) => (_: any, isExpanded: boolean) => {
+      if (!isExpanded)
+        return setExpandedAccordions(
+          expandedAccordions.filter((accordion) => accordion !== blockIndex)
+        )
 
-    return setExpandedAccordions([...expandedAccordions, blockIndex])
-  }
+      setExpandedAccordions([...expandedAccordions, blockIndex])
+    }
 
   const handleEditBlockTitle = (blockIndex: number) => {
     setShouldChangeBlockTitle(blockIndex)
   }
 
   let clickCount = 0
-  const handleClickOrDoubleClick =
-    (blockIndex: number) => (_: any, isExpanded: boolean) => {
-      handleUnselectElement()
+  const handleClickOrDoubleClick = (blockIndex: number) => () => {
+    handleUnselectElement()
 
-      clickCount += 1
+    clickCount += 1
 
-      setTimeout(() => {
-        if (clickCount === 1) handleToggleAccordion(isExpanded, blockIndex)
-        else if (clickCount === 2) handleEditBlockTitle(blockIndex)
+    setTimeout(() => {
+      if (clickCount > 1) handleEditBlockTitle(blockIndex)
 
-        clickCount = 0
-      }, 250)
-    }
-
-  const handleChangeSheetValues = (
-    dataBlockIndex: number,
-    fieldIndex: number,
-    value: number | string,
-    inputField: SheetInputFieldKey = "value"
-  ) => {
-    if (!sheetDataRef) return
-
-    const selectedBlock = templateWithValues[dataBlockIndex]
-    const selectedField: any = selectedBlock.inputFields[fieldIndex]
-    selectedField[inputField] = value
-
-    sheetDataRef.current = templateWithValues
+      clickCount = 0
+    }, 250)
   }
 
   const handleSaveBlockTitle: FocusEventHandler<HTMLInputElement> = (e) => {
     setShouldChangeBlockTitle(-1)
 
     const element = e.target
-    const blockIndex = Number(element.id.replace("block-title-", ""))
+    const blockIndex = Number(element.dataset.id)
 
-    handleChangeSheetBlockTitle?.(blockIndex, element.value)
+    renameSheetBlock(blockIndex, element.value)
   }
 
-  const { openDialog } = useSheetBuilderContext()
   const handleEditSelectedElement = () => {
     const mappedType = {
       text: "text",
@@ -133,26 +100,33 @@ export default function Sheet(props: SheetProps) {
   }
 
   const handleDeleteSelectedElement = () => {
-    handleRemoveElement(
+    removeSheetElement(
       selectedElement!.blockIndex,
       selectedElement!.elementIndex
     )
     handleUnselectElement()
   }
 
-  return (
-    <>
+  const memoizedSheet = useMemo(
+    () => (
       <SheetView
-        sheetDataBlocks={template}
+        sheetDataBlocks={sheetTemplate}
         edit={!!edit}
         expandedAccordions={expandedAccordions}
         shouldChangeBlockTitle={shouldChangeBlockTitle}
+        onToggleAccordion={handleToggleAccordion}
         onEditTitleOrChangeAccordion={handleClickOrDoubleClick}
         onSelectElement={handleSelectElement}
-        onChangeSheetValues={handleChangeSheetValues}
         onSaveBlockTitle={handleSaveBlockTitle}
-        onRemove={onRemove}
       />
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sheetTemplate, expandedAccordions, shouldChangeBlockTitle]
+  )
+
+  return (
+    <>
+      {memoizedSheet}
       {edit && (
         <ElementSettingsMenu
           isVisible={!!selectedElement}

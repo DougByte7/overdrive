@@ -3,41 +3,43 @@ import type {
   GridPosition,
   SheetDataBlock,
   SheetFieldType,
-  SheetInputFieldKey,
 } from "./sheet-types"
-import { ExpandMore, Delete as DeleteIcon } from "@mui/icons-material"
+import {
+  ExpandMore,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+} from "@mui/icons-material"
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   IconButton,
   Paper,
+  Typography,
   useMediaQuery,
 } from "@mui/material"
 import { AddElementMenu } from "./components/add-element-menu"
 import { SheetInput } from "./components/sheet-input"
 import { BlockTitle } from "./components/block-title"
+import { css } from "@emotion/react"
+import theme from "@/theme"
+import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 
 interface SheetViewProps {
   sheetDataBlocks: SheetDataBlock[]
   edit: boolean
   expandedAccordions: number[]
   shouldChangeBlockTitle: number
-  onEditTitleOrChangeAccordion: (
+  onToggleAccordion: (
     blockIndex: number
   ) => (_: any, isExpanded: boolean) => void
+  onEditTitleOrChangeAccordion: (blockIndex: number) => VoidFunction
   onSelectElement: (selectedElement: {
     blockIndex: number
     elementIndex: number
   }) => (type: SheetFieldType) => VoidFunction
-  onChangeSheetValues: (
-    dataBlockIndex: number,
-    fieldIndex: number,
-    value: number | string,
-    inputField?: SheetInputFieldKey
-  ) => void
-  onSaveBlockTitle?: FocusEventHandler
-  onRemove?: (blockIndex: number) => VoidFunction
+  onSaveBlockTitle: FocusEventHandler
 }
 
 export default function SheetView(props: SheetViewProps) {
@@ -46,32 +48,42 @@ export default function SheetView(props: SheetViewProps) {
     edit = false,
     expandedAccordions,
     shouldChangeBlockTitle,
-    onEditTitleOrChangeAccordion,
+    onToggleAccordion: handleToggleAccordion,
+    onEditTitleOrChangeAccordion: handleEditTitleOrChangeAccordion,
     onSelectElement: handleSelectElement,
-    onChangeSheetValues: handleChangeSheetValues,
     onSaveBlockTitle: handleSaveBlockTitle,
-    onRemove: handleRemove,
   } = props
 
-  const getGridArea = (position: GridPosition) => ({
-    gridArea: `${position?.rowStart} / ${position?.columnStart} /
-          ${position?.rowEnd} / ${position?.columnEnd}`,
-  })
+  const { removeSheetBlock } = useSheetBuilderContext()
+
+  const getGridArea = (position: GridPosition) => {
+    return {
+      gridArea: `${position?.rowStart} / ${position?.columnStart} /
+      ${position?.rowEnd} / ${position?.columnEnd}`,
+    }
+  }
 
   const minWidth850 = useMediaQuery("(min-width:850px)")
 
   const Container = minWidth850 ? (Paper as any) : Accordion
 
+  const handleChangeSheetValues = () =>
+    console.warn("handleChangeSheetValues is not implemented")
+
+  let lastLine = 1
   return (
-    <form className="sheet" noValidate autoComplete="off">
+    <form css={styles} noValidate autoComplete="off">
       {sheetDataBlocks?.map((block, blockIndex) => {
+        lastLine =
+          block.position.rowEnd > lastLine ? block.position.rowEnd : lastLine
+
         return (
           <Container
             key={`block_${block.title}_${blockIndex}`}
             style={getGridArea(block.position)}
             elevation={3}
             expanded={expandedAccordions.includes(blockIndex)}
-            onChange={onEditTitleOrChangeAccordion(blockIndex)}
+            onChange={handleToggleAccordion(blockIndex)}
           >
             <AccordionSummary
               expandIcon={!minWidth850 && <ExpandMore />}
@@ -83,10 +95,11 @@ export default function SheetView(props: SheetViewProps) {
                 },
               }}
             >
-              {edit && handleRemove && (
+              {edit && (
                 <IconButton
+                  sx={{ paddingLeft: 0 }}
                   aria-label="delete block"
-                  onClick={handleRemove(blockIndex)}
+                  onClick={removeSheetBlock(blockIndex)}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -97,6 +110,7 @@ export default function SheetView(props: SheetViewProps) {
                 blockIndex={blockIndex}
                 title={block.title}
                 onSaveBlockTitle={handleSaveBlockTitle!}
+                onClick={handleEditTitleOrChangeAccordion(blockIndex)}
               />
             </AccordionSummary>
 
@@ -124,42 +138,66 @@ export default function SheetView(props: SheetViewProps) {
                 />
               ))}
 
-              {edit && !minWidth850 && (
-                <AddElementMenu blockIndex={blockIndex} />
-              )}
+              {edit && <AddElementMenu blockIndex={blockIndex} />}
             </AccordionDetails>
           </Container>
         )
       })}
-
-      <style jsx global>{`
-        .sheet {
-          margin: 16px;
-
-          &,
-          .sheet-block {
-            display: flex;
-            flex-direction: column;
-          }
-
-          .sheet-block {
-            gap: 8px;
-          }
-        }
-
-        @media screen and (min-width: 850px) {
-          .sheet {
-            grid-area: main;
-            grid-template-columns: repeat(16, minmax(0, 1fr));
-            gap: 16px;
-
-            &,
-            .sheet-block {
-              display: grid;
-            }
-          }
-        }
-      `}</style>
+      <Button
+        sx={{
+          ...getGridArea({
+            columnStart: 1,
+            columnEnd: 8,
+            rowStart: lastLine,
+            rowEnd: lastLine + 1,
+          }),
+          height: "200px",
+          paddingInline: 0,
+        }}
+      >
+        <Paper
+          sx={{
+            width: "100%",
+            height: "100%",
+            padding: theme.spacing(2),
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          elevation={3}
+        >
+          <AddIcon />
+          <Typography align="center">New block</Typography>
+        </Paper>
+      </Button>
     </form>
   )
 }
+
+const styles = css`
+  max-width: 750px;
+  height: max-content;
+  margin: ${theme.spacing(2)};
+
+  &,
+  .sheet-block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sheet-block {
+    gap: ${theme.spacing(1)};
+  }
+
+  @media screen and (min-width: 850px) {
+    grid-area: main;
+    grid-template-columns: repeat(16, minmax(0, 1fr));
+    gap: ${theme.spacing(2)};
+
+    &,
+    .sheet-block {
+      display: grid;
+    }
+  }
+`

@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react"
+import React from "react"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 import { SheetFieldType, SheetInputField } from "@/common/sheet/sheet-types"
 import {
@@ -7,20 +7,20 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
-  Theme,
 } from "@mui/material"
 import { createStyles, makeStyles } from "@mui/styles"
 import { StatData } from "@/common/form-elements/stat-input/stat-input-types"
+import theme from "@/theme"
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     formControl: {
       marginTop: theme.spacing(2),
     },
   })
-) as any
+)
 
-const DialogFormInputView: FunctionComponent = () => {
+export default function InputForm() {
   const {
     newComponent: { type },
     handleChangeNewComponent,
@@ -47,7 +47,6 @@ const DialogFormInputView: FunctionComponent = () => {
     <FormControl component="fieldset" className={classes.formControl}>
       <FormLabel component="legend">Input type</FormLabel>
       <RadioGroup
-        className={classes.radioGroup}
         aria-label="input-type"
         name="input-type"
         value={type}
@@ -56,12 +55,12 @@ const DialogFormInputView: FunctionComponent = () => {
         <FormControlLabel
           value="text"
           control={<Radio color="primary" />}
-          label="Text"
+          label="Single line"
         />
         <FormControlLabel
           value="textarea"
           control={<Radio color="primary" />}
-          label="Text area"
+          label="Multiple lines"
         />
         <FormControlLabel
           value="number"
@@ -71,11 +70,9 @@ const DialogFormInputView: FunctionComponent = () => {
         <FormControlLabel
           value="numberWithModifier"
           control={<Radio color="primary" />}
-          label="Number with modifier"
+          label="Boxed number and modifier"
         />
       </RadioGroup>
     </FormControl>
   )
 }
-
-export default DialogFormInputView

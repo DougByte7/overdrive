@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react"
+import React from "react"
 import { useSheetBuilderContext } from "@/sheet-builder/sheet-builder-context"
 import { SheetInputCheckboxField } from "@/common/sheet/sheet-types"
 import {
@@ -10,7 +10,7 @@ import {
 } from "@mui/material"
 import isNil from "lodash/isNil"
 
-const DialogFormCheckboxView: FunctionComponent = () => {
+export default function CheckboxForm() {
   const { newComponent, handleChangeNewComponent } = useSheetBuilderContext()
 
   const handleChangeNumberOfBoxes = (
@@ -80,5 +80,3 @@ const DialogFormCheckboxView: FunctionComponent = () => {
     </FormGroup>
   )
 }
-
-export default DialogFormCheckboxView

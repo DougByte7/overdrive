@@ -1,9 +1,6 @@
 export interface IOverdriveDBData {
-  addItems: (storeNames: Array<OverdriveDBStores>, data: any[]) => void
-  getItems: (
-    storeName: OverdriveDBStores,
-    callback: (items: any) => void
-  ) => void
+  addItems: (storeNames: Array<OverdriveDBStores>, data: any[]) => Promise<void>
+  getItems: (storeName: OverdriveDBStores) => Promise<any>
 }
 
 export enum OverdriveDBStores {
