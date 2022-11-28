@@ -161,7 +161,7 @@ export default function SheetInput(props: SheetInputProps) {
       )
     }
     case "textarea": {
-      return <Input {...commonInputProps} multiline minRows={4} maxRows={10} />
+      return <Input {...commonInputProps} multiline minRows={4} />
     }
 
     case "numberWithModifier": {
