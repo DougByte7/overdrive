@@ -9,7 +9,9 @@ const IndexedDBContext = createContext<IOverdriveDBData>({
     new Promise(() => console.warn("IndexedDBContextProvider not found")),
 })
 
-const IndexedDBContextProvider: FunctionComponent = ({ children }) => {
+const IndexedDBContextProvider: FunctionComponent<{
+  children: React.ReactNode
+}> = ({ children }) => {
   if (!indexedDB) {
     throw new Error(
       "Your browser doesn't support a stable version of IndexedDB. Please use a modern browser."

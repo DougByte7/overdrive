@@ -11,7 +11,7 @@ const IndexedDBContextProvider = dynamic(
   {
     ssr: false,
   }
-)
+) as FunctionComponent<{ [k: string]: any }>
 
 export default function MyApp({
   Component,

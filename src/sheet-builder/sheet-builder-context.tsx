@@ -73,7 +73,9 @@ const SheetBuilderContext = createContext<ISheetBuilderContextData>({
   removeSheetElement: () => console.warn("removeSheetElement fn called"),
 })
 
-const SheetBuilderContextProvider: FunctionComponent = ({ children }) => {
+const SheetBuilderContextProvider: FunctionComponent<{
+  children: ReactNode
+}> = ({ children }) => {
   const [sheetTemplate, setSheetTemplate] = useState<SheetDataBlock[]>([
     //emptySheetBlock,
     ...(dedTemplate as SheetDataBlock[]),
