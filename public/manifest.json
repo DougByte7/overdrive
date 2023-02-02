@@ -1,0 +1,55 @@
+{
+  "short_name": "Dice Overdrive",
+  "name": "Dice Overdrive! Charge your rolls!",
+  "icons": [
+    {
+      "src": "/images/icon-logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon-logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "background_color": "#8100BE",
+  "display": "fullscreen",
+  "scope": "/",
+  "theme_color": "#8100BE",
+  "shortcuts": [
+    {
+      "name": "Criar personagem",
+      "short_name": "Personagem",
+      "description": "Crie um novo persogem para seus jogos",
+      "url": "/character-builder",
+      "icons": [{ "src": "/images/icon-logo.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Criar sala",
+      "short_name": "Sala",
+      "description": "Crie uma sala de jogo",
+      "url": "/new-game",
+      "icons": [{ "src": "/images/icon-logo.svg", "sizes": "192x192" }]
+    }
+  ],
+  "description": "Sua plataforma definitiva para jogar RPG",
+  "screenshots": [
+    {
+      "src": "/images/icon-logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "540x720",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/images/icon-logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "720x540",
+      "form_factor": "wide"
+    }
+  ]
+}

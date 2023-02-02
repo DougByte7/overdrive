@@ -13,6 +13,7 @@ export default function Home() {
 
         <Image
           aria-hidden={true}
+          alt="Dice Overdrive logo"
           src="/d10-electric.svg"
           width={194}
           height={222}
@@ -39,7 +40,7 @@ export default function Home() {
 
       <style jsx>{`
         .container {
-          background: #121212;
+          background: #8100be;
           height: 100vh;
           width: 100%;
           display: grid;
@@ -51,6 +52,7 @@ export default function Home() {
 
         .logo-text {
           display: flex;
+          align-items: center;
           flex-direction: column;
           gap: 32px;
         }
@@ -67,22 +69,22 @@ export default function Home() {
           width: 100%;
           background: repeating-linear-gradient(
             -49deg,
-            #ff6f00,
-            #ff6f00 20px,
-            #121212 20px,
-            #121212 40px
+            white,
+            white 20px,
+            #8100be 20px,
+            #8100be 40px
           );
         }
 
         .warning {
-          color: #121212;
+          color: #8100be;
           width: 100%;
-          background: #ff6f00;
+          background: white;
           padding: 24px 0;
           text-align: center;
           text-transform: uppercase;
           font-size: 2.5rem;
-          font-family: "Inter", sans-serif;
+          font-family: Inter, sans-serif;
           margin: 0;
         }
 
@@ -99,7 +101,7 @@ export default function Home() {
             display: initial;
           }
 
-          .warning: {
+          .warning {
             font-size: 3rem;
           }
         }
