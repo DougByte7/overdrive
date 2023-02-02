@@ -40,20 +40,20 @@ interface SheetViewProps {
     elementIndex: number
   }) => (type: SheetFieldType) => VoidFunction
   onSaveBlockTitle: FocusEventHandler
+  onAddEmptyBlock: VoidFunction
 }
 
-export default function SheetView(props: SheetViewProps) {
-  const {
-    sheetDataBlocks,
-    edit = false,
-    expandedAccordions,
-    shouldChangeBlockTitle,
-    onToggleAccordion: handleToggleAccordion,
-    onEditTitleOrChangeAccordion: handleEditTitleOrChangeAccordion,
-    onSelectElement: handleSelectElement,
-    onSaveBlockTitle: handleSaveBlockTitle,
-  } = props
-
+export default function SheetView({
+  sheetDataBlocks,
+  edit = false,
+  expandedAccordions,
+  shouldChangeBlockTitle,
+  onToggleAccordion: handleToggleAccordion,
+  onEditTitleOrChangeAccordion: handleEditTitleOrChangeAccordion,
+  onSelectElement: handleSelectElement,
+  onSaveBlockTitle: handleSaveBlockTitle,
+  onAddEmptyBlock: handleAddEmptyBlock,
+}: SheetViewProps) {
   const { removeSheetBlock } = useSheetBuilderContext()
 
   const getGridArea = (position: GridPosition) => {
@@ -154,6 +154,7 @@ export default function SheetView(props: SheetViewProps) {
           height: "200px",
           paddingInline: 0,
         }}
+        onClick={handleAddEmptyBlock}
       >
         <Paper
           sx={{
@@ -177,6 +178,7 @@ export default function SheetView(props: SheetViewProps) {
 
 const styles = css`
   max-width: 750px;
+  width: 100%;
   height: max-content;
   margin: ${theme.spacing(2)};
 

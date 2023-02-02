@@ -15,8 +15,13 @@ interface SheetProps {
 }
 
 export default function Sheet(props: SheetProps) {
-  const { sheetTemplate, openDialog, renameSheetBlock, removeSheetElement } =
-    useSheetBuilderContext()
+  const {
+    sheetTemplate,
+    openDialog,
+    renameSheetBlock,
+    removeSheetElement,
+    addSheetBlock,
+  } = useSheetBuilderContext()
   const { edit } = props
   const [expandedAccordions, setExpandedAccordions] = useState<number[]>([])
   const [shouldChangeBlockTitle, setShouldChangeBlockTitle] =
@@ -107,6 +112,15 @@ export default function Sheet(props: SheetProps) {
     handleUnselectElement()
   }
 
+  const handleAddEmptyBlock = () => {
+    addSheetBlock({
+      rowStart: sheetTemplate.length + 1,
+      columnStart: 1,
+      rowEnd: sheetTemplate.length + 2,
+      columnEnd: 17,
+    })
+  }
+
   const memoizedSheet = useMemo(
     () => (
       <SheetView
@@ -118,6 +132,7 @@ export default function Sheet(props: SheetProps) {
         onEditTitleOrChangeAccordion={handleClickOrDoubleClick}
         onSelectElement={handleSelectElement}
         onSaveBlockTitle={handleSaveBlockTitle}
+        onAddEmptyBlock={handleAddEmptyBlock}
       />
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps

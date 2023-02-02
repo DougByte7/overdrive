@@ -24,7 +24,7 @@ import {
   SheetBuilderHandleOpenDialog,
   SheetElementsDescription,
 } from "./sheet-builder-types"
-import dedTemplate from "@/sheet-builder/sheet-templates/dungeons-and-dragons-5e"
+//import dedTemplate from "@/sheet-builder/sheet-templates/dungeons-and-dragons-5e"
 
 const initialDialogData: DialogData = Object.freeze({
   title: "",
@@ -77,8 +77,7 @@ const SheetBuilderContextProvider: FunctionComponent<{
   children: ReactNode
 }> = ({ children }) => {
   const [sheetTemplate, setSheetTemplate] = useState<SheetDataBlock[]>([
-    //emptySheetBlock,
-    ...(dedTemplate as SheetDataBlock[]),
+    //...(dedTemplate as SheetDataBlock[]),
   ])
 
   const addSheetBlock: AddSheetBlockEvent = (position) => {
