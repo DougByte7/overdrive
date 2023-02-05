@@ -5,6 +5,7 @@ import theme from "@/theme"
 import { SharedSheetInfoProvider } from "@/shared-states/shared-sheet-info"
 import { ThemeProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
+import { Analytics } from "@vercel/analytics/react"
 
 const IndexedDBContextProvider = dynamic(
   () => import("@/indexed-db/indexed-db-context"),
@@ -34,6 +35,7 @@ export default function MyApp({
           </ThemeProvider>
         </SharedSheetInfoProvider>
       </IndexedDBContextProvider>
+      <Analytics />
     </>
   )
 }
