@@ -174,7 +174,7 @@ function ForgotForm({
   })
 
   const handleSendConfirmationEmail = form.onSubmit(async (values) => {
-    const res = await fetch("/api/password-reset", {
+    const res = await fetch("/api/auth/password-reset", {
       method: "POST",
       body: JSON.stringify(values),
     }).then((res) => res.json())
@@ -261,7 +261,7 @@ function RegisterForm({
   })
 
   const handleSendConfirmationEmail = form.onSubmit(async (values) => {
-    const res = await fetch("/api/email-confirmation", {
+    const res = await fetch("/api/auth/email-confirmation", {
       method: "POST",
       body: JSON.stringify(values),
     }).then((res) => res.json())
@@ -369,7 +369,7 @@ function PasswordForm({
       <Space h="sm" />
       <form
         onSubmit={form.onSubmit(async (values) => {
-          const res = await fetch("/api/register", {
+          const res = await fetch("/api/auth/register", {
             method: "POST",
             body: JSON.stringify({
               confirmationCode,
