@@ -6,6 +6,7 @@ import nodemailer from "nodemailer"
 
 interface ConfirmationEmailPayload {
   email: string
+  name: string
 }
 
 export default async function handler(
@@ -19,14 +20,23 @@ export default async function handler(
   switch (method) {
     case "POST":
       try {
-        const { email } = JSON.parse(req.body) as ConfirmationEmailPayload
+        const { email, name } = JSON.parse(req.body) as ConfirmationEmailPayload
+
+        if (!name || name.length < 2 || name.length > 30) {
+          throw new Error("Display name must have from 3 to 30 characters")
+        }
+
         const user = await User.findOne({ email })
         if (user)
           throw new Error(
             "This email is already in use. Have you forgotten your password?"
           )
 
-        const confirmationEmail = await ConfirmationEmail.create({ email })
+        const confirmationEmail = await ConfirmationEmail.create({
+          email,
+          name,
+        })
+
         const transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
           port: 587,

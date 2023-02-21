@@ -2425,11 +2425,6 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@next-auth/mongodb-adapter@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@next-auth/mongodb-adapter/-/mongodb-adapter-1.1.1.tgz#255581e66988956bafea555497e92690ad6086fe"
-  integrity sha512-X5O4U4l2M8nyp/B3qF5GOr/JJw2ShKgWfTZRa80Y5CUzTPPmf09ggL5v5UwCmz9l2RIv2GUxO8hK4qrcaZvDRw==
-
 "@next/env@13.1.2":
   version "13.1.2"
   resolved "https://registry.npmjs.org/@next/env/-/env-13.1.2.tgz"
