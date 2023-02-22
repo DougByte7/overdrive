@@ -11,7 +11,7 @@ import {
 import { css } from "@emotion/react"
 import { signIn } from "next-auth/react"
 import { NextRouter, useRouter } from "next/router"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { showNotification } from "@mantine/notifications"
 
 type FormMode = "login" | "register" | "forgot"
@@ -21,6 +21,11 @@ export default function Login() {
   const { confirmationCode } = router.query
 
   const [formMode, setFormMode] = useState<FormMode>("login")
+  const [hasError, setHasError] = useState(false)
+
+  useEffect(() => {
+    setHasError(false)
+  }, [formMode])
 
   function getForm() {
     switch (formMode) {
@@ -29,14 +34,22 @@ export default function Login() {
       case "forgot":
         return <ForgotForm setFormMode={setFormMode} />
       default:
-        return <LoginForm setFormMode={setFormMode} router={router} />
+        return (
+          <LoginForm
+            setFormMode={setFormMode}
+            setHasError={setHasError}
+            router={router}
+          />
+        )
     }
   }
 
   return (
     <main css={styles}>
       <Stack
-        className={`container ${formMode === "login" ? "" : "container--full"}`}
+        className={`container ${
+          formMode === "login" ? "" : "container--full"
+        } ${hasError ? "container--error" : ""}`}
         align="center"
       >
         {confirmationCode ? (
@@ -54,9 +67,11 @@ export default function Login() {
 
 function LoginForm({
   setFormMode,
+  setHasError,
   router,
 }: {
   setFormMode: Dispatch<SetStateAction<FormMode>>
+  setHasError: Dispatch<SetStateAction<boolean>>
   router: NextRouter
 }) {
   const form = useForm({
@@ -71,23 +86,28 @@ function LoginForm({
     },
   })
 
-  const handleLogin = form.onSubmit(async (values) => {
-    const res = await signIn("credentials", {
-      ...values,
-      redirect: false,
-    }).catch(console.error)
+  const handleLogin = form.onSubmit(
+    async (values) => {
+      const res = await signIn("credentials", {
+        ...values,
+        redirect: false,
+      }).catch(console.error)
 
-    if (res?.ok) {
-      router.push("/home")
-    } else {
-      showNotification({
-        autoClose: 10000,
-        title: "Erro ao validar seu dados de sessão",
-        message: res?.error,
-        color: "red",
-      })
+      if (res?.ok) {
+        router.push("/home")
+      } else {
+        showNotification({
+          autoClose: 10000,
+          title: "Erro ao validar seu dados de sessão",
+          message: res?.error,
+          color: "red",
+        })
+      }
+    },
+    () => {
+      setHasError(true)
     }
-  })
+  )
   const handleForgotPassword = () => setFormMode("forgot")
   const handleStartRegistration = () => setFormMode("register")
 
@@ -181,9 +201,9 @@ function ForgotForm({
 
     if (res.success) {
       showNotification({
-        autoClose: 10000,
-        title: "Enviamos um código para você",
-        message: "Verifique seu email e continue o processo pelo link enviado",
+        autoClose: 15000,
+        title: "Solicitação efetuada",
+        message: `Se existir uma conta com o e-mail ${values.email}, nós enviaremos um e-mail de redefinição de senha`,
         color: "green",
       })
     } else {
@@ -358,6 +378,34 @@ function PasswordForm({
     },
   })
 
+  const handleRegister = form.onSubmit(async (values) => {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        confirmationCode,
+        password: values.newPassword,
+        isReset: router.query.isReset,
+      }),
+    }).then((res) => res.json())
+
+    if (res.success) {
+      await signIn("credentials", {
+        email: res.email,
+        password: values.newPassword,
+        redirect: false,
+      }).catch(console.error)
+
+      router.push("/home")
+    } else {
+      showNotification({
+        autoClose: 10000,
+        title: "Algo de errado não está certo",
+        message: res.message,
+        color: "red",
+      })
+    }
+  })
+
   return (
     <>
       <Title className="title" order={1} size={24}>
@@ -367,33 +415,7 @@ function PasswordForm({
         Ótimo, agora vamos criar a sua nova senha!
       </Text>
       <Space h="sm" />
-      <form
-        onSubmit={form.onSubmit(async (values) => {
-          const res = await fetch("/api/auth/register", {
-            method: "POST",
-            body: JSON.stringify({
-              confirmationCode,
-              password: values.newPassword,
-            }),
-          }).then((res) => res.json())
-
-          if (res.success) {
-            signIn("credentials", {
-              email: res.email,
-              password: values.newPassword,
-              redirect: false,
-            }).catch(console.error)
-            router.push("/home")
-          } else {
-            showNotification({
-              autoClose: 10000,
-              title: "Algo de errado não está certo",
-              message: res.message,
-              color: "red",
-            })
-          }
-        })}
-      >
+      <form onSubmit={handleRegister}>
         <Stack>
           <PasswordInput
             sx={{ ".mantine-InputWrapper-label": { fontSize: "14px" } }}
@@ -421,8 +443,9 @@ function PasswordForm({
 const styles = css`
   background-color: #8100be;
   background-image: url("/images/icon-logo.svg");
-  background-position: top center;
+  background-position: center 30px;
   background-repeat: no-repeat;
+  background-size: 230px;
   height: 100vh;
 
   .container {
@@ -442,12 +465,32 @@ const styles = css`
       max-height: 100%;
     }
 
+    &.container--error {
+      max-height: 495px;
+    }
+
     .title {
       align-self: flex-start;
     }
 
     form {
       width: 100%;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    background-position: calc(50vw + 50px) 40%;
+
+    .container {
+      border-radius: 0;
+      left: 0;
+      width: 400px;
+      max-height: 100%;
+
+      &.container--full {
+        border-radius: 0;
+        padding: 48px 16px 24px;
+      }
     }
   }
 `

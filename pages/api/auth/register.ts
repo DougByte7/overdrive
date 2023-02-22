@@ -4,11 +4,13 @@ import User from "model/User"
 import { NextApiRequest, NextApiResponse } from "next"
 import bcrypt from "bcrypt"
 import nodemailer from "nodemailer"
+import PasswordReset from "model/PasswordReset"
 
 interface RegisterPayload {
   confirmationCode?: string
   password?: string
   name?: string
+  isReset?: "true" | "false"
 }
 
 export default async function handler(
@@ -22,7 +24,7 @@ export default async function handler(
   switch (method) {
     case "POST":
       try {
-        const { confirmationCode, password } = JSON.parse(
+        const { confirmationCode, password, isReset } = JSON.parse(
           req.body
         ) as RegisterPayload
 
@@ -31,31 +33,49 @@ export default async function handler(
         }
 
         if (!confirmationCode) {
-          throw new Error("Invalid confirmation code")
+          throw new Error("Código de confirmação inválido")
         }
 
-        const { email, name } = await ConfirmationEmail.findById(
-          confirmationCode
-        ).catch((error) => {
-          console.log(error)
+        let userEmail = ""
 
-          res.status(400).json({
-            success: false,
-            message: "Your confirmation code has expired.",
+        if (isReset === "true") {
+          const hashedPassword = await bcrypt.hash(password, 12)
+          const passwordReset = await PasswordReset.findById(confirmationCode)
+
+          if (!passwordReset) {
+            throw new Error("Seu código de redefinição expirou")
+          }
+
+          const user = await User.findByIdAndUpdate(passwordReset.userId, {
+            hashedPassword,
           })
-        })
+          userEmail = user.email
 
-        const hashedPassword = await bcrypt.hash(password, 12)
+          await PasswordReset.findByIdAndDelete(confirmationCode)
+        } else {
+          const confirmationEmail = await ConfirmationEmail.findById(
+            confirmationCode
+          )
 
-        await User.create({
-          email,
-          hashedPassword,
-          name,
-        })
+          if (!confirmationEmail) {
+            throw new Error("Seu código de confirmação expirou.")
+          }
+
+          userEmail = confirmationEmail.email
+          const hashedPassword = await bcrypt.hash(password, 12)
+
+          await User.create({
+            name: confirmationEmail.name,
+            email: confirmationEmail.email,
+            hashedPassword,
+          })
+
+          await ConfirmationEmail.findByIdAndDelete(confirmationCode)
+        }
 
         // send email here
 
-        res.status(201).json({ success: true, email })
+        res.status(201).json({ success: true, email: userEmail })
       } catch (error: any) {
         res.status(400).json({ success: false, message: error.message })
       }
