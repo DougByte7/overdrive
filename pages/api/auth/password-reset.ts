@@ -80,7 +80,7 @@ export default async function handler(
           <small>${i18nMail[locale].automatic}</small>
           `,
             })
-            .catch((mailError) => {
+            .catch((_mailError) => {
               console.log(
                 "welp, no idea what to do if this fails, guess user is destined not use use the app :/"
               )

@@ -3,7 +3,7 @@ import ConfirmationEmail from "model/ConfirmationEmail"
 import User from "model/User"
 import { NextApiRequest, NextApiResponse } from "next"
 import bcrypt from "bcrypt"
-import nodemailer from "nodemailer"
+//import nodemailer from "nodemailer"
 import PasswordReset from "model/PasswordReset"
 
 interface RegisterPayload {

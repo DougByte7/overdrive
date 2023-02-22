@@ -6,10 +6,10 @@ if (!MONGODB_URI) {
   throw new Error("Please add your MONGODB_URI to .env.local")
 }
 
-let cached = global.mongoose
+let cached = (global as any).mongoose
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null }
+  cached = (global as any).mongoose = { conn: null, promise: null }
 }
 
 export default async function dbConnect() {
