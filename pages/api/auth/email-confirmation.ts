@@ -3,6 +3,7 @@ import validateEmail from "lib/regex/validateEmail"
 import ConfirmationEmail from "model/ConfirmationEmail"
 import User from "model/User"
 import nodemailer from "nodemailer"
+import * as Sentry from "@sentry/nextjs"
 
 interface ConfirmationEmailPayload {
   email: string
@@ -90,7 +91,8 @@ export default async function handler(req: any, res: any) {
           <small>${i18nMail[locale].automatic}</small>
           `,
           })
-          .catch((_mailError) => {
+          .catch((mailError) => {
+            Sentry.captureException(mailError)
             console.log(
               "welp, no idea what to do if this fails, guess user is destined not use use the app :/"
             )
