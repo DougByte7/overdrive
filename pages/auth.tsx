@@ -459,14 +459,16 @@ const styles = css`
     max-height: 428px;
     transition: border-radius 250ms, padding-top 250ms, max-height 250ms;
 
-    &.container--full {
-      border-radius: 0;
-      padding-top: 24px;
-      max-height: 100%;
-    }
+    @media screen and (max-width: 767px) {
+      &.container--full {
+        border-radius: 0;
+        padding-top: 24px;
+        max-height: 100%;
+      }
 
-    &.container--error {
-      max-height: 495px;
+      &.container--error {
+        max-height: 495px;
+      }
     }
 
     .title {
@@ -486,11 +488,6 @@ const styles = css`
       left: 0;
       width: 400px;
       max-height: 100%;
-
-      &.container--full {
-        border-radius: 0;
-        padding: 48px 16px 24px;
-      }
     }
   }
 `
