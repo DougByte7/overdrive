@@ -1,7 +1,6 @@
 import dbConnect from "lib/dbConnect"
 import ConfirmationEmail from "model/ConfirmationEmail"
 import User from "model/User"
-import { NextApiRequest, NextApiResponse } from "next"
 import bcrypt from "bcrypt"
 //import nodemailer from "nodemailer"
 import PasswordReset from "model/PasswordReset"
@@ -13,10 +12,7 @@ interface RegisterPayload {
   isReset?: "true" | "false"
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: any, res: any) {
   const { method } = req
 
   await dbConnect()

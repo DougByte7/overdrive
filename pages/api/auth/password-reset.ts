@@ -2,7 +2,6 @@ import dbConnect from "lib/dbConnect"
 import validateEmail from "lib/regex/validateEmail"
 import PasswordReset from "model/PasswordReset"
 import User from "model/User"
-import { NextApiRequest, NextApiResponse } from "next"
 import nodemailer from "nodemailer"
 
 interface PasswordResetPayload {
@@ -29,10 +28,7 @@ const i18nMail = {
   },
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: any, res: any) {
   const { method } = req
 
   await dbConnect()
