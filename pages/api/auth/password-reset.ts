@@ -52,13 +52,14 @@ export default async function handler(req: any, res: any) {
         const user = await User.findOne({ email })
         if (user) {
           const { id } = await PasswordReset.create({ userId: user.id })
+          res.status(201).json({ success: true })
 
           const transporter = nodemailer.createTransport(
             smtpTransport({
               host: "smtp.gmail.com",
               port: 465,
               secure: true,
-              greetingTimeout: 1000 * 60 * 2,
+              greetingTimeout: 1000 * 60 * 5,
               auth: {
                 user: process.env.GMAIL_USER,
                 pass: process.env.GMAIL_PASSWORD,
@@ -66,7 +67,16 @@ export default async function handler(req: any, res: any) {
             })
           )
 
-          transporter
+          transporter.verify(function (error, success) {
+            if (error) {
+              console.log(error)
+              Sentry.captureException(error)
+            } else {
+              console.log("Server is ready to take our messages", success)
+            }
+          })
+
+          await transporter
             .sendMail({
               from: "Dice Overdrive - Support <dougbyte@diceoverdrive.com>",
               to: email,
@@ -90,10 +100,6 @@ export default async function handler(req: any, res: any) {
               )
             })
         }
-
-        res.status(201).json({
-          success: true,
-        })
       } catch (error: any) {
         const { message } = error
         res.status(400).json({ success: false, message })
