@@ -76,11 +76,20 @@ export default async function handler(req: any, res: any) {
           })
         )
 
+        transporter.verify(function (error, success) {
+          if (error) {
+            console.log(error)
+            Sentry.captureException(error)
+          } else {
+            console.log("Server is ready to take our messages", success)
+          }
+        })
+
         transporter
           .sendMail({
             from: {
               name: "Dice Overdrive - Support",
-              address: "dougbyte@diceoverdrive.com",
+              address: process.env.GMAIL_USER!,
             },
             to: email,
             subject: `Dice Overdrive ${i18nMail[locale].subject}`,
