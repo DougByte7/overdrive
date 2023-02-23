@@ -63,12 +63,14 @@ export default async function handler(req: any, res: any) {
           name,
         })
 
+        res.status(201).json({ success: true })
+
         const transporter = nodemailer.createTransport(
           smtpTransport({
             host: "smtp.gmail.com",
             port: 465,
             secure: true,
-            greetingTimeout: 1000 * 60 * 2,
+            greetingTimeout: 1000 * 60 * 5,
             auth: {
               user: process.env.GMAIL_USER,
               pass: process.env.GMAIL_PASSWORD,
@@ -85,7 +87,7 @@ export default async function handler(req: any, res: any) {
           }
         })
 
-        transporter
+        await transporter
           .sendMail({
             from: {
               name: "Dice Overdrive - Support",
@@ -110,8 +112,6 @@ export default async function handler(req: any, res: any) {
               "welp, no idea what to do if this fails, guess user is destined not use use the app :/"
             )
           })
-
-        res.status(201).json({ success: true })
       } catch (error: any) {
         let message = error.message
         if (error.code === 11000) {
