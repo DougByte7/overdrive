@@ -3,6 +3,8 @@ import validateEmail from "lib/regex/validateEmail"
 import PasswordReset from "model/PasswordReset"
 import User from "model/User"
 import nodemailer from "nodemailer"
+const smtpTransport = require("nodemailer-smtp-transport")
+
 import * as Sentry from "@sentry/nextjs"
 
 interface PasswordResetPayload {
@@ -51,15 +53,17 @@ export default async function handler(req: any, res: any) {
         if (user) {
           const { id } = await PasswordReset.create({ userId: user.id })
 
-          const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 465,
-            secure: true,
-            auth: {
-              user: process.env.GMAIL_USER,
-              pass: process.env.GMAIL_PASSWORD,
-            },
-          })
+          const transporter = nodemailer.createTransport(
+            smtpTransport({
+              host: "smtp.gmail.com",
+              port: 465,
+              secure: true,
+              auth: {
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_PASSWORD,
+              },
+            })
+          )
 
           transporter
             .sendMail({
