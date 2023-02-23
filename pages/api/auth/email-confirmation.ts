@@ -63,8 +63,6 @@ export default async function handler(req: any, res: any) {
           name,
         })
 
-        res.status(201).json({ success: true })
-
         const transporter = nodemailer.createTransport(
           smtpTransport({
             host: "smtp.gmail.com",
@@ -87,15 +85,14 @@ export default async function handler(req: any, res: any) {
           }
         })
 
-        await transporter
-          .sendMail({
-            from: {
-              name: "Dice Overdrive - Support",
-              address: process.env.GMAIL_USER!,
-            },
-            to: email,
-            subject: `Dice Overdrive ${i18nMail[locale].subject}`,
-            html: `
+        const mailError = await transporter.sendMail({
+          from: {
+            name: "Dice Overdrive - Support",
+            address: process.env.GMAIL_USER!,
+          },
+          to: email,
+          subject: `Dice Overdrive ${i18nMail[locale].subject}`,
+          html: `
           <p>
             ${i18nMail[locale].message}
             <br/>
@@ -105,13 +102,17 @@ export default async function handler(req: any, res: any) {
           <br />
           <small>${i18nMail[locale].automatic}</small>
           `,
-          })
-          .catch((mailError) => {
-            Sentry.captureException(mailError)
-            console.log(
-              "welp, no idea what to do if this fails, guess user is destined not use use the app :/"
-            )
-          })
+        })
+
+        if (mailError) {
+          Sentry.captureException(mailError)
+          console.log(
+            "welp, no idea what to do if this fails, guess user is destined not use use the app :/",
+            mailError
+          )
+        }
+
+        res.status(201).json({ success: true })
       } catch (error: any) {
         let message = error.message
         if (error.code === 11000) {
