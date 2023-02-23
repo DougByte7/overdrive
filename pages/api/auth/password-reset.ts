@@ -77,6 +77,7 @@ export default async function handler(req: any, res: any) {
           <small>${i18nMail[locale].automatic}</small>
           `,
             })
+            .then((res) => console.log(res))
             .catch((mailError) => {
               Sentry.captureException(mailError)
               console.log(
