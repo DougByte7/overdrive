@@ -3,6 +3,7 @@ import validateEmail from "lib/regex/validateEmail"
 import PasswordReset from "model/PasswordReset"
 import User from "model/User"
 import nodemailer from "nodemailer"
+import * as Sentry from "@sentry/nextjs"
 
 interface PasswordResetPayload {
   email: string
@@ -52,8 +53,8 @@ export default async function handler(req: any, res: any) {
 
           const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
+            port: 465,
+            secure: true,
             auth: {
               user: process.env.GMAIL_USER,
               pass: process.env.GMAIL_PASSWORD,
@@ -76,7 +77,8 @@ export default async function handler(req: any, res: any) {
           <small>${i18nMail[locale].automatic}</small>
           `,
             })
-            .catch((_mailError) => {
+            .catch((mailError) => {
+              Sentry.captureException(mailError)
               console.log(
                 "welp, no idea what to do if this fails, guess user is destined not use use the app :/"
               )
