@@ -2,7 +2,6 @@ import dbConnect from "lib/dbConnect"
 import ConfirmationEmail from "model/ConfirmationEmail"
 import User from "model/User"
 import bcrypt from "bcrypt"
-//import nodemailer from "nodemailer"
 import PasswordReset from "model/PasswordReset"
 
 interface RegisterPayload {
