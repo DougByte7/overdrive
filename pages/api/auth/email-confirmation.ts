@@ -61,8 +61,6 @@ export default async function handler(req: any, res: any) {
           name,
         })
 
-        res.status(201).json({ success: true })
-
         const emailMessage = `
         <p>
           ${i18nMail[locale].message}
@@ -81,6 +79,8 @@ export default async function handler(req: any, res: any) {
           },
           emailMessage
         )
+
+        res.status(201).json({ success: true })
       } catch (error: any) {
         let message = error.message
         if (error.code === 11000) {

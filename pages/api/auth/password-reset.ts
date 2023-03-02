@@ -54,7 +54,6 @@ export default async function handler(
         if (!user) return res.status(201).json({ success: true })
 
         const { id } = await PasswordReset.create({ userId: user.id })
-        res.status(201).json({ success: true })
 
         const emailMessage = `
           <p>
@@ -74,6 +73,8 @@ export default async function handler(
           },
           emailMessage
         )
+
+        res.status(201).json({ success: true })
       } catch (error: any) {
         const { message } = error
         res.status(400).json({ success: false, message })
