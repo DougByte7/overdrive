@@ -8,4 +8,6 @@ export default function useRouteGuard() {
   if (status === "unauthenticated") {
     router.push("/auth")
   }
+
+  return status
 }
