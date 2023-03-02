@@ -28,18 +28,15 @@ export default async function sendEmail(
       throw error
     } else {
       console.log("transporter ready")
-
-      return transporter
-        .sendMail({
-          from,
-          to,
-          subject,
-          html: message,
-        })
-        .then(() => transporter.close())
-        .catch((mailError) => {
-          throw mailError
-        })
     }
   })
+
+  await transporter.sendMail({
+    from,
+    to,
+    subject,
+    html: message,
+  })
+
+  transporter.close()
 }
