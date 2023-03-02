@@ -73,7 +73,7 @@ export default async function handler(req: any, res: any) {
         <br />
         <small>${i18nMail[locale].automatic}</small>
         `
-        sendEmail(
+        await sendEmail(
           {
             from: "Dice Overdrive - Support <dougbyte@diceoverdrive.com>",
             to: email,

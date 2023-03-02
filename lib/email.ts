@@ -27,6 +27,8 @@ export default async function sendEmail(
     if (error) {
       throw error
     } else {
+      console.log("transporter ready")
+
       return transporter
         .sendMail({
           from,

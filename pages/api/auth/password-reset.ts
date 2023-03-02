@@ -51,11 +51,12 @@ export default async function handler(
         }
 
         const user = await User.findOne({ email })
-        if (user) {
-          const { id } = await PasswordReset.create({ userId: user.id })
-          res.status(201).json({ success: true })
+        if (!user) return res.status(201).json({ success: true })
 
-          const emailMessage = `
+        const { id } = await PasswordReset.create({ userId: user.id })
+        res.status(201).json({ success: true })
+
+        const emailMessage = `
           <p>
             ${i18nMail[locale].message}
             <br/>
@@ -65,15 +66,14 @@ export default async function handler(
           <br />
           <small>${i18nMail[locale].automatic}</small>
           `
-          sendEmail(
-            {
-              from: "Dice Overdrive - Support <dougbyte@diceoverdrive.com>",
-              to: email,
-              subject: `Dice Overdrive ${i18nMail[locale].subject}`,
-            },
-            emailMessage
-          )
-        }
+        await sendEmail(
+          {
+            from: "Dice Overdrive - Support <dougbyte@diceoverdrive.com>",
+            to: email,
+            subject: `Dice Overdrive ${i18nMail[locale].subject}`,
+          },
+          emailMessage
+        )
       } catch (error: any) {
         const { message } = error
         res.status(400).json({ success: false, message })
