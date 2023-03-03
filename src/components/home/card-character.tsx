@@ -1,14 +1,4 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
-import {
-  Card,
-  Image,
-  Button,
-  Text,
-  Avatar,
-  Flex,
-  BackgroundImage,
-} from "@mantine/core"
+import { Card, Button, Text, BackgroundImage } from "@mantine/core"
 
 interface CardCharacterProps {
   imgSrc: string
@@ -25,6 +15,10 @@ export default function CardCharacter({
   campaignId,
   id,
 }: CardCharacterProps) {
+  function handleJoinRoom() {
+    console.log(campaignId, id)
+  }
+
   return (
     <Card radius="md" w={223} h={275} p={0}>
       <BackgroundImage src={imgSrc} radius="md" h="100%" p="md">
@@ -36,7 +30,7 @@ export default function CardCharacter({
           {name}
         </Text>
 
-        <Button size="md" pos="absolute" bottom={16}>
+        <Button size="md" pos="absolute" bottom={16} onClick={handleJoinRoom}>
           Entrar
         </Button>
       </BackgroundImage>
