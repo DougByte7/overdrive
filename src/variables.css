@@ -1,0 +1,9 @@
+:root {
+  --do_color_primary_dark_10: #670098;
+  --do_color_primary_base: #8100be;
+  --do_color_primary_light_50: #f6f0fa;
+
+  --do_text_color_300: #9b9b9b;
+  --do_text_color_500: #ededed;
+  --do_text_color_600: white;
+}

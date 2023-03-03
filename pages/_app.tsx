@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { MantineProvider } from "@mantine/core"
 import { NotificationsProvider } from "@mantine/notifications"
 import { SessionProvider } from "next-auth/react"
+import "src/variables.css"
 
 const IndexedDBContextProvider = dynamic(
   () => import("@/indexed-db/indexed-db-context"),
