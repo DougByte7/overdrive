@@ -2,9 +2,7 @@ import dbConnect from "lib/dbConnect"
 import validateEmail from "lib/regex/validateEmail"
 import ConfirmationEmail from "model/ConfirmationEmail"
 import User from "model/User"
-import nodemailer from "nodemailer"
-const smtpTransport = require("nodemailer-smtp-transport")
-import * as Sentry from "@sentry/nextjs"
+import sendEmail from "lib/email"
 
 interface ConfirmationEmailPayload {
   email: string
@@ -63,54 +61,24 @@ export default async function handler(req: any, res: any) {
           name,
         })
 
-        const transporter = nodemailer.createTransport(
-          smtpTransport({
-            host: "smtp.gmail.com",
-            port: 465,
-            secure: true,
-            greetingTimeout: 1000 * 60 * 5,
-            auth: {
-              user: process.env.GMAIL_USER,
-              pass: process.env.GMAIL_PASSWORD,
-            },
-          })
-        )
-
-        transporter.verify(function (error, success) {
-          if (error) {
-            console.log(error)
-            Sentry.captureException(error)
-          } else {
-            console.log("Server is ready to take our messages", success)
-          }
-        })
-
-        const mailError = await transporter.sendMail({
-          from: {
-            name: "Dice Overdrive - Support",
-            address: process.env.GMAIL_USER!,
+        const emailMessage = `
+        <p>
+          ${i18nMail[locale].message}
+          <br/>
+          <a href="${req.headers.referer}?confirmationCode=${confirmationEmail.id}">${i18nMail[locale].link}</a>
+        </p>
+        <small><strong>${i18nMail[locale].mistake}</strong></small>
+        <br />
+        <small>${i18nMail[locale].automatic}</small>
+        `
+        await sendEmail(
+          {
+            from: "Dice Overdrive - Support <dougbyte@diceoverdrive.com>",
+            to: email,
+            subject: `Dice Overdrive ${i18nMail[locale].subject}`,
           },
-          to: email,
-          subject: `Dice Overdrive ${i18nMail[locale].subject}`,
-          html: `
-          <p>
-            ${i18nMail[locale].message}
-            <br/>
-            <a href="${req.headers.referer}?confirmationCode=${confirmationEmail.id}">${i18nMail[locale].link}</a>
-          </p>
-          <small><strong>${i18nMail[locale].mistake}</strong></small>
-          <br />
-          <small>${i18nMail[locale].automatic}</small>
-          `,
-        })
-
-        if (mailError) {
-          Sentry.captureException(mailError)
-          console.log(
-            "welp, no idea what to do if this fails, guess user is destined not use use the app :/",
-            mailError
-          )
-        }
+          emailMessage
+        )
 
         res.status(201).json({ success: true })
       } catch (error: any) {

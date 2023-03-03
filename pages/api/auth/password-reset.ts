@@ -1,11 +1,9 @@
 import dbConnect from "lib/dbConnect"
+import sendEmail from "lib/email"
 import validateEmail from "lib/regex/validateEmail"
 import PasswordReset from "model/PasswordReset"
 import User from "model/User"
-import nodemailer from "nodemailer"
-const smtpTransport = require("nodemailer-smtp-transport")
-
-import * as Sentry from "@sentry/nextjs"
+import { NextApiRequest, NextApiResponse } from "next"
 
 interface PasswordResetPayload {
   email: string
@@ -31,7 +29,10 @@ const i18nMail = {
   },
 }
 
-export default async function handler(req: any, res: any) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { method } = req
 
   await dbConnect()
@@ -50,38 +51,11 @@ export default async function handler(req: any, res: any) {
         }
 
         const user = await User.findOne({ email })
-        if (user) {
-          const { id } = await PasswordReset.create({ userId: user.id })
-          res.status(201).json({ success: true })
+        if (!user) return res.status(201).json({ success: true })
 
-          const transporter = nodemailer.createTransport(
-            smtpTransport({
-              host: "smtp.gmail.com",
-              port: 465,
-              secure: true,
-              greetingTimeout: 1000 * 60 * 5,
-              auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_PASSWORD,
-              },
-            })
-          )
+        const { id } = await PasswordReset.create({ userId: user.id })
 
-          transporter.verify(function (error, success) {
-            if (error) {
-              console.log(error)
-              Sentry.captureException(error)
-            } else {
-              console.log("Server is ready to take our messages", success)
-            }
-          })
-
-          await transporter
-            .sendMail({
-              from: "Dice Overdrive - Support <dougbyte@diceoverdrive.com>",
-              to: email,
-              subject: `Dice Overdrive ${i18nMail[locale].subject}`,
-              html: `
+        const emailMessage = `
           <p>
             ${i18nMail[locale].message}
             <br/>
@@ -90,16 +64,17 @@ export default async function handler(req: any, res: any) {
           <small><strong>${i18nMail[locale].mistake}</strong></small>
           <br />
           <small>${i18nMail[locale].automatic}</small>
-          `,
-            })
-            .then((res) => console.log(res))
-            .catch((mailError) => {
-              Sentry.captureException(mailError)
-              console.log(
-                "welp, no idea what to do if this fails, guess user is destined not use use the app :/"
-              )
-            })
-        }
+          `
+        await sendEmail(
+          {
+            from: "Dice Overdrive - Support <dougbyte@diceoverdrive.com>",
+            to: email,
+            subject: `Dice Overdrive ${i18nMail[locale].subject}`,
+          },
+          emailMessage
+        )
+
+        res.status(201).json({ success: true })
       } catch (error: any) {
         const { message } = error
         res.status(400).json({ success: false, message })

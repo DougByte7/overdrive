@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-page-custom-font */
-import { Html, Head, Main, NextScript } from "next/document"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
+import { Html, Head, Main, NextScript } from "next/document"
 
 export default function Document() {
   return (
@@ -37,6 +37,7 @@ const styles = css`
     /* width */
     ::-webkit-scrollbar {
       width: 8px;
+      height: 8px;
     }
 
     /* Track */
@@ -46,12 +47,12 @@ const styles = css`
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-      background: #ff6f00;
+      background: var(--do_color_primary_base);
     }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-      background: rgb(178, 77, 0);
+      background: var(--do_color_primary_dark_10);
     }
 
     /* Remove Arrows/Spinners */

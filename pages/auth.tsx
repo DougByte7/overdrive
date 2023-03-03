@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react"
 import { useForm } from "@mantine/form"
 import {
   Button,
@@ -8,7 +10,6 @@ import {
   Title,
   Space,
 } from "@mantine/core"
-import { css } from "@emotion/react"
 import { signIn } from "next-auth/react"
 import { NextRouter, useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
@@ -320,6 +321,7 @@ function RegisterForm({
         <Stack>
           <TextInput
             sx={{ ".mantine-InputWrapper-label": { fontSize: "14px" } }}
+            name="username"
             label="Nome de usuário"
             placeholder="Antedeguemon"
             size="lg"
@@ -328,6 +330,7 @@ function RegisterForm({
           <TextInput
             sx={{ ".mantine-InputWrapper-label": { fontSize: "14px" } }}
             type="email"
+            name="email"
             label="E-mail"
             placeholder="seu@email.com"
             size="lg"
