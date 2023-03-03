@@ -28,6 +28,10 @@ export default function CardCampaign({
   const slotsText =
     slots === 1 ? `${slots} vaga disponível` : `${slots} vagas disponíveis`
 
+  function handleJoinRoom() {
+    console.log(id)
+  }
+
   return (
     <Card p="md" radius="md" bg="var(--do_text_color_500)" w={223}>
       <Card.Section>
@@ -60,7 +64,7 @@ export default function CardCampaign({
         </Text>
       </Flex>
 
-      <Button size="md" mt="md" fullWidth>
+      <Button size="md" mt="md" fullWidth onClick={handleJoinRoom}>
         Entrar
       </Button>
     </Card>
