@@ -1,10 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import useRouteGuard from "@/hooks/routeGuard"
-import { Box, Flex, LoadingOverlay, TextInput, Title } from "@mantine/core"
+import {
+  Box,
+  Flex,
+  LoadingOverlay,
+  ScrollArea,
+  TextInput,
+  Title,
+} from "@mantine/core"
 import { IconSearch } from "@tabler/icons"
 import CardCampaign from "@/components/home/card-campaign"
-import { ReactNode } from "react"
+import { ReactNode, WheelEventHandler } from "react"
 import CardCharacter from "@/components/home/card-character"
 
 export default function Home() {
@@ -34,7 +41,8 @@ export default function Home() {
       campaignName: "Maldição de Strahd",
       campaignId: "1",
       name: "Anóriel Heinhardt",
-      imgSrc: "https://i.pinimg.com/564x/fa/73/88/fa7388b1240d66cb712e15f7533d34cd.jpg",
+      imgSrc:
+        "https://i.pinimg.com/564x/fa/73/88/fa7388b1240d66cb712e15f7533d34cd.jpg",
     },
   ]
 
@@ -136,6 +144,11 @@ function SideScrollingBox({ children }: { children: ReactNode }) {
         gap="sm"
         css={css`
           width: max-content;
+
+          @media screen and (min-width: 1360px) {
+            flex-wrap: wrap;
+            max-width: 100%;
+          }
         `}
       >
         {children}
