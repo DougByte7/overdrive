@@ -8,6 +8,8 @@ import paladin from "./paladin"
 import ranger from "./ranger"
 import rogue from "./rogue"
 import sorcerer from "./sorcerer"
+import warlock from "./warlock"
+import wizard from "./wizard"
 
 const classes = {
   barbarian,
@@ -19,7 +21,9 @@ const classes = {
   paladin,
   ranger,
   rogue,
-  sorcerer
+  sorcerer,
+  warlock,
+  wizard,
 }
 
 export default classes

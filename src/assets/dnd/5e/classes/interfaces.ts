@@ -61,6 +61,7 @@ export type EquipmentTag =
   | "longsword"
   | "longbow"
   | "dagger"
+  | "quarterstaff"
   | "leatherArmor"
   | "scaleMail"
   | "chainMail"
@@ -68,6 +69,7 @@ export type EquipmentTag =
   | "quiver"
   | "componentPouch"
   | "arcaneFocus"
+  | "spellbook"
   | "holySymbol"
   | "thievesTools"
   | "lute"
@@ -78,6 +80,7 @@ export type EquipmentTag =
   | "entertainersPack"
   | "priestsPack"
   | "burglarsPack"
+  | "scholarsPack"
 
 export type Tool = "musicalInstrument" | "artisansTools"
 
