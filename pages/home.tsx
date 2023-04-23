@@ -1,22 +1,9 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
 import useRouteGuard from "@/hooks/routeGuard"
-import {
-  Box,
-  Flex,
-  LoadingOverlay,
-  ScrollArea,
-  TextInput,
-  Title,
-} from "@mantine/core"
-import { IconSearch } from "@tabler/icons"
-import CardCampaign from "@/components/home/card-campaign"
-import { ReactNode, WheelEventHandler } from "react"
-import CardCharacter from "@/components/home/card-character"
+import { LoadingOverlay } from "@mantine/core"
+import HomeComponent from "@/components/home"
 
 export default function Home() {
   const authStatus = useRouteGuard()
-
   if (authStatus !== "authenticated") return <LoadingOverlay visible />
 
   const campaigns = [
@@ -33,6 +20,20 @@ export default function Home() {
         { imgSrc: "", name: "test3" },
       ],
     },
+    {
+      id: "2",
+      limit: 4,
+      imgSrc:
+        "https://images.ctfassets.net/swt2dsco9mfe/2vBTubJNP0ZXwhKVZBHG9g/31300a00a34dd561c2e9e67da6a69476/1920x1342-ebberon.jpg?q=70",
+      title: "Rising from the Last War",
+      description:
+        "Explore Sharn, uma cidade de arranha-céus, aeronaves e intrigas noir",
+      players: [
+        { imgSrc: "", name: "test4" },
+        { imgSrc: "", name: "test5" },
+        { imgSrc: "", name: "test6" },
+      ],
+    },
   ]
 
   const characters = [
@@ -44,115 +45,15 @@ export default function Home() {
       imgSrc:
         "https://i.pinimg.com/564x/fa/73/88/fa7388b1240d66cb712e15f7533d34cd.jpg",
     },
+    {
+      id: "2",
+      campaignName: "Rising from the Last War",
+      campaignId: "2",
+      name: "NPC - Arlow",
+      imgSrc:
+        "https://i.pinimg.com/564x/29/f0/f4/29f0f4a55670997585dc912836b0cb8a.jpg",
+    },
   ]
 
-  return (
-    <main
-      css={css`
-        padding: 16px;
-      `}
-    >
-      <TextInput
-        sx={{
-          ".mantine-TextInput-input": {
-            background: "var(--do_color_primary_light_50)",
-            border: 0,
-            borderRadius: 6,
-          },
-          ".mantine-TextInput-input::placeholder": {
-            color: "var(--do_text_color_300)",
-          },
-        }}
-        size="lg"
-        placeholder="O que está procurando?"
-        icon={<IconSearch color="var(--do_color_primary_base)" size={24} />}
-      />
-
-      <div>
-        <Title size="h3" mt="xl" mb="md">
-          Minhas campanhas
-        </Title>
-
-        <SideScrollingBox>
-          {[
-            ...campaigns,
-            ...campaigns,
-            ...campaigns,
-            ...campaigns,
-            ...campaigns,
-            ...campaigns,
-            ...campaigns,
-            ...campaigns,
-            ...campaigns,
-          ].map((campaign, i) => (
-            <CardCampaign
-              key={i}
-              id={campaign.id}
-              imgSrc={campaign.imgSrc}
-              title={campaign.title}
-              description={campaign.description}
-              players={campaign.players}
-              limit={campaign.limit}
-            />
-          ))}
-        </SideScrollingBox>
-      </div>
-
-      <div>
-        <Title size="h3" mt="xl" mb="md">
-          Meus personagens
-        </Title>
-
-        <SideScrollingBox>
-          {[
-            ...characters,
-            ...characters,
-            ...characters,
-            ...characters,
-            ...characters,
-            ...characters,
-            ...characters,
-            ...characters,
-            ...characters,
-          ].map((character, i) => (
-            <CardCharacter
-              key={i}
-              imgSrc={character.imgSrc}
-              name={character.name}
-              campaignName={character.campaignName}
-              campaignId={character.campaignId}
-              id={character.id}
-            />
-          ))}
-        </SideScrollingBox>
-      </div>
-    </main>
-  )
-}
-
-function SideScrollingBox({ children }: { children: ReactNode }) {
-  return (
-    <Box
-      css={css`
-        overflow: auto;
-        ::-webkit-scrollbar {
-          height: 0px;
-        }
-      `}
-    >
-      <Flex
-        gap="sm"
-        css={css`
-          width: max-content;
-
-          @media screen and (min-width: 1360px) {
-            flex-wrap: wrap;
-            max-width: 100%;
-          }
-        `}
-      >
-        {children}
-      </Flex>
-    </Box>
-  )
+  return <HomeComponent campaigns={campaigns} characters={characters} />
 }

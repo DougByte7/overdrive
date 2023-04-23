@@ -6,4 +6,11 @@
   --do_text_color_300: #9b9b9b;
   --do_text_color_500: #ededed;
   --do_text_color_600: white;
+
+  --do_text_size_sm: 0.875rem;
+  --do_text_size_md: 1rem;
+  --do_text_size_lg: 1.5rem;
+
+  --do_border_color: var(--do_text_color_500);
+  --do_border_radius_sm: 4px;
 }

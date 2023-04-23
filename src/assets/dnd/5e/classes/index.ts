@@ -34,7 +34,7 @@ export type {
   Dice,
   Armor,
   Weapon,
-  SavingThrow,
+  Attribute as SavingThrow,
   Skill,
   EquipmentTag,
   Tool,

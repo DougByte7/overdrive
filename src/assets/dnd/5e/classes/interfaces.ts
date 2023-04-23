@@ -24,7 +24,7 @@ export type Weapon =
   | "dagger"
   | "dart"
   | "quarterstaff"
-export type SavingThrow = "str" | "dex" | "con" | "int" | "wis" | "cha"
+export type Attribute = "str" | "dex" | "con" | "int" | "wis" | "cha"
 export type Skill =
   | "Arcana"
   | "Acrobacia (Acrobatics)"
@@ -97,7 +97,7 @@ export interface DnD5eClass {
     armor?: Armor[]
     weapon: Weapon[]
     tools?: Tool[]
-    savingThrows: SavingThrow[]
+    savingThrows: Attribute[]
     skills: {
       amount: number
       options: Skill[]
