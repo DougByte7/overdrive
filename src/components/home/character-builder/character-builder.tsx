@@ -19,6 +19,8 @@ import {
   Image,
   Badge,
   Grid,
+  BackgroundImage,
+  Card,
 } from "@mantine/core"
 import { IconChevronLeft, IconPencil } from "@tabler/icons"
 import { ChangeEventHandler, MouseEventHandler, useState } from "react"
@@ -29,7 +31,7 @@ import { Attribute } from "@/assets/dnd/5e/classes/interfaces"
 
 interface CharacterForm {
   name: string
-  picture: File | null
+  picture: File | null | string
   race: string
   class: string
   str: number
@@ -98,12 +100,14 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
   const handleSetPicture = (picture: File) => {
     const reader = new FileReader()
-    reader.onload = (e: ProgressEvent<FileReader>) =>
+    reader.onload = (e: ProgressEvent<FileReader>) => {
       e.target && setPictureUrl(e.target.result as string)
+      const pictureUrl = (e.target?.result as string) ?? ""
+      setForm({ ...form, picture: pictureUrl })
+    }
+
     if (picture) reader.readAsDataURL(picture)
     else setPictureUrl("")
-
-    setForm({ ...form, picture })
   }
 
   const handledPrev = () => {
@@ -765,14 +769,31 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
                 O que está esperando, grandes aventuras esperam por você.
               </Text>
             </Box>
-            <Image
-              maw="100%"
-              fit="contain"
-              width={311}
-              height={283}
-              src={pictureUrl}
-              alt=""
-            />
+            <Card radius="md" w={280} h={275} p={0}>
+              <BackgroundImage src={pictureUrl} radius="md" h="100%">
+                <div
+                  css={css`
+                    background: linear-gradient(
+                      180deg,
+                      rgba(0, 0, 0, 0.2) 0%,
+                      rgba(0, 0, 0, 0) 100%
+                    );
+                    padding: 16px;
+                    height: 100%;
+                  `}
+                >
+                  <Text weight={500} color="var(--do_text_color_300)" size="sm">
+                    {races[form.race as keyof typeof races].name},
+                    {classes[form.class as keyof typeof classes].name}.
+                  </Text>
+
+                  <Text size="lg" color="var(--do_text_color_600)">
+                    {form.name}
+                  </Text>
+                </div>
+              </BackgroundImage>
+            </Card>
+            <Image maw="100%" fit="contain" alt="" />
             <Space h="2rem" />
           </Stack>
         )}

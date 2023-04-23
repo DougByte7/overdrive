@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
-import { Modal, TextInput, Title } from "@mantine/core"
+import { Card, Modal, TextInput, Title, Text, ActionIcon } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import CardCampaign from "./card-campaign"
 import CardCharacter from "./card-character"
 import SideScrollingBox from "./side-scrolling-box"
-import { IconSearch } from "@tabler/icons"
+import { IconPlus, IconSearch } from "@tabler/icons"
 import CharacterBuilder from "./character-builder/character-builder"
+import { notifications } from "@mantine/notifications"
 
 interface HomeComponentProps {
   campaigns: any[]
@@ -18,6 +19,14 @@ export default function HomeComponent({
   characters,
 }: HomeComponentProps) {
   const [opened, { open, close }] = useDisclosure(false)
+
+  const handleNewBoard = () => {
+    notifications.show({
+      title: "Vish :/",
+      message: "Desculpe, mas essa função ainda está em desenvolvimento.",
+      color: "red",
+    })
+  }
 
   return (
     <>
@@ -48,6 +57,38 @@ export default function HomeComponent({
           </Title>
 
           <SideScrollingBox>
+            <Card
+              css={css`
+                background-color: var(--do_color_primary_light_50);
+                border: 1px dashed rgba(0, 0, 0, 0.25);
+                border-radius: var(--do_border_radius_md);
+                display: flex;
+                align-content: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 8px;
+              `}
+              w={223}
+              h={351}
+            >
+              <Text weight={600} align="center">
+                Criar uma mesa
+              </Text>
+
+              <Text size="sm" align="center">
+                Crie uma mesa e viva novas aventuras!
+              </Text>
+
+              <ActionIcon
+                mt="sm"
+                size="xl"
+                color="brand"
+                variant="filled"
+                onClick={handleNewBoard}
+              >
+                <IconPlus size="1.5rem" />
+              </ActionIcon>
+            </Card>
             {campaigns.map((campaign, i) => (
               <CardCampaign
                 key={i}
@@ -69,6 +110,38 @@ export default function HomeComponent({
           </Title>
 
           <SideScrollingBox>
+            <Card
+              css={css`
+                background-color: var(--do_color_primary_light_50);
+                border: 1px dashed rgba(0, 0, 0, 0.25);
+                border-radius: var(--do_border_radius_md);
+                display: flex;
+                align-content: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 8px;
+              `}
+              w={223}
+              h={275}
+            >
+              <Text weight={600} align="center">
+                Criar um personagem
+              </Text>
+
+              <Text size="sm" align="center">
+                Crie um personagem para utilizar onde quiser!
+              </Text>
+
+              <ActionIcon
+                mt="sm"
+                size="xl"
+                color="brand"
+                variant="filled"
+                onClick={open}
+              >
+                <IconPlus size="1.5rem" />
+              </ActionIcon>
+            </Card>
             {characters.map((character, i) => (
               <CardCharacter
                 key={i}

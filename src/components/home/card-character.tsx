@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { Card, Button, Text, BackgroundImage } from "@mantine/core"
+import { notifications } from "@mantine/notifications"
 
 interface CardCharacterProps {
   imgSrc: string
@@ -19,13 +20,18 @@ export default function CardCharacter({
 }: CardCharacterProps) {
   function handleJoinRoom() {
     console.log(campaignId, id)
+
+    notifications.show({
+      title: "Vish :/",
+      message: "Desculpe, mas essa função ainda está em desenvolvimento.",
+      color: "red",
+    })
   }
 
   return (
     <Card radius="md" w={223} h={275} p={0}>
       <BackgroundImage src={imgSrc} radius="md" h="100%">
         <div
-          className="aaaaaa"
           css={css`
             background: linear-gradient(
               180deg,

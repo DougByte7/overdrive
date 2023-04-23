@@ -1,12 +1,14 @@
 import useRouteGuard from "@/hooks/routeGuard"
 import { LoadingOverlay } from "@mantine/core"
 import HomeComponent from "@/components/home"
+import races from "@/assets/dnd/5e/races"
+import classes from "@/assets/dnd/5e/classes"
 
 export default function Home() {
   const authStatus = useRouteGuard()
   if (authStatus !== "authenticated") return <LoadingOverlay visible />
 
-  const campaigns = [
+  const campaigns: unknown[] = [
     {
       id: "1",
       limit: 4,
@@ -36,24 +38,41 @@ export default function Home() {
     },
   ]
 
-  const characters = [
-    {
-      id: "1",
-      campaignName: "Maldição de Strahd",
-      campaignId: "1",
-      name: "Anóriel Heinhardt",
-      imgSrc:
-        "https://i.pinimg.com/564x/fa/73/88/fa7388b1240d66cb712e15f7533d34cd.jpg",
-    },
-    {
-      id: "2",
-      campaignName: "Rising from the Last War",
-      campaignId: "2",
-      name: "NPC - Arlow",
-      imgSrc:
-        "https://i.pinimg.com/564x/29/f0/f4/29f0f4a55670997585dc912836b0cb8a.jpg",
-    },
-  ]
+  const characters = JSON.parse(localStorage.getItem("characters") ?? "[]").map(
+    (character: any, i: number) => {
+      return {
+        id: i,
+        campaignName:
+          races[character.race as keyof typeof races].name +
+          ", " +
+          classes[character.class as keyof typeof classes].name +
+          ".",
+        campaignId: "1",
+        name: character.name,
+        imgSrc: character.picture,
+      }
+    }
+  )
+  console.log(characters)
+
+  // [
+  //   {
+  //     id: "1",
+  //     campaignName: "Maldição de Strahd",
+  //     campaignId: "1",
+  //     name: "Anóriel Heinhardt",
+  //     imgSrc:
+  //       "https://i.pinimg.com/564x/fa/73/88/fa7388b1240d66cb712e15f7533d34cd.jpg",
+  //   },
+  //   {
+  //     id: "2",
+  //     campaignName: "Rising from the Last War",
+  //     campaignId: "2",
+  //     name: "NPC - Arlow",
+  //     imgSrc:
+  //       "https://i.pinimg.com/564x/29/f0/f4/29f0f4a55670997585dc912836b0cb8a.jpg",
+  //   },
+  // ]
 
   return <HomeComponent campaigns={campaigns} characters={characters} />
 }
