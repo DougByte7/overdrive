@@ -4,7 +4,7 @@ import dynamic from "next/dynamic"
 import theme from "@/theme"
 import { Analytics } from "@vercel/analytics/react"
 import { MantineProvider } from "@mantine/core"
-import { NotificationsProvider } from "@mantine/notifications"
+import { Notifications } from "@mantine/notifications"
 import { SessionProvider } from "next-auth/react"
 import "src/variables.css"
 
@@ -30,9 +30,8 @@ export default function MyApp({
       <SessionProvider session={session}>
         <IndexedDBContextProvider>
           <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-            <NotificationsProvider>
-              <Component {...pageProps} />
-            </NotificationsProvider>
+            <Notifications />
+            <Component {...pageProps} />
           </MantineProvider>
         </IndexedDBContextProvider>
       </SessionProvider>

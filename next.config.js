@@ -17,6 +17,7 @@ module.exports = withSentryConfig(
       locales: ["en-US", "pt-BR"],
       defaultLocale: "pt-BR",
     },
+    reactStrictMode: true,
   }),
   { silent: true },
   { hideSourcemaps: true }

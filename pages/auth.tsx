@@ -13,7 +13,7 @@ import {
 import { signIn } from "next-auth/react"
 import { NextRouter, useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { showNotification } from "@mantine/notifications"
+import { notifications } from '@mantine/notifications';
 
 type FormMode = "login" | "register" | "forgot"
 
@@ -97,7 +97,7 @@ function LoginForm({
       if (res?.ok) {
         router.push("/home")
       } else {
-        showNotification({
+        notifications.show({
           autoClose: 10000,
           title: "Erro ao validar seu dados de sessão",
           message: res?.error,
@@ -201,14 +201,14 @@ function ForgotForm({
     }).then((res) => res.json())
 
     if (res.success) {
-      showNotification({
+      notifications.show({
         autoClose: 15000,
         title: "Solicitação efetuada",
         message: `Se existir uma conta com o e-mail ${values.email}, nós enviaremos um e-mail de redefinição de senha`,
         color: "green",
       })
     } else {
-      showNotification({
+      notifications.show({
         autoClose: 10000,
         title: "Algo de errado não está certo",
         message: res.message,
@@ -288,7 +288,7 @@ function RegisterForm({
     }).then((res) => res.json())
 
     if (res.success) {
-      showNotification({
+      notifications.show({
         autoClose: 10000,
         title: "Enviamos um código para você",
         message:
@@ -296,7 +296,7 @@ function RegisterForm({
         color: "green",
       })
     } else {
-      showNotification({
+      notifications.show({
         autoClose: 10000,
         title: "Algo de errado não está certo",
         message: res.message,
@@ -400,7 +400,7 @@ function PasswordForm({
 
       router.push("/home")
     } else {
-      showNotification({
+      notifications.show({
         autoClose: 10000,
         title: "Algo de errado não está certo",
         message: res.message,
