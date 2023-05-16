@@ -5,6 +5,7 @@ import theme from "@/theme"
 import { Analytics } from "@vercel/analytics/react"
 import { MantineProvider } from "@mantine/core"
 import { Notifications } from "@mantine/notifications"
+import { ModalsProvider } from "@mantine/modals"
 import { SessionProvider } from "next-auth/react"
 import "src/variables.css"
 
@@ -31,7 +32,9 @@ export default function MyApp({
         <IndexedDBContextProvider>
           <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
             <Notifications />
-            <Component {...pageProps} />
+            <ModalsProvider>
+              <Component {...pageProps} />
+            </ModalsProvider>
           </MantineProvider>
         </IndexedDBContextProvider>
       </SessionProvider>
