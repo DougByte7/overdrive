@@ -5,19 +5,22 @@ import { io } from "socket.io-client"
 import Peer from "simple-peer"
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react"
-import { useEffectOnce } from "react-use"
 import { useLocalStorage } from "@mantine/hooks"
 import { modals } from "@mantine/modals"
 import { Select, Stack } from "@mantine/core"
 
-const socket = io("/", { path: "/api/socketio" })
+const socket = io("/", {
+  path: "/api/socketio",
+  addTrailingSlash: false,
+  autoConnect: false,
+})
 
 export default function Room() {
   const [localStream, setLocalStream] = useState<MediaStream>()
   const [remoteStreams, setRemoteStreams] = useState<MediaStream[]>([])
   const [messages, setMessages] = useState<string[]>([])
   const guestId = "guest" + useId()
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
   const peer = useRef<Peer.Instance>()
   const [preferredVideoSource, setPreferredVideoSource] = useLocalStorage<
@@ -31,7 +34,9 @@ export default function Room() {
     key: "preferredAudioSource",
   })
 
-  useEffectOnce(() => {
+  useEffect(() => {
+    if (status === "loading" || !router.query.roomId) return
+
     const tryConnectRTC = async () => {
       const devices = await navigator.mediaDevices?.enumerateDevices()
       if (!devices.length) return
@@ -51,8 +56,8 @@ export default function Room() {
 
       if (!(videoDevices.length || audioDevices.length)) return
 
-      let videoSourceId = ""
-      let audioSourceId = ""
+      let videoSourceId = preferredVideoSource
+      let audioSourceId = preferredAudioSource
 
       const onConfirm = async () => {
         modals.closeAll()
@@ -154,6 +159,8 @@ export default function Room() {
 
     tryConnectRTC()
 
+    socket.connect()
+
     socket.emit("room:join", {
       room: router.query.roomId,
       user: {
@@ -180,12 +187,14 @@ export default function Room() {
       peer.current?.destroy()
       modals.closeAll()
     }
-  })
+  }, [status, router.query.roomId])
 
   const sendMessage: KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
     if (event.shiftKey || event.key !== "Enter" || !event.currentTarget.value)
       return
     event.preventDefault()
+
+    console.log("post")
 
     const message = event.currentTarget.value
     setMessages((messages) => [...messages, message])

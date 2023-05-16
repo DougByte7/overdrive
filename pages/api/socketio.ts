@@ -16,20 +16,24 @@ const socketHandler = (_req: NextApiRequest, res: NextApiResponseServerIO) => {
     console.log("Socket is initializing")
 
     const httpServer = res.socket.server
-    const io = new ServerIO(httpServer, { path: "/api/socketio" })
+    const io = new ServerIO(httpServer, {
+      path: "/api/socketio",
+      addTrailingSlash: false,
+    })
     res.socket.server.io = io
 
     io.on("connection", (socket) => {
       console.log("connected")
 
       socket.on("room:join", ({ room, user }) => {
+        socket.join(room)
+
         console.table({
           "room-id": room,
           "user-id": user.id,
           "user-name": user.name,
+          connections: io.of(room).server.engine.clientsCount,
         })
-
-        socket.join(room)
 
         socket.to(room).emit("user:joined", user)
 
