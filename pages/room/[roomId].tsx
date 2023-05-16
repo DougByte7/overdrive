@@ -56,8 +56,8 @@ export default function Room() {
 
       if (!(videoDevices.length || audioDevices.length)) return
 
-      let videoSourceId = preferredVideoSource
-      let audioSourceId = preferredAudioSource
+      let videoSourceId = preferredVideoSource ?? ""
+      let audioSourceId = preferredAudioSource ?? ""
 
       const onConfirm = async () => {
         modals.closeAll()
