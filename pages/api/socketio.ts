@@ -22,6 +22,10 @@ const socketHandler = (_req: NextApiRequest, res: NextApiResponseServerIO) => {
     })
     res.socket.server.io = io
 
+    io.engine.on("connection_error", (err) => {
+      console.log(err)
+    })
+
     io.on("connection", (socket) => {
       console.log("connected")
 
