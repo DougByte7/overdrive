@@ -3,6 +3,12 @@
   --do_color_primary_base: #8100be;
   --do_color_primary_light_50: #f6f0fa;
 
+  --do_color_support_dark_30: #2d2f33;
+
+  --do_color_info: #41b4f5;
+  --do_color_warn: #f5c341;
+  --do_color_danger: #f54141;
+
   --do_text_color_300: #9b9b9b;
   --do_text_color_500: #ededed;
   --do_text_color_600: white;
