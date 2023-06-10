@@ -1,12 +1,17 @@
-import { FunctionComponent } from "react"
+import { FunctionComponent, useState } from "react"
 import Head from "next/head"
 import dynamic from "next/dynamic"
 import theme from "@/theme"
 import { Analytics } from "@vercel/analytics/react"
-import { MantineProvider } from "@mantine/core"
+import {
+  ColorScheme,
+  ColorSchemeProvider,
+  MantineProvider,
+} from "@mantine/core"
 import { Notifications } from "@mantine/notifications"
 import { ModalsProvider } from "@mantine/modals"
 import { SessionProvider } from "next-auth/react"
+import { Provider as JotaiProvider } from "jotai"
 import "src/variables.css"
 
 const IndexedDBContextProvider = dynamic(
@@ -23,20 +28,35 @@ export default function MyApp({
   Component: FunctionComponent
   pageProps: Record<string, any>
 }) {
+  const [colorScheme, setColorScheme] = useState<ColorScheme>("light")
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"))
+
   return (
     <>
       <Head>
         <title>Dice Overdrive</title>
       </Head>
       <SessionProvider session={session}>
-        <IndexedDBContextProvider>
-          <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-            <Notifications />
-            <ModalsProvider>
-              <Component {...pageProps} />
-            </ModalsProvider>
-          </MantineProvider>
-        </IndexedDBContextProvider>
+        <JotaiProvider>
+          <IndexedDBContextProvider>
+            <ColorSchemeProvider
+              colorScheme={colorScheme}
+              toggleColorScheme={toggleColorScheme}
+            >
+              <MantineProvider
+                theme={{ colorScheme, ...theme }}
+                withGlobalStyles
+                withNormalizeCSS
+              >
+                <Notifications />
+                <ModalsProvider>
+                  <Component {...pageProps} />
+                </ModalsProvider>
+              </MantineProvider>
+            </ColorSchemeProvider>
+          </IndexedDBContextProvider>
+        </JotaiProvider>
       </SessionProvider>
       <Analytics />
     </>

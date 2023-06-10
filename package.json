@@ -33,6 +33,7 @@
     "dayjs": "^1.11.7",
     "embla-carousel-react": "^7.0.9",
     "idb": "^7.0.2",
+    "jotai": "^2.1.1",
     "lodash": "^4.17.21",
     "mongodb": "^5.0.1",
     "mongoose": "^6.9.1",
