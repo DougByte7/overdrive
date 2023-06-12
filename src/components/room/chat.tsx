@@ -103,7 +103,7 @@ export default function Chat() {
   return (
     <div css={chat}>
       <div>
-        {messages.map((message, i) => (
+        {messages.map((message) => (
           <div key={message.from + message.time}>
             <Group spacing={8}>
               <Avatar size="sm" radius="xl" />

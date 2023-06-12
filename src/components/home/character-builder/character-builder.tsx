@@ -185,6 +185,33 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
     })
   }
 
+  const isInvalidFormStep = () => {
+    if (step === 1) {
+      return !(form.picture && form.name)
+    }
+
+    if (step === 2) {
+      return !form.race
+    }
+
+    if (step === 3) {
+      return !form.class
+    }
+
+    if (step === 5) {
+      return !(
+        form.str &&
+        form.dex &&
+        form.con &&
+        form.int &&
+        form.wis &&
+        form.cha
+      )
+    }
+
+    return false
+  }
+
   const EditButton = ({ step }: { step: number }) => (
     <ActionIcon
       color="brand"
@@ -800,7 +827,12 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
       </Transition>
 
       <Box>
-        <Button fullWidth size="lg" onClick={handleNext}>
+        <Button
+          fullWidth
+          size="lg"
+          disabled={isInvalidFormStep()}
+          onClick={handleNext}
+        >
           {step === 4
             ? "Rolar os dados"
             : step === 6
