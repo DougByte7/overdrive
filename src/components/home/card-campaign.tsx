@@ -25,6 +25,9 @@ export default function CardCampaign({
   id,
   onJoin,
 }: CardCampaignProps) {
+  const fallbackImg =
+    "https://img.freepik.com/vetores-gratis/cavaleiro-e-portal-magico-em-moldura-de-pedra-na-paisagem-montanhosa-a-noite-ilustracao-em-vetor-desenho-animado-fantasia-com-homem-em-trajes-medievais-com-lanca-e-arco-antigo-com-brilho-azul-mistico_107791-5203.jpg?w=1800&t=st=1687126050~exp=1687126650~hmac=cc998a2842574a75a219239b192a720ac4bdd2a6050cc565969d4260cebe7c49"
+
   const slots = limit - players.length
   const slotsText =
     slots === 1 ? `${slots} vaga disponível` : `${slots} vagas disponíveis`
@@ -38,7 +41,7 @@ export default function CardCampaign({
     <>
       <Card p="md" radius="md" bg="var(--do_text_color_500)" w={223}>
         <Card.Section>
-          <Image src={imgSrc} height={140} width={223} alt="" />
+          <Image src={imgSrc ?? fallbackImg} height={140} width={223} alt="" />
         </Card.Section>
 
         <Text weight={700} mt="md">

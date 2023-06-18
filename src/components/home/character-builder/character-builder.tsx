@@ -187,7 +187,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
   const isInvalidFormStep = () => {
     if (step === 1) {
-      return !(form.picture && form.name)
+      return !form.name
     }
 
     if (step === 2) {
