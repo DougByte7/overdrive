@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { Card, Image, Button, Text, Avatar, Flex } from "@mantine/core"
 
@@ -46,9 +45,11 @@ export default function CardCampaign({
           {title}
         </Text>
 
-        <Text size="sm">{description}</Text>
+        <Text css={descriptionStyle} size="sm">
+          {description}
+        </Text>
 
-        <Flex>
+        <Flex pos="absolute" bottom={74} align="center">
           {players.slice(0, 3).map((player) => (
             <Avatar
               css={css`
@@ -68,10 +69,26 @@ export default function CardCampaign({
           </Text>
         </Flex>
 
-        <Button size="md" mt="md" fullWidth onClick={handleJoinRoom}>
+        <Button
+          pos="absolute"
+          right={16}
+          bottom={16}
+          left={16}
+          size="md"
+          onClick={handleJoinRoom}
+        >
           Entrar
         </Button>
       </Card>
     </>
   )
 }
+
+const descriptionStyle = css`
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 3lh;
+`
