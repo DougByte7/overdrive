@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { Card, Modal, TextInput, Title, Text, ActionIcon } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
@@ -32,10 +31,12 @@ export default function HomeComponent({
     <>
       <main
         css={css`
-          padding: 16px;
+          margin-block: 16px;
         `}
       >
         <TextInput
+          mr={16}
+          ml={16}
           sx={{
             ".mantine-TextInput-input": {
               background: "var(--do_color_primary_light_50)",
@@ -52,7 +53,7 @@ export default function HomeComponent({
         />
 
         <div>
-          <Title size="h3" mt="xl" mb="md">
+          <Title size="h3" mt="xl" mb="md" mr={16} ml={16}>
             Minhas campanhas
           </Title>
 
@@ -105,7 +106,7 @@ export default function HomeComponent({
         </div>
 
         <div>
-          <Title size="h3" mt="xl" mb="md">
+          <Title size="h3" mt="xl" mb="md" mr={16} ml={16}>
             Meus personagens
           </Title>
 
