@@ -80,6 +80,7 @@ const gnome: DnD5eRace = {
   subraces: [rockGnome],
   boost: {
     intelligence: 2,
+    constitution: 1,
     speed: 5,
     darkvision: 12,
   },

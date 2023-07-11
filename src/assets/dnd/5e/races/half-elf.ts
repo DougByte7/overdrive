@@ -54,6 +54,10 @@ const halfElf: DnD5eRace = {
   subraces: [],
   boost: {
     charisma: 2,
+    anyAttr: {
+      amount: 2,
+      value: 1,
+    },
     speed: 6,
     darkvision: 12,
   },

@@ -74,6 +74,7 @@ const halfling: DnD5eRace = {
   subraces: [lightfoot],
   boost: {
     dexterity: 2,
+    charisma: 1,
     speed: 5,
   },
 }

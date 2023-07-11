@@ -85,6 +85,7 @@ const dwarf: DnD5eRace = {
   subraces: [hillDwarf],
   boost: {
     constitution: 2,
+    wisdom: 1,
     speed: 5,
     darkvision: 12,
   },
