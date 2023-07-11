@@ -2,7 +2,7 @@ import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
 
 const features: DnD5eFeature[] = [
   {
-    name: "Lançamento de Magias",
+    name: "Conjuração",
     level: 1,
     description:
       "Como um estudante de magia arcana, você possui um livro de magias contendo feitiços que mostram os primeiros vislumbres do seu verdadeiro poder.",
@@ -32,10 +32,10 @@ const features: DnD5eFeature[] = [
       "Você prepara a lista de magias de mago que estão disponíveis para lançar. Para isso, escolha um número de magias de mago do seu livro de magias igual ao seu modificador de Inteligência + seu nível de mago (mínimo de uma magia). As magias devem ser de um nível para o qual você possui espaços de magia. Por exemplo, se você é um mago de 3º nível, possui quatro espaços de magia de 1º nível e dois de 2º nível. Com uma Inteligência de 16, sua lista de magias preparadas pode incluir seis magias de 1º ou 2º nível, em qualquer combinação, escolhidas do seu livro de magias. Se você preparar a magia mísseis mágicos de 1º nível, pode lançá-la usando um espaço de magia de 1º ou 2º nível. Lançar a magia não a remove da sua lista de magias preparadas. Você pode alterar sua lista de magias preparadas ao terminar um descanso longo. Preparar uma nova lista de magias de mago requer tempo gasto estudando seu livro de magias e memorizando as invocações e gestos que você deve fazer para lançar a magia: pelo menos 1 minuto por nível de magia para cada magia em sua lista.",
   },
   {
-    name: "Habilidade de Lançamento de Magias",
+    name: "Habilidade de Conjuração",
     level: 1,
     description:
-      "A inteligência é a habilidade de lançamento de magias para suas magias de mago, pois você aprende suas magias através de estudo dedicado e memorização. Você usa sua Inteligência sempre que uma magia se refere à sua habilidade de lançamento de magias. Além disso, você usa seu modificador de Inteligência ao definir a CD (Classe de Dificuldade) para um teste de resistência de uma magia de mago que você lança e ao fazer um ataque com uma magia.",
+      "A inteligência é a habilidade de Conjuração para suas magias de mago, pois você aprende suas magias através de estudo dedicado e memorização. Você usa sua Inteligência sempre que uma magia se refere à sua habilidade de Conjuração. Além disso, você usa seu modificador de Inteligência ao definir a CD (Classe de Dificuldade) para um teste de resistência de uma magia de mago que você lança e ao fazer um ataque com uma magia.",
   },
   {
     name: "CD de Magia e Modificador de Ataque",
@@ -44,7 +44,7 @@ const features: DnD5eFeature[] = [
       "CD de magia = 8 + seu bônus de proficiência + seu modificador de Inteligência. Modificador de ataque com magia = seu bônus de proficiência + seu modificador de Inteligência.",
   },
   {
-    name: "Lançamento de Magias como Ritual",
+    name: "Conjuração como Ritual",
     level: 1,
     description:
       "Você pode lançar uma magia de mago como um ritual se essa magia tiver a marca de ritual e você tiver a magia em seu livro de magias. Você não precisa ter a magia preparada.",
@@ -166,7 +166,7 @@ const wizard: DnD5eClass = {
   },
   proficiencies: {
     weapon: ["simple"],
-    savingThrows: ["int", "wis"],
+    savingThrows: ["intelligence", "wisdom"],
     skills: {
       amount: 2,
       options: [

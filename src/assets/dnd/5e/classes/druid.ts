@@ -222,7 +222,7 @@ const druid: DnD5eClass = {
   proficiencies: {
     armor: ["light", "medium", "shield"],
     weapon: ["simple"],
-    savingThrows: ["wis", "cha"],
+    savingThrows: ["wisdom", "charisma"],
     skills: {
       amount: 2,
       options: [

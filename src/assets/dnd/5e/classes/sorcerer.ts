@@ -2,7 +2,7 @@ import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
 
 const features: DnD5eFeature[] = [
   {
-    name: "Lançamento de Magias",
+    name: "Conjuração",
     level: 1,
     description:
       "Um evento no seu passado, ou na vida de um pai ou ancestral, deixou uma marca indelével em você, infundindo-o com magia arcana. Essa fonte de magia, qualquer que seja a sua origem, alimenta suas magias.",
@@ -26,10 +26,10 @@ const features: DnD5eFeature[] = [
       "Você conhece duas magias de 1º nível de sua escolha da lista de magias de feiticeiro. A coluna Magias Conhecidas da tabela de Feiticeiro mostra quando você aprende mais magias de feiticeiro de sua escolha. Cada uma dessas magias deve ser de um nível para o qual você tenha espaços de magia. Por exemplo, quando você alcança o 3º nível nesta classe, pode aprender uma nova magia de 1º ou 2º nível. Além disso, quando você ganha um nível nesta classe, você pode escolher uma das magias de feiticeiro que conhece e substituí-la por outra magia da lista de magias de feiticeiro, que também deve ser de um nível para o qual você tenha espaços de magia.",
   },
   {
-    name: "Habilidade de Lançamento de Magias",
+    name: "Habilidade de Conjuração",
     level: 1,
     description:
-      "Carisma é a sua habilidade de lançamento de magias para suas magias de feiticeiro, uma vez que o poder de sua magia depende de sua habilidade de projetar sua vontade no mundo. Você usa seu Carisma sempre que uma magia se referir à sua habilidade de lançamento de magias. Além disso, você usa seu modificador de Carisma ao definir a CD de resistência para uma magia de feiticeiro que você conjura e ao fazer um rolagem de ataque com uma magia. CD de Resistência de Magia e Modificador de Ataque de Magia, CD de resistência de magia = 8 + seu bônus de proficiência + seu modificador de Carisma. Modificador de ataque de magia = seu bônus de proficiência + seu modificador de Carisma.",
+      "Carisma é a sua habilidade de Conjuração para suas magias de feiticeiro, uma vez que o poder de sua magia depende de sua habilidade de projetar sua vontade no mundo. Você usa seu Carisma sempre que uma magia se referir à sua habilidade de Conjuração. Além disso, você usa seu modificador de Carisma ao definir a CD de resistência para uma magia de feiticeiro que você conjura e ao fazer um rolagem de ataque com uma magia. CD de Resistência de Magia e Modificador de Ataque de Magia, CD de resistência de magia = 8 + seu bônus de proficiência + seu modificador de Carisma. Modificador de ataque de magia = seu bônus de proficiência + seu modificador de Carisma.",
   },
   {
     name: "Foco de Conjuração",
@@ -156,7 +156,7 @@ const sorcerer: DnD5eClass = {
   },
   proficiencies: {
     weapon: ["dagger", "dart", "quarterstaff", "lightCrossbow"],
-    savingThrows: ["con", "cha"],
+    savingThrows: ["constitution", "charisma"],
     skills: {
       amount: 2,
       options: [

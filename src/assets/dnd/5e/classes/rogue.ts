@@ -131,7 +131,7 @@ const rogue: DnD5eClass = {
   proficiencies: {
     armor: ["light"],
     weapon: ["simple", "handCrossbow", "longSword", "rapier", "shortSword"],
-    savingThrows: ["dex", "int"],
+    savingThrows: ["dexterity", "intelligence"],
     skills: {
       amount: 4,
       options: [

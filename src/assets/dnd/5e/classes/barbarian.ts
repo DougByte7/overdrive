@@ -140,7 +140,7 @@ const barbarian: DnD5eClass = {
   proficiencies: {
     armor: ["light", "medium", "shield"],
     weapon: ["simple", "martial"],
-    savingThrows: ["str", "con"],
+    savingThrows: ["strength", "constitution"],
     skills: {
       amount: 2,
       options: [

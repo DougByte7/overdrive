@@ -95,7 +95,7 @@ const fighter: DnD5eClass = {
   proficiencies: {
     armor: ["light", "medium", "heavy", "shield"],
     weapon: ["simple", "martial"],
-    savingThrows: ["str", "con"],
+    savingThrows: ["strength", "constitution"],
     skills: {
       amount: 2,
       options: [

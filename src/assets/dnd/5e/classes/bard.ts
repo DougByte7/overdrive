@@ -142,7 +142,7 @@ const bard: DnD5eClass = {
     armor: ["light"],
     weapon: ["simple", "handCrossbow", "longSword", "rapier", "shortSword"],
     tools: ["musicalInstrument", "musicalInstrument", "musicalInstrument"],
-    savingThrows: ["dex", "cha"],
+    savingThrows: ["dexterity", "charisma"],
     skills: {
       amount: 3,
       options: [

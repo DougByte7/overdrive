@@ -6,42 +6,34 @@ interface AbilityScore {
   description: string
 }
 
-type AbilityScoreName =
-  | "strength"
-  | "dexterity"
-  | "constitution"
-  | "intelligence"
-  | "wisdom"
-  | "charisma"
-
-const abilityScores: Record<AbilityScoreName, AbilityScore> = {
+const abilityScores: Record<Attribute, AbilityScore> = {
   strength: {
-    attributeName: "str",
+    attributeName: "strength",
     name: "Força",
     description: "Mede o poder físico",
   },
   dexterity: {
-    attributeName: "dex",
+    attributeName: "dexterity",
     name: "Destreza",
     description: "Mede a agilidade",
   },
   constitution: {
-    attributeName: "con",
+    attributeName: "constitution",
     name: "Constituição",
     description: "Mede a resistência",
   },
   intelligence: {
-    attributeName: "int",
+    attributeName: "intelligence",
     name: "Inteligência",
     description: "Mede o raciocínio e a memória",
   },
   wisdom: {
-    attributeName: "wis",
+    attributeName: "wisdom",
     name: "Sabedoria",
     description: "Mede a percepção e a compreensão",
   },
   charisma: {
-    attributeName: "cha",
+    attributeName: "charisma",
     name: "Carisma",
     description: "Mede a força da personalidade",
   },

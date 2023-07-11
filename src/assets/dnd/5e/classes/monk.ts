@@ -179,7 +179,7 @@ const monk: DnD5eClass = {
   proficiencies: {
     weapon: ["simple", "shortSword"],
     tools: ["musicalInstrument", "artisansTools"],
-    savingThrows: ["str", "dex"],
+    savingThrows: ["strength", "dexterity"],
     skills: {
       amount: 2,
       options: [

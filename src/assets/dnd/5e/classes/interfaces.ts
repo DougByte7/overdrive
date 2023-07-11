@@ -24,7 +24,13 @@ export type Weapon =
   | "dagger"
   | "dart"
   | "quarterstaff"
-export type Attribute = "str" | "dex" | "con" | "int" | "wis" | "cha"
+export type Attribute =
+  | "strength"
+  | "dexterity"
+  | "constitution"
+  | "intelligence"
+  | "wisdom"
+  | "charisma"
 export type Skill =
   | "Arcana"
   | "Acrobacia (Acrobatics)"

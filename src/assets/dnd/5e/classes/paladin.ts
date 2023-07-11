@@ -185,7 +185,7 @@ const paladin: DnD5eClass = {
   proficiencies: {
     armor: ["light", "medium", "heavy", "shield"],
     weapon: ["simple", "martial"],
-    savingThrows: ["wis", "cha"],
+    savingThrows: ["wisdom", "charisma"],
     skills: {
       amount: 2,
       options: [

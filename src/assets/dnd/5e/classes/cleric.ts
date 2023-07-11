@@ -137,7 +137,7 @@ const cleric: DnD5eClass = {
   proficiencies: {
     armor: ["light", "light", "shield"],
     weapon: ["simple"],
-    savingThrows: ["wis", "cha"],
+    savingThrows: ["wisdom", "charisma"],
     skills: {
       amount: 2,
       options: [

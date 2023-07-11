@@ -143,7 +143,7 @@ const ranger: DnD5eClass = {
   proficiencies: {
     armor: ["light", "medium", "shield"],
     weapon: ["simple", "martial"],
-    savingThrows: ["str", "dex"],
+    savingThrows: ["strength", "dexterity"],
     skills: {
       amount: 3,
       options: [
