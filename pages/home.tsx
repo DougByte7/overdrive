@@ -1,8 +1,8 @@
 import useRouteGuard from "@/hooks/routeGuard"
 import { LoadingOverlay } from "@mantine/core"
 import HomeComponent from "@/components/home"
-import races, { DnD5eRaceName } from "@/assets/dnd/5e/races"
-import classes, { DnD5eClassName } from "@/assets/dnd/5e/classes"
+import races from "@/assets/dnd/5e/races"
+import classes from "@/assets/dnd/5e/classes"
 import { CharacterForm } from "@/components/home/character-builder/interfaces"
 
 export default function Home() {
@@ -43,11 +43,9 @@ export default function Home() {
     (character: CharacterForm, i: number) => {
       return {
         id: i,
-        campaignName: `${races[character.race as DnD5eRaceName].name}, ${
-          (character as any).class
-            ? classes[(character as any).class as DnD5eClassName]?.name
-            : character.classes.map((c) => classes[c].name).join(" / ")
-        }.`,
+        campaignName: `${races[character.race!].name}, ${character.classes
+          .map((c) => classes[c].name)
+          .join(" / ")}.`,
         campaignId: "1",
         name: character.name,
         imgSrc: character.picture,
