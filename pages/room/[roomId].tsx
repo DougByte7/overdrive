@@ -6,8 +6,8 @@ import { useAtom } from "jotai"
 import { socketAton } from "@/components/room/state"
 import WebRTCStream from "@/components/room/web-rtc-stream"
 import TurnOrder from "@/components/room/turn-order"
-import Image from "next/image"
 import Chat from "@/components/room/chat"
+import Canvas from "@/components/room/canvas"
 
 export default function Room() {
   const [socket] = useAtom(socketAton)
@@ -35,17 +35,12 @@ export default function Room() {
 
   return (
     <main css={page}>
-      <section css={avatars}>
-        <WebRTCStream />
+      <section>
+        <Canvas />
       </section>
 
-      <section>
-        <Image
-          src="/images/free/maps/ForestPathPublic.jpg"
-          alt=""
-          height={2100}
-          width={2100}
-        />
+      <section css={avatars}>
+        <WebRTCStream />
       </section>
 
       <section css={chat}>
