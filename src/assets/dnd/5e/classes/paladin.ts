@@ -185,33 +185,38 @@ const paladin: DnD5eClass = {
   proficiencies: {
     armor: ["light", "medium", "heavy", "shield"],
     weapon: ["simple", "martial"],
-    savingThrows: ["wis", "cha"],
+    savingThrows: ["wisdom", "charisma"],
     skills: {
       amount: 2,
       options: [
-        "Atletismo (Athletics)",
-        "Intuição (Insight)",
-        "Intimidação (Intimidation)",
-        "Medicina (Medicine)",
-        "Persuasão (Persuasion)",
-        "Religião (Religion)",
+        { label: "Atletismo (Athletics)", value: "athletics" },
+        { label: "Intuição (Insight)", value: "insight" },
+        { label: "Intimidação (Intimidation)", value: "intimidation" },
+        { label: "Medicina (Medicine)", value: "medicine" },
+        { label: "Persuasão (Persuasion)", value: "persuasion" },
+        { label: "Religião (Religion)", value: "religion" },
       ],
     },
     equipmentOptions: [
       [
-        { name: ["martialWeapon", "shield"], amount: 1 },
-        { name: "martialWeapon", amount: 2 },
+        {
+          list: [
+            { category_range: "Martial", amount: 1 },
+            { index: "shield", amount: 1 },
+          ],
+        },
+        { category_range: "Martial", amount: 2 },
       ],
       [
-        { name: "javelin", amount: 5 },
-        { name: "simpleMeleeWeapon", amount: 1 },
+        { index: "javelin", amount: 5 },
+        { category_range: "Simple Melee", amount: 1 },
       ],
       [
-        { name: "priestsPack", amount: 1 },
-        { name: "explorersPack", amount: 1 },
+        { index: "priests-pack", amount: 1 },
+        { index: "explorers-pack", amount: 1 },
       ],
-      [{ name: "chainMail", amount: 1 }],
-      [{ name: "holySymbol", amount: 1 }],
+      [{ index: "chain-mail", amount: 1 }],
+      [{ gear_category: "holy-symbols", amount: 1 }],
     ],
   },
 }

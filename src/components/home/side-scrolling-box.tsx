@@ -10,6 +10,8 @@ interface SideScrollingBoxProps {
 export default function SideScrollingBox({ children }: SideScrollingBoxProps) {
   return (
     <Box
+      pr={16}
+      pl={16}
       css={css`
         overflow: auto;
         ::-webkit-scrollbar {

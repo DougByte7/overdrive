@@ -32,7 +32,7 @@ const features: DnD5eFeature[] = [
       "No 1º nível, você conhece duas magias de 1º nível à sua escolha da lista de magias de warlock. A coluna Magias Conhecidas da tabela do Warlock mostra quando você aprende mais magias de warlock de sua escolha de 1º nível ou superior. Uma magia que você escolhe deve ser de um nível não superior ao que é mostrado na coluna Nível do Slot da tabela para o seu nível. Quando você alcança o 6º nível, por exemplo, você aprende uma nova magia de warlock, que pode ser de 1º, 2º ou 3º nível. Além disso, quando você ganha um nível nesta classe, você pode escolher uma das magias de warlock que conhece e substituí-la por outra magia da lista de magias de warlock, que também deve ser de um nível para o qual você tenha slots de magia.",
   },
   {
-    name: "Habilidade de Lançamento de Magias",
+    name: "Habilidade de Conjuração",
     level: 1,
     description:
       "Carisma é a sua habilidade de conjuração de magias para suas magias de warlock, então você usa seu Carisma sempre que uma magia se referir à sua habilidade de conjuração. Além disso, você usa seu modificador de Carisma ao definir a CD de resistência para uma magia de warlock que você conjura e ao fazer uma jogada de ataque com uma. CD de resistência da magia = 8 + seu bônus de proficiência + seu modificador de Carisma. Modificador de ataque de magia = seu bônus de proficiência + seu modificador de Carisma.",
@@ -129,34 +129,41 @@ const warlock: DnD5eClass = {
   },
   proficiencies: {
     weapon: ["simple"],
-    savingThrows: ["wis", "cha"],
+    savingThrows: ["wisdom", "charisma"],
     skills: {
       amount: 2,
       options: [
-        "Arcana",
-        "Enganação (Deception)",
-        "História (History)",
-        "Intimidação (Intimidation)",
-        "Investigação (Investigation)",
-        "Natureza (Nature)",
-        "Religião (Religion)",
+        { label: "Arcana", value: "arcana" },
+        { label: "Enganação (Deception)", value: "deception" },
+        { label: "História (History)", value: "history" },
+        { label: "Intimidação (Intimidation)", value: "intimidation" },
+        { label: "Investigação (Investigation)", value: "investigation" },
+        { label: "Natureza (Nature)", value: "nature" },
+        { label: "Religião (Religion)", value: "religion" },
       ],
     },
     equipmentOptions: [
       [
-        { name: "lightCrossbow", amount: 1, ammo: 20 },
-        { name: "simpleWeapon", amount: 1 },
+        { index: "crossbow-light", amount: 1, ammo: 20 },
+        { category_range: "Simple", amount: 1 },
       ],
       [
-        { name: "componentPouch", amount: 1 },
-        { name: "arcaneFocus", amount: 1 },
+        { index: "component-pouch", amount: 1 },
+        { gear_category: "arcane-foci", amount: 1 },
       ],
       [
-        { name: "scholarsPack", amount: 1 },
-        { name: "dungeoneersPack", amount: 1 },
+        { index: "scholars-pack", amount: 1 },
+        { index: "dungeoneers-pack", amount: 1 },
       ],
-      [{ name: "dagger", amount: 2 }],
-      [{ name: ["leatherArmor", "simpleWeapon"], amount: 1 }],
+      [{ index: "dagger", amount: 2 }],
+      [
+        {
+          list: [
+            { index: "leather-armor", amount: 1 },
+            { category_range: "Simple", amount: 1 },
+          ],
+        },
+      ],
     ],
   },
 }

@@ -10,6 +10,7 @@ import rogue from "./rogue"
 import sorcerer from "./sorcerer"
 import warlock from "./warlock"
 import wizard from "./wizard"
+import type { DnD5eClass } from "./interfaces"
 
 const classes = {
   barbarian,
@@ -26,7 +27,7 @@ const classes = {
   wizard,
 }
 
-export default classes
+export type DnD5eClassName = keyof typeof classes
 export type {
   DnD5eFeature,
   DnD5eSubClass,
@@ -36,7 +37,7 @@ export type {
   Weapon,
   Attribute as SavingThrow,
   Skill,
-  EquipmentTag,
   Tool,
   DnD5eClass,
 } from "./interfaces"
+export default classes as Record<DnD5eClassName, DnD5eClass>

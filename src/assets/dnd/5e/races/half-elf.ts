@@ -49,11 +49,15 @@ const traits: DnD5eTrait[] = [
 
 const halfElf: DnD5eRace = {
   name: "Meio-Elfo",
-  description: "+2 Cha, +1 em duas",
+  description: "+2 Car, +1 em duas",
   traits,
   subraces: [],
   boost: {
     charisma: 2,
+    anyAttr: {
+      amount: 2,
+      value: 1,
+    },
     speed: 6,
     darkvision: 12,
   },

@@ -1,134 +1,76 @@
-/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import {
   ActionIcon,
-  TextInput,
   Title,
   Text,
-  FileInput,
   Box,
   Button,
   Stack,
-  Paper,
-  Group,
-  Avatar,
-  Accordion,
   Space,
   Transition,
-  UnstyledButton,
-  Image,
-  Badge,
-  Grid,
   BackgroundImage,
   Card,
 } from "@mantine/core"
-import { IconChevronLeft, IconPencil } from "@tabler/icons"
-import { ChangeEventHandler, MouseEventHandler, useState } from "react"
+import { IconChevronLeft } from "@tabler/icons"
+import { useState } from "react"
 import races from "@/assets/dnd/5e/races"
 import classes from "@/assets/dnd/5e/classes"
-import abilityScores from "@/assets/dnd/5e/abilityScores"
-import { Attribute } from "@/assets/dnd/5e/classes/interfaces"
-
-interface CharacterForm {
-  name: string
-  picture: File | null | string
-  race: string
-  class: string
-  str: number
-  dex: number
-  con: number
-  int: number
-  wis: number
-  cha: number
-}
+import { useAtom } from "jotai"
+import {
+  attrMethodAtom,
+  avatarPreviewUrlAton,
+  characterFormAton,
+  pointBuyAtom,
+} from "./state"
+import CharacterDescription from "./components/5e/character-description"
+import RaceSelection from "./components/5e/race-selection"
+import ClassSelection from "./components/5e/class-selection"
+import AttributeMethod from "./components/5e/attribute-method"
+import AttributeSelection from "./components/5e/attribute-selection"
+import ReviewOptions from "./components/5e/review-options"
+import FeaturesSelection from "./components/5e/features-selection"
+import ItemsSelection from "./components/5e/item-selection"
 
 interface CharacterBuilderProps {
   onCancel: VoidFunction
 }
 
-function rollAttribute() {
-  const rolls = [
-    Math.floor(Math.random() * 6) + 1,
-    Math.floor(Math.random() * 6) + 1,
-    Math.floor(Math.random() * 6) + 1,
-    Math.floor(Math.random() * 6) + 1,
-  ]
-
-  const lower = Math.min(...rolls)
-  rolls.splice(rolls.indexOf(lower), 1)
-
-  return rolls.reduce((acc, roll) => {
-    return acc + roll
-  }, 0)
-}
-
-function getModifier(abilityScore: number) {
-  return Math.floor((abilityScore - 10) / 2)
+export enum Steps {
+  UNSET,
+  DESCRIPTION,
+  RACE,
+  CLASS,
+  ATTRIBUTE_METHOD,
+  ATTRIBUTE,
+  FEATURES,
+  ITEMS,
+  //SPELLS,
+  REVIEW,
+  FINAL,
+  CLOSE,
 }
 
 export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
-  const [form, setForm] = useState<CharacterForm>({
-    name: "",
-    picture: null,
-    race: "",
-    class: "",
-    str: 0,
-    dex: 0,
-    con: 0,
-    int: 0,
-    wis: 0,
-    cha: 0,
-  })
-  const [pictureUrl, setPictureUrl] = useState("")
-  const [step, setStep] = useState(1)
-  const [rolls, setRolls] = useState(() => [
-    { value: rollAttribute(), usedAt: "" },
-    { value: rollAttribute(), usedAt: "" },
-    { value: rollAttribute(), usedAt: "" },
-    { value: rollAttribute(), usedAt: "" },
-    { value: rollAttribute(), usedAt: "" },
-    { value: rollAttribute(), usedAt: "" },
-  ])
-  const [selectedRoll, setSelectedRoll] = useState({
-    activeIndex: -1,
-    value: 0,
-  })
+  const [form] = useAtom(characterFormAton)
+  const [attrMethod] = useAtom(attrMethodAtom)
+  const [availablePoints] = useAtom(pointBuyAtom)
+  const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton)
 
-  const handleSetName: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setForm({ ...form, name: e.currentTarget.value })
-  }
-
-  const handleSetPicture = (picture: File) => {
-    const reader = new FileReader()
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      e.target && setPictureUrl(e.target.result as string)
-      const pictureUrl = (e.target?.result as string) ?? ""
-      setForm({ ...form, picture: pictureUrl })
-    }
-
-    if (picture) reader.readAsDataURL(picture)
-    else setPictureUrl("")
-  }
+  const [step, setStep] = useState(Steps.DESCRIPTION)
 
   const handledPrev = () => {
     const prevStep = step - 1
-    if (prevStep === 0) onCancel()
+    if (prevStep === Steps.UNSET) onCancel()
 
     setStep(prevStep)
   }
   const handleNext = () => {
-    if (step === 7) {
-      /**
-       * @todo Go to character sheet on linked adventure or empty board
-       */
-      onCancel()
-    }
-
-    if (step === 6) {
+    if (step === Steps.FINAL) {
       try {
         const characters = JSON.parse(
           localStorage.getItem("characters") ?? "[]"
         )
+        form.picture ??= `/images/fantasy/races/${form.race}.png`
         localStorage.setItem(
           "characters",
           JSON.stringify([...characters, form])
@@ -137,67 +79,50 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
         console.error("Erro ao salvar personagem local")
       }
     }
+
+    if (step === Steps.CLOSE) {
+      /**
+       * @todo Go to character sheet on linked adventure or empty board
+       */
+
+      onCancel()
+    }
     setStep((step) => step + 1)
   }
 
-  const handleSelectRace =
-    (race: keyof typeof races): MouseEventHandler<HTMLButtonElement> =>
-    (_) => {
-      setForm({ ...form, race: race })
-    }
-
-  const handleSelectClass =
-    (className: keyof typeof classes): MouseEventHandler<HTMLButtonElement> =>
-    (_) => {
-      setForm({ ...form, class: className })
-    }
-
-  const handleSelectAttrValue = (activeIndex: number, value: number) => () => {
-    setSelectedRoll({ activeIndex, value })
-  }
-
-  const handleSetAttrValue = (attr: Attribute) => (e: any) => {
-    ;(e as MouseEvent).stopPropagation()
-    if (!selectedRoll.value) return
-
-    setRolls((rolls) => {
-      const rollIndex = rolls.findIndex((roll) => roll.usedAt === attr)
-      if (rollIndex >= 0) {
-        rolls[rollIndex].usedAt = ""
+  const isInvalidFormStep = () => {
+    switch (step) {
+      case Steps.DESCRIPTION: {
+        return !form.name
       }
-
-      rolls[selectedRoll.activeIndex].usedAt = attr
-      return rolls
-    })
-
-    setForm((form) => {
-      if (rolls[selectedRoll.activeIndex].usedAt) {
-        form[rolls[selectedRoll.activeIndex].usedAt as Attribute] = 0
+      case Steps.RACE: {
+        return !form.race
       }
-
-      form[attr] = selectedRoll.value
-      return form
-    })
-
-    setSelectedRoll({
-      activeIndex: -1,
-      value: 0,
-    })
+      case Steps.CLASS: {
+        return !form.classes.length
+      }
+      case Steps.ATTRIBUTE_METHOD: {
+        return !attrMethod
+      }
+      case Steps.ATTRIBUTE: {
+        return (
+          (attrMethod !== "pointbuy" &&
+            !(
+              form.strength &&
+              form.dexterity &&
+              form.constitution &&
+              form.intelligence &&
+              form.wisdom &&
+              form.charisma
+            )) ||
+          (attrMethod === "pointbuy" && availablePoints > 0)
+        )
+      }
+      default: {
+        return false
+      }
+    }
   }
-
-  const EditButton = ({ step }: { step: number }) => (
-    <ActionIcon
-      color="brand"
-      size="xs"
-      variant="outline"
-      css={css`
-        border-bottom-left-radius: 0;
-      `}
-      onClick={() => setStep(step)}
-    >
-      <IconPencil size=".75rem" />
-    </ActionIcon>
-  )
 
   return (
     <Stack spacing="md" h={590}>
@@ -209,558 +134,52 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
         <IconChevronLeft size="1rem" color="var(--do_color_primary_base)" />
       </ActionIcon>
 
-      <Transition mounted={step === 1} transition="fade">
-        {(styles) => {
-          return (
-            <Stack style={styles} spacing="md" h="100%">
-              <Box>
-                <Title size="h4">Como o seu personagem é?</Title>
-                <Text size="sm">Escolha um nome e uma foto.</Text>
-              </Box>
-
-              <Stack
-                sx={{
-                  maxWidth: "288px",
-                }}
-                spacing="xs"
-              >
-                <FileInput
-                  name="character-picture"
-                  label="Foto do personagem"
-                  placeholder="Selecione uma foto..."
-                  accept="image/png,image/jpeg,image/avif"
-                  withAsterisk
-                  sx={{
-                    ".mantine-InputWrapper-label": {
-                      fontSize: "var(--do_text_size_sm)",
-                      fontWeight: 700,
-                    },
-                  }}
-                  onChange={handleSetPicture}
-                />
-                <TextInput
-                  name="name"
-                  label="Nome do Personagem"
-                  autoComplete="false"
-                  withAsterisk
-                  placeholder="Anóriel Heinhardt"
-                  sx={{
-                    ".mantine-InputWrapper-label": {
-                      fontSize: "var(--do_text_size_sm)",
-                      fontWeight: 700,
-                    },
-                  }}
-                  value={form.name}
-                  onChange={handleSetName}
-                />
-              </Stack>
-
-              <Paper withBorder p="md">
-                <Group>
-                  <Avatar size={40} alt="" src={pictureUrl} />
-                  <Text weight={600}>{form.name || "Nome"}</Text>
-                </Group>
-              </Paper>
-            </Stack>
-          )
-        }}
+      <Transition mounted={step === Steps.DESCRIPTION} transition="fade">
+        {(styles) => <CharacterDescription styles={styles} />}
       </Transition>
 
-      <Transition mounted={step === 2} transition="fade">
+      <Transition mounted={step === Steps.RACE} transition="fade">
+        {(styles) => <RaceSelection styles={styles} />}
+      </Transition>
+
+      <Transition mounted={step === Steps.CLASS} transition="fade">
+        {(styles) => <ClassSelection styles={styles} />}
+      </Transition>
+
+      {/**
+       * @todo Background selection
+       */}
+
+      <Transition mounted={step === Steps.ATTRIBUTE_METHOD} transition="fade">
+        {(styles) => <AttributeMethod styles={styles} />}
+      </Transition>
+
+      <Transition mounted={step === Steps.ATTRIBUTE} transition="fade">
+        {(styles) => <AttributeSelection styles={styles} />}
+      </Transition>
+
+      <Transition mounted={step === Steps.FEATURES} transition="fade">
+        {(styles) => <FeaturesSelection styles={styles} />}
+      </Transition>
+
+      <Transition mounted={step === Steps.ITEMS} transition="fade">
+        {(styles) => <ItemsSelection styles={styles} />}
+      </Transition>
+
+      {/* <Transition mounted={step === Steps.SPELLS} transition="fade">
         {(styles) => (
-          <Stack style={styles} spacing="md">
-            <Box>
-              <Title size="h4">Escolha uma raça</Title>
-              <Text size="sm">Escolha uma raça</Text>
-            </Box>
-
-            <Accordion
-              variant="separated"
-              radius="md"
-              styles={{
-                item: {
-                  background: "none",
-                  border: "1px solid var(--do_text_color_500)",
-                },
-                chevron: {
-                  justifySelf: "end",
-                  marginLeft: "0.65rem",
-                  color: "var(--do_color_primary_base)",
-                },
-              }}
-            >
-              {Object.entries(races).map(([raceKey, race]) => (
-                <Accordion.Item
-                  value={race.name}
-                  key={race.name}
-                  pos="relative"
-                >
-                  <UnstyledButton
-                    css={css`
-                      position: absolute;
-                      top: 16px;
-                      left: 16px;
-                      bottom: 16px;
-                      right: 56px;
-                    `}
-                    aria-label={`Selecionar: ${race.name}, ${race.description};`}
-                    onClick={handleSelectRace(raceKey as keyof typeof races)}
-                  />
-                  <Accordion.Control
-                    css={css`
-                      border-radius: inherit;
-                      border: 1px solid
-                        ${form.race === raceKey
-                          ? "var(--do_color_primary_base)"
-                          : "transparent"};
-                    `}
-                    aria-label="Exibir mais informações"
-                  >
-                    <Group>
-                      <Avatar
-                        size={40}
-                        alt=""
-                        src={"https://via.placeholder.com/40/"}
-                      />
-                      <span>
-                        <Text weight={600}>{race.name}</Text>
-                        <Text size="sm">{race.description}</Text>
-                      </span>
-                    </Group>
-                  </Accordion.Control>
-                  <Accordion.Panel>
-                    <Stack spacing="md">
-                      {race.traits.map((trait) => (
-                        <Paper
-                          key={race.name + trait.name}
-                          withBorder
-                          p="md"
-                          radius="md"
-                        >
-                          <Group>
-                            {/* <Avatar
-                        size={18}
-                        alt=""
-                        src={"https://via.placeholder.com/40/"}
-                      /> */}
-                            <Text weight={600}>{trait.name}</Text>
-                            <Text>{trait.description}</Text>
-                          </Group>
-                        </Paper>
-                      ))}
-                    </Stack>
-                  </Accordion.Panel>
-                </Accordion.Item>
-              ))}
-            </Accordion>
-          </Stack>
+          <SpellsSelection
+            styles={styles}
+            onSkip={() => setStep((step) => step + 1)}
+          />
         )}
+      </Transition> */}
+
+      <Transition mounted={step === Steps.REVIEW} transition="fade">
+        {(styles) => <ReviewOptions styles={styles} setStep={setStep} />}
       </Transition>
 
-      <Transition mounted={step === 3} transition="fade">
-        {(styles) => (
-          <Stack style={styles} spacing="md">
-            <Box>
-              <Title size="h4">Escolha uma classe</Title>
-              <Text size="sm">Escolha uma classe</Text>
-            </Box>
-
-            <Accordion
-              variant="separated"
-              radius="md"
-              styles={{
-                control: {
-                  padding: "12px",
-                },
-                item: {
-                  background: "none",
-                  border: "1px solid var(--do_text_color_500)",
-                },
-                chevron: {
-                  justifySelf: "end",
-                  marginLeft: "0",
-                  color: "var(--do_color_primary_base)",
-                },
-              }}
-            >
-              {Object.entries(classes).map(([classKey, className]) => (
-                <Accordion.Item
-                  value={className.name}
-                  key={className.name}
-                  pos="relative"
-                >
-                  <UnstyledButton
-                    css={css`
-                      position: absolute;
-                      top: 16px;
-                      left: 16px;
-                      bottom: 16px;
-                      right: 56px;
-                    `}
-                    aria-label={`Selecionar: ${className.name}, ${className.description};`}
-                    onClick={handleSelectClass(
-                      classKey as keyof typeof classes
-                    )}
-                  />
-                  <Accordion.Control
-                    css={css`
-                      border-radius: inherit;
-                      border: 1px solid
-                        ${form.class === classKey
-                          ? "var(--do_color_primary_base)"
-                          : "transparent"};
-                    `}
-                    aria-label="Exibir mais informações"
-                  >
-                    <Group spacing="xs">
-                      <Avatar
-                        size={40}
-                        alt=""
-                        src={"https://via.placeholder.com/40/"}
-                      />
-                      <div
-                        css={css`
-                          width: 78%;
-                        `}
-                      >
-                        <Text weight={600}>{className.name}</Text>
-                        <Text size="11px">{className.description}</Text>
-                      </div>
-                    </Group>
-                  </Accordion.Control>
-                  <Accordion.Panel>
-                    <Stack spacing="md">
-                      {className.features.map((trait) => (
-                        <Paper
-                          key={className.name + trait.name}
-                          withBorder
-                          p="md"
-                          radius="md"
-                        >
-                          <Group>
-                            {/* <Avatar
-                        size={18}
-                        alt=""
-                        src={"https://via.placeholder.com/40/"}
-                      /> */}
-                            <Text weight={600}>{trait.name}</Text>
-                            <Text>{trait.description}</Text>
-                          </Group>
-                        </Paper>
-                      ))}
-                    </Stack>
-                  </Accordion.Panel>
-                </Accordion.Item>
-              ))}
-            </Accordion>
-          </Stack>
-        )}
-      </Transition>
-
-      <Transition mounted={step === 4} transition="fade">
-        {(styles) => (
-          <Stack style={styles} spacing="md">
-            <Box>
-              <Title size="h4">Vamos rolar dados!</Title>
-              <Text size="sm">
-                Vamos fazer várias rolagens e anotar os valores.
-              </Text>
-            </Box>
-            <Image
-              maw="100%"
-              fit="contain"
-              width={311}
-              height={283}
-              src="https://via.placeholder.com/283x311/"
-              alt="Conjunto de dados"
-            />
-            <Space h="2rem" />
-          </Stack>
-        )}
-      </Transition>
-
-      <Transition mounted={step === 5} transition="fade">
-        {(styles) => (
-          <Stack style={styles} spacing="md">
-            <Box>
-              <Title size="h4">Escolha os seus atributos!</Title>
-              <Text size="sm">
-                Agora que rolamos todos os dados, vamos dividir em seus
-                atributos.
-              </Text>
-              <Space h="xs" />
-              <Group spacing="xs">
-                {rolls.map((roll, i) => {
-                  return (
-                    <button
-                      key={i}
-                      css={[
-                        attributeButtonStyles,
-                        selectedRoll.activeIndex === i
-                          ? attributeButtonActiveStyles
-                          : null,
-                        roll.usedAt ? attributeButtonUsedStyles : null,
-                      ]}
-                      onClick={handleSelectAttrValue(i, roll.value)}
-                    >
-                      {roll.value}
-                    </button>
-                  )
-                })}
-              </Group>
-            </Box>
-
-            <Accordion
-              variant="separated"
-              radius="md"
-              styles={{
-                control: {
-                  padding: "12px",
-                },
-                item: {
-                  background: "none",
-                  border: "1px solid var(--do_text_color_500)",
-                },
-                chevron: {
-                  justifySelf: "end",
-                  marginLeft: "0",
-                  color: "var(--do_color_primary_base)",
-                },
-              }}
-            >
-              {Object.values(abilityScores).map((ability) => (
-                <Accordion.Item
-                  value={ability.name}
-                  key={ability.name}
-                  pos="relative"
-                >
-                  <Accordion.Control aria-label="Exibir mais informações">
-                    <Group spacing="xs">
-                      <button
-                        css={attributeButtonStyles}
-                        onClick={handleSetAttrValue(ability.attributeName)}
-                      >
-                        {form[ability.attributeName] || ""}{" "}
-                      </button>
-
-                      <Text weight={600}>
-                        {ability.name}{" "}
-                        {!!form[ability.attributeName] && (
-                          <Badge variant="outline">
-                            {getModifier(form[ability.attributeName]) > 0
-                              ? "+"
-                              : ""}
-                            {getModifier(form[ability.attributeName])}
-                          </Badge>
-                        )}
-                      </Text>
-                    </Group>
-                  </Accordion.Control>
-                  <Accordion.Panel>{ability.description}</Accordion.Panel>
-                </Accordion.Item>
-              ))}
-            </Accordion>
-          </Stack>
-        )}
-      </Transition>
-
-      <Transition mounted={step === 6} transition="fade">
-        {(styles) => (
-          <Stack style={styles} spacing="md">
-            <Box>
-              <Title size="h4">Só mais uma coisinha!</Title>
-              <Text size="sm">
-                Decidiu mudar algo? Sua chance é agora! Uma última olhada antes
-                da aventura.
-              </Text>
-            </Box>
-
-            <Box>
-              <Text size="sm">Perfil e Atributos</Text>
-              <Paper withBorder p="md">
-                <Group>
-                  <Avatar size={40} alt="" src={pictureUrl} />
-                  <Text
-                    css={css`
-                      flex-grow: 1;
-                    `}
-                    weight={600}
-                  >
-                    {form.name || "Nome"}
-                  </Text>
-                  <EditButton step={1} />
-                </Group>
-              </Paper>
-
-              <Space h="md" />
-
-              <Paper withBorder p="md">
-                <Group>
-                  <Text
-                    css={css`
-                      flex-grow: 1;
-                    `}
-                    weight={600}
-                  >
-                    Atributos
-                  </Text>
-                  <EditButton step={5} />
-                </Group>
-                <Stack>
-                  <Grid align="center">
-                    <Grid.Col span={4}>For</Grid.Col>
-                    <Grid.Col span={4}>
-                      <span css={attributeButtonStyles}>{form.str}</span>
-                    </Grid.Col>
-                    <Grid.Col span={4}>
-                      <Badge variant="outline">
-                        {getModifier(form.str) >= 0 ? "+" : ""}
-                        {getModifier(form.str)}
-                      </Badge>
-                    </Grid.Col>
-                  </Grid>
-                  <Grid align="center">
-                    <Grid.Col span={4}>Des</Grid.Col>
-                    <Grid.Col span={4}>
-                      <span css={attributeButtonStyles}>{form.dex}</span>
-                    </Grid.Col>
-                    <Grid.Col span={4}>
-                      <Badge variant="outline">
-                        {getModifier(form.dex) >= 0 ? "+" : ""}
-                        {getModifier(form.dex)}
-                      </Badge>
-                    </Grid.Col>
-                  </Grid>
-                  <Grid align="center">
-                    <Grid.Col span={4}>Con</Grid.Col>
-                    <Grid.Col span={4}>
-                      <span css={attributeButtonStyles}>{form.con}</span>
-                    </Grid.Col>
-                    <Grid.Col span={4}>
-                      <Badge variant="outline">
-                        {getModifier(form.con) >= 0 ? "+" : ""}
-                        {getModifier(form.con)}
-                      </Badge>
-                    </Grid.Col>
-                  </Grid>
-                  <Grid align="center">
-                    <Grid.Col span={4}>Int</Grid.Col>
-                    <Grid.Col span={4}>
-                      <span css={attributeButtonStyles}>{form.int}</span>
-                    </Grid.Col>
-                    <Grid.Col span={4}>
-                      <Badge variant="outline">
-                        {getModifier(form.int) >= 0 ? "+" : ""}
-                        {getModifier(form.int)}
-                      </Badge>
-                    </Grid.Col>
-                  </Grid>
-                  <Grid align="center">
-                    <Grid.Col span={4}>Sab</Grid.Col>
-                    <Grid.Col span={4}>
-                      <span css={attributeButtonStyles}>{form.wis}</span>
-                    </Grid.Col>
-                    <Grid.Col span={4}>
-                      <Badge variant="outline">
-                        {getModifier(form.wis) >= 0 ? "+" : ""}
-                        {getModifier(form.wis)}
-                      </Badge>
-                    </Grid.Col>
-                  </Grid>
-                  <Grid align="center">
-                    <Grid.Col span={4}> Car</Grid.Col>
-                    <Grid.Col span={4}>
-                      <span css={attributeButtonStyles}>{form.cha}</span>
-                    </Grid.Col>
-                    <Grid.Col span={4}>
-                      <Badge variant="outline">
-                        {getModifier(form.cha) >= 0 ? "+" : ""}
-                        {getModifier(form.cha)}
-                      </Badge>
-                    </Grid.Col>
-                  </Grid>
-                </Stack>
-              </Paper>
-            </Box>
-
-            <Box>
-              <Text size="sm">Raça</Text>
-              <Paper withBorder p="md">
-                <Group>
-                  <Text
-                    css={css`
-                      flex-grow: 1;
-                    `}
-                    weight={600}
-                  >
-                    {races[form.race as keyof typeof races].name}
-                  </Text>
-                  <EditButton step={2} />
-                </Group>
-
-                <Space h="md" />
-
-                <Stack spacing="md">
-                  {races[form.race as keyof typeof races].traits.map(
-                    (trait) => (
-                      <Paper key={trait.name} withBorder p="md" radius="md">
-                        <Group>
-                          {/* <Avatar
-                        size={18}
-                        alt=""
-                        src={"https://via.placeholder.com/40/"}
-                      /> */}
-                          <Text weight={600}>{trait.name}</Text>
-                          <Text>{trait.description}</Text>
-                        </Group>
-                      </Paper>
-                    )
-                  )}
-                </Stack>
-              </Paper>
-            </Box>
-
-            <Box>
-              <Text size="sm">Classe</Text>
-              <Paper withBorder p="md">
-                <Group>
-                  <Text
-                    css={css`
-                      flex-grow: 1;
-                    `}
-                    weight={600}
-                  >
-                    {classes[form.class as keyof typeof classes].name}
-                  </Text>
-                  <EditButton step={3} />
-                </Group>
-
-                <Space h="md" />
-
-                <Stack spacing="md">
-                  {classes[form.class as keyof typeof classes].features.map(
-                    (feature) => (
-                      <Paper key={feature.name} withBorder p="md" radius="md">
-                        <Group>
-                          {/* <Avatar
-                        size={18}
-                        alt=""
-                        src={"https://via.placeholder.com/40/"}
-                      /> */}
-                          <Text weight={600}>{feature.name}</Text>
-                          <Text>{feature.description}</Text>
-                        </Group>
-                      </Paper>
-                    )
-                  )}
-                </Stack>
-              </Paper>
-            </Box>
-          </Stack>
-        )}
-      </Transition>
-
-      <Transition mounted={step === 7} transition="fade">
+      <Transition mounted={step === Steps.FINAL} transition="fade">
         {(styles) => (
           <Stack style={styles} spacing="md">
             <Box>
@@ -770,7 +189,13 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
               </Text>
             </Box>
             <Card radius="md" w={280} h={275} p={0}>
-              <BackgroundImage src={pictureUrl} radius="md" h="100%">
+              <BackgroundImage
+                src={
+                  avatarPreviewUrl || `/images/fantasy/races/${form.race}.png`
+                }
+                radius="md"
+                h="100%"
+              >
                 <div
                   css={css`
                     background: linear-gradient(
@@ -783,8 +208,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
                   `}
                 >
                   <Text weight={500} color="var(--do_text_color_300)" size="sm">
-                    {races[form.race as keyof typeof races].name},
-                    {classes[form.class as keyof typeof classes].name}.
+                    {races[form.race!].name},{classes[form.classes[0]].name}.
                   </Text>
 
                   <Text size="lg" color="var(--do_text_color_600)">
@@ -793,19 +217,21 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
                 </div>
               </BackgroundImage>
             </Card>
-            <Image maw="100%" fit="contain" alt="" />
             <Space h="2rem" />
           </Stack>
         )}
       </Transition>
 
       <Box>
-        <Button fullWidth size="lg" onClick={handleNext}>
-          {step === 4
-            ? "Rolar os dados"
-            : step === 6
+        <Button
+          fullWidth
+          size="lg"
+          disabled={isInvalidFormStep()}
+          onClick={handleNext}
+        >
+          {step === Steps.REVIEW
             ? "Criar personagem"
-            : step === 7
+            : step === Steps.FINAL
             ? "Iniciar aventura"
             : "Próximo"}
         </Button>
@@ -817,26 +243,3 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
     </Stack>
   )
 }
-
-const attributeButtonStyles = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  border-radius: var(--do_border_radius_sm);
-  width: 39px;
-  height: 40px;
-  background: var(--do_color_primary_light_50);
-  font-size: var(--do_text_size_lg);
-  font-weight: bold;
-`
-
-const attributeButtonActiveStyles = css`
-  outline: 1px solid var(--do_color_primary_base);
-  outline-offset: 2px;
-`
-
-const attributeButtonUsedStyles = css`
-  opacity: 0.5;
-  text-decoration: line-through;
-`

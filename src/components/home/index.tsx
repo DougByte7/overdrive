@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { Card, Modal, TextInput, Title, Text, ActionIcon } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
@@ -28,14 +27,34 @@ export default function HomeComponent({
     })
   }
 
+  // useEffect(() => {
+  //   Promise.all(
+  //     equipment.map((res) =>
+  //       fetch(`https://www.dnd5eapi.co${res.url}`).then((res) => res.json())
+  //     )
+  //   ).then((res) => {
+  //     console.log(res)
+  //   })
+  // }, [])
+
+  // const allItems = [
+  //   ...Object.values(equipment["adventuring-gear"]).flat(),
+  //   ...Object.values(equipment.armor).flat(),
+  //   ...Object.values(equipment["mounts-and-vehicles"]).flat(),
+  //   ...Object.values(equipment.tools).flat(),
+  //   ...Object.values(equipment.weapon).flat(),
+  // ]
+
   return (
     <>
       <main
         css={css`
-          padding: 16px;
+          margin-block: 16px;
         `}
       >
         <TextInput
+          mr={16}
+          ml={16}
           sx={{
             ".mantine-TextInput-input": {
               background: "var(--do_color_primary_light_50)",
@@ -52,7 +71,7 @@ export default function HomeComponent({
         />
 
         <div>
-          <Title size="h3" mt="xl" mb="md">
+          <Title size="h3" mt="xl" mb="md" mr={16} ml={16}>
             Minhas campanhas
           </Title>
 
@@ -105,7 +124,7 @@ export default function HomeComponent({
         </div>
 
         <div>
-          <Title size="h3" mt="xl" mb="md">
+          <Title size="h3" mt="xl" mb="md" mr={16} ml={16}>
             Meus personagens
           </Title>
 

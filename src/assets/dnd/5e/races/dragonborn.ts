@@ -28,19 +28,72 @@ const traits: DnD5eTrait[] = [
   },
   {
     name: "Ancestral Dracônico.",
-    description: `Você tem ancestralidade dracônica. Escolha um tipo de dragão da tabela de Ancestrais Dracônicos. Sua Arma de Sopro e resistência a danos são determinados pelo tipo de dragão, conforme mostrado na tabela.
-      | Dragão   | Tipo de dano | Arma de Sopro                        |
-      | Preto    | Ácido        | Linha de 5 por 30 pés (TR. Destreza) |
-      | Azul     | Relâmpago    | Linha de 5 por 30 pés (TR. Destreza) |
-      | latão    | Fogo         | Linha de 5 por 30 pés (TR. Destreza) |
-      | Bronze   | Relâmpago    | Linha de 5 por 30 pés (TR. Destreza) |
-      | Cobre    | Ácido        | Linha de 5 por 30 pés (TR. Destreza) |
-      | Ouro     | Fogo         | Cone de 15 pés (TR. Destreza)        |
-      | Verde    | Veneno       | Cone de 15 pés (TR. Constituição)    |
-      | Vermelho | Fogo         | Cone de 15 pés (TR. Destreza)        |
-      | Prata    | Frio         | Cone de 15 pés (TR. Constituição)    |
-      | Branco   | Frio         | Cone de 15 pés (TR. Constituição)    |
-      `,
+    description: [
+      "Você tem ancestralidade dracônica. Escolha um tipo de dragão da tabela de Ancestrais Dracônicos. Sua Arma de Sopro e resistência a danos são determinados pelo tipo de dragão, conforme mostrado na tabela.",
+      "| Dragão   | Tipo de dano | Arma de Sopro                                        |",
+      "| Preto    | Ácido        | Linha de 1.5 por 9 metros (5 x 30 ft) (TR. Destreza) |",
+      "| Azul     | Relâmpago    | Linha de 1.5 por 9 metros (5 x 30 ft) (TR. Destreza) |",
+      "| Latão    | Fogo         | Linha de 1.5 por 9 metros (5 x 30 ft) (TR. Destreza) |",
+      "| Bronze   | Relâmpago    | Linha de 1.5 por 9 metros (5 x 30 ft) (TR. Destreza) |",
+      "| Cobre    | Ácido        | Linha de 1.5 por 9 metros (5 x 30 ft) (TR. Destreza) |",
+      "| Ouro     | Fogo         | Cone de 4.5 metros (15 ft) (TR. Destreza)            |",
+      "| Verde    | Veneno       | Cone de 4.5 metros (15 ft) (TR. Constituição)        |",
+      "| Vermelho | Fogo         | Cone de 4.5 metros (15 ft) (TR. Destreza)            |",
+      "| Prata    | Frio         | Cone de 4.5 metros (15 ft) (TR. Constituição)        |",
+      "| Branco   | Frio         | Cone de 4.5 metros (15 ft) (TR. Constituição)        |",
+    ],
+    options: [
+      {
+        label: "Preto - Ácido - TR: Des",
+        value: "black",
+        group: "Linha 1.5x9m (5x30 ft)",
+      },
+      {
+        label: "Cobre - Ácido - TR: Des",
+        value: "copper",
+        group: "Linha 1.5x9m (5x30 ft)",
+      },
+      {
+        label: "Azul - Relâmpago - TR: Des",
+        value: "blue",
+        group: "Linha 1.5x9m (5x30 ft)",
+      },
+      {
+        label: "Bronze - Relâmpago - TR: Des",
+        value: "bronze",
+        group: "Linha 1.5x9m (5x30 ft)",
+      },
+      {
+        label: "Latão - Fogo - TR: Des",
+        value: "brass",
+        group: "Linha 1.5x9m (5x30 ft)",
+      },
+      {
+        label: "Ouro - Fogo - TR. Des",
+        value: "gold",
+        group: "Cone 4.5m (15ft)",
+      },
+      {
+        label: "Vermelho - Fogo - TR: Des",
+        value: "red",
+        group: "Cone 4.5m (15ft)",
+      },
+      {
+        label: "Verde - Veneno - TR: Con",
+        value: "green",
+        group: "Cone 4.5m (15ft)",
+      },
+      {
+        label: "Prata - Frio - TR: Con",
+        value: "silver",
+        group: "Cone 4.5m (15ft)",
+      },
+      {
+        label: "Branco - Frio - TR: Con",
+        value: "white",
+        group: "Cone 4.5m (15ft)",
+      },
+    ],
   },
   {
     name: "Arma de Sopro.",
@@ -55,7 +108,7 @@ const traits: DnD5eTrait[] = [
   {
     name: "Línguas.",
     description:
-      "Você pode falar, ler e escrever Comum e Dracônico. Dracônico é considerado uma das línguas mais antigas e é freqüentemente usado no estudo da magia. A linguagem soa dura para a maioria das outras criaturas e inclui numerosas consoantes duras e sibilantes.",
+      "Você pode falar, ler e escrever Comum e Dracônico. Dracônico é considerado uma das línguas mais antigas e é frequentemente usado no estudo da magia. A linguagem soa dura para a maioria das outras criaturas e inclui numerosas consoantes duras e sibilantes.",
   },
 ]
 

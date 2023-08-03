@@ -7,6 +7,7 @@ import halfOrc from "./half-orc"
 import halfling from "./halfling"
 import human from "./human"
 import tiefling from "./tiefling"
+import type { DnD5eRace } from "./interfaces"
 
 const races = {
   dwarf,
@@ -17,8 +18,9 @@ const races = {
   gnome,
   halfElf,
   halfOrc,
-  tiefling
+  tiefling,
 }
 
-export default races
+export type DnD5eRaceName = keyof typeof races
 export type { DnD5eTrait, DnD5eSubrace, DnD5eRace } from "./interfaces"
+export default races as Record<DnD5eRaceName, DnD5eRace>

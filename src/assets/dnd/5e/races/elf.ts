@@ -88,6 +88,7 @@ const elf: DnD5eRace = {
   subraces: [highElf],
   boost: {
     dexterity: 2,
+    intelligence: 1,
     speed: 6,
     darkvision: 12,
   },

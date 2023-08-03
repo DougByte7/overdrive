@@ -46,9 +46,9 @@ export const authOptions: AuthOptions = {
           throw invalidError
         }
 
-        const { id, image } = user
+        const { id, name, image } = user
 
-        return { id, email, image }
+        return { id, name, email, image }
       },
     }),
   ],
