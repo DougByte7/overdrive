@@ -44,7 +44,7 @@ export enum Steps {
   ATTRIBUTE,
   FEATURES,
   ITEMS,
-  //SPELLS,
+  SPELLS,
   REVIEW,
   FINAL,
   CLOSE,
@@ -166,14 +166,14 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
         {(styles) => <ItemsSelection styles={styles} />}
       </Transition>
 
-      {/* <Transition mounted={step === Steps.SPELLS} transition="fade">
+      <Transition mounted={step === Steps.SPELLS} transition="fade">
         {(styles) => (
           <SpellsSelection
             styles={styles}
             onSkip={() => setStep((step) => step + 1)}
           />
         )}
-      </Transition> */}
+      </Transition>
 
       <Transition mounted={step === Steps.REVIEW} transition="fade">
         {(styles) => <ReviewOptions styles={styles} setStep={setStep} />}
