@@ -28,7 +28,7 @@ import { css } from "@emotion/react"
 import type { Attribute } from "@/assets/dnd/5e/classes/interfaces"
 import type { AttributeScore } from "../../interfaces"
 import getModifier from "@/assets/dnd/5e/utils/getModifier"
-import isNil from "lodash/isnil"
+import isNil from "lodash.isnil"
 
 interface AttributeSelectionProps {
   styles: CSSProperties
