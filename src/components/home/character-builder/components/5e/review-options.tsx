@@ -197,7 +197,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                   {
                     races[form.race!].traits
                       .find((t) => t.name === k)
-                      ?.options?.find((o) => o.value === k)?.label
+                      ?.options?.find((o) => o.value === v)?.label
                   }
                 </Text>
               )
