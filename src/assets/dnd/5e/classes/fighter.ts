@@ -4,8 +4,23 @@ const features: DnD5eFeature[] = [
   {
     name: "Estilo de Luta",
     level: 1,
-    description:
+    description: [
       "Você adota um estilo particular de luta como sua especialidade. Escolha uma das opções a seguir. Você não pode escolher a mesma opção de Estilo de Luta mais de uma vez, mesmo que depois possa escolher novamente.",
+      "Arquearia: Você recebe um bônus de +2 em rolagens de ataque que você faz com armas de longo alcance.",
+      "Defesa: Enquanto estiver usando armadura, você recebe um bônus de +1 na CA (Classe de Armadura).",
+      "Duelo: Quando estiver empunhando uma arma de combate corpo a corpo em uma mão e nenhuma outra arma, você recebe um bônus de +2 em rolagens de dano com essa arma.",
+      "Combate com Arma Grande: Quando você rolar um 1 ou 2 em um dado de dano para um ataque que você fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo se for um 1 ou 2. A arma deve ter a propriedade 'duas mãos' ou 'versátil' para você obter esse benefício.",
+      "Proteção: Quando uma criatura que você pode ver ataca um alvo que não seja você e esteja a até 1.5m (5ft) de você, você pode usar sua reação para impor desvantagem na rolagem de ataque. Você deve estar empunhando um escudo.",
+      "Combate com Duas Armas: Quando você se envolve em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.",
+    ],
+    options: [
+      { label: "Arquearia", value: "archery" },
+      { label: "Defesa", value: "defense" },
+      { label: "Duelo", value: "dueling" },
+      { label: "Combate com Arma Grande", value: "great_weapon_fighting" },
+      { label: "Proteção", value: "protection" },
+      { label: "Combate com Duas Armas", value: "two_weapon_fighting" },
+    ],
   },
   {
     name: "Retomar folego",
@@ -99,32 +114,45 @@ const fighter: DnD5eClass = {
     skills: {
       amount: 2,
       options: [
-        "Acrobacia (Acrobatics)",
-        "Lidar com animais (Animal Handling)",
-        "Atletismo (Athletics)",
-        "História (History)",
-        "Intuição (Insight)",
-        "Intimidação (Intimidation)",
-        "Percepção (Perception)",
-        "Sobrevivência (Survival)",
+        { label: "Acrobacia (Acrobatics)", value: "acrobatics" },
+        {
+          label: "Lidar com animais (Animal Handling)",
+          value: "animal_handling",
+        },
+        { label: "Atletismo (Athletics)", value: "athletics" },
+        { label: "História (History)", value: "history" },
+        { label: "Intuição (Insight)", value: "insight" },
+        { label: "Intimidação (Intimidation)", value: "intimidation" },
+        { label: "Percepção (Perception)", value: "perception" },
+        { label: "Sobrevivência (Survival)", value: "survival" },
       ],
     },
     equipmentOptions: [
       [
-        { name: "chainMail", amount: 1 },
-        { name: ["leatherArmor", "longbow"], amount: 1, ammo: 20 },
+        { index: "chain-mail", amount: 1 },
+        {
+          list: [
+            { index: "leather-armor", amount: 1 },
+            { index: "longbow", amount: 1, ammo: 20 },
+          ],
+        },
       ],
       [
-        { name: ["martialWeapon", "shield"], amount: 1 },
-        { name: "martialWeapon", amount: 2 },
+        {
+          list: [
+            { category_range: "Martial", amount: 1 },
+            { index: "shield", amount: 1 },
+          ],
+        },
+        { category_range: "Martial", amount: 2 },
       ],
       [
-        { name: "lightCrossbow", amount: 1, ammo: 20 },
-        { name: "handaxe", amount: 2 },
+        { index: "crossbow-light", amount: 1, ammo: 20 },
+        { index: "handaxe", amount: 2 },
       ],
       [
-        { name: "dungeoneersPack", amount: 1 },
-        { name: "explorersPack", amount: 1 },
+        { index: "dungeoneers-pack", amount: 1 },
+        { index: "explorers-pack", amount: 1 },
       ],
     ],
   },

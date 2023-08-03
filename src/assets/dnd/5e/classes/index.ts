@@ -37,7 +37,6 @@ export type {
   Weapon,
   Attribute as SavingThrow,
   Skill,
-  EquipmentTag,
   Tool,
   DnD5eClass,
 } from "./interfaces"

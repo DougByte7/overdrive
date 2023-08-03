@@ -1,7 +1,8 @@
 export interface DnD5eFeature {
   name: string
   level: number | number[]
-  description: string
+  description: string | string[]
+  options?: LabelValue<string>[]
 }
 
 export interface DnD5eSubClass {
@@ -32,61 +33,22 @@ export type Attribute =
   | "wisdom"
   | "charisma"
 export type Skill =
-  | "Arcana"
-  | "Acrobacia (Acrobatics)"
-  | "Atletismo (Athletics)"
-  | "Enganação (Deception)"
-  | "Furtividade (Stealth)"
-  | "História (History)"
-  | "Intimidação (Intimidation)"
-  | "Intuição (Insight)"
-  | "Investigação (Investigation)"
-  | "Lidar com animais (Animal Handling)"
-  | "Medicina (Medicine)"
-  | "Natureza (Nature)"
-  | "Percepção (Perception)"
-  | "Persuasão (Persuasion)"
-  | "Religião (Religion)"
-  | "Sobrevivência (Survival)"
-
-export type EquipmentTag =
-  | "greataxe"
-  | "mace"
-  | "warhammer"
-  | "martialWeapon"
-  | "martialMeleeWeapon"
-  | "simpleMeleeWeapon"
-  | "handaxe"
-  | "dart"
-  | "lightCrossbow"
-  | "simpleWeapon"
-  | "javelin"
-  | "rapier"
-  | "shortbow"
-  | "shortsword"
-  | "longsword"
-  | "longbow"
-  | "dagger"
-  | "quarterstaff"
-  | "leatherArmor"
-  | "scaleMail"
-  | "chainMail"
-  | "shield"
-  | "quiver"
-  | "componentPouch"
-  | "arcaneFocus"
-  | "spellbook"
-  | "holySymbol"
-  | "thievesTools"
-  | "lute"
-  | "musicalInstrument"
-  | "dungeoneersPack"
-  | "explorersPack"
-  | "diplomatsPack"
-  | "entertainersPack"
-  | "priestsPack"
-  | "burglarsPack"
-  | "scholarsPack"
+  | "arcana"
+  | "acrobatics"
+  | "athletics"
+  | "deception"
+  | "stealth"
+  | "history"
+  | "intimidation"
+  | "insight"
+  | "investigation"
+  | "animal_handling"
+  | "medicine"
+  | "nature"
+  | "perception"
+  | "persuasion"
+  | "religion"
+  | "survival"
 
 export type Tool = "musicalInstrument" | "artisansTools"
 
@@ -106,14 +68,49 @@ export interface DnD5eClass {
     savingThrows: Attribute[]
     skills: {
       amount: number
-      options: Skill[]
+      options: LabelValue<Skill>[]
     }
-    equipmentOptions: Array<
-      Array<{
-        name: EquipmentTag | EquipmentTag[]
-        amount: number
-        ammo?: number
-      }>
-    >
+    equipmentOptions: Array<Array<EquipmentOption>>
   }
+}
+
+export type EquipmentOption =
+  | WithAmount<
+      | EquipmentIndex
+      | EquipmentCategoryList
+      | EquipmentToolList
+      | EquipmentGearList
+    >
+  | EquipmentList
+
+export interface EquipmentIndex {
+  index: string
+  ammo?: number
+}
+
+export interface EquipmentCategoryList {
+  category_range: string
+}
+
+export interface EquipmentToolList {
+  tool_category: string
+}
+
+export interface EquipmentGearList {
+  gear_category: string
+}
+
+interface EquipmentList {
+  list: Array<
+    WithAmount<
+      | EquipmentIndex
+      | EquipmentCategoryList
+      | EquipmentToolList
+      | EquipmentGearList
+    >
+  >
+}
+
+export type WithAmount<T> = T & {
+  amount: number
 }

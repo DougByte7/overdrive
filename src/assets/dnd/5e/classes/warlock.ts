@@ -133,30 +133,37 @@ const warlock: DnD5eClass = {
     skills: {
       amount: 2,
       options: [
-        "Arcana",
-        "Enganação (Deception)",
-        "História (History)",
-        "Intimidação (Intimidation)",
-        "Investigação (Investigation)",
-        "Natureza (Nature)",
-        "Religião (Religion)",
+        { label: "Arcana", value: "arcana" },
+        { label: "Enganação (Deception)", value: "deception" },
+        { label: "História (History)", value: "history" },
+        { label: "Intimidação (Intimidation)", value: "intimidation" },
+        { label: "Investigação (Investigation)", value: "investigation" },
+        { label: "Natureza (Nature)", value: "nature" },
+        { label: "Religião (Religion)", value: "religion" },
       ],
     },
     equipmentOptions: [
       [
-        { name: "lightCrossbow", amount: 1, ammo: 20 },
-        { name: "simpleWeapon", amount: 1 },
+        { index: "crossbow-light", amount: 1, ammo: 20 },
+        { category_range: "Simple", amount: 1 },
       ],
       [
-        { name: "componentPouch", amount: 1 },
-        { name: "arcaneFocus", amount: 1 },
+        { index: "component-pouch", amount: 1 },
+        { gear_category: "arcane-foci", amount: 1 },
       ],
       [
-        { name: "scholarsPack", amount: 1 },
-        { name: "dungeoneersPack", amount: 1 },
+        { index: "scholars-pack", amount: 1 },
+        { index: "dungeoneers-pack", amount: 1 },
       ],
-      [{ name: "dagger", amount: 2 }],
-      [{ name: ["leatherArmor", "simpleWeapon"], amount: 1 }],
+      [{ index: "dagger", amount: 2 }],
+      [
+        {
+          list: [
+            { index: "leather-armor", amount: 1 },
+            { category_range: "Simple", amount: 1 },
+          ],
+        },
+      ],
     ],
   },
 }

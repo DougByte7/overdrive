@@ -160,28 +160,28 @@ const sorcerer: DnD5eClass = {
     skills: {
       amount: 2,
       options: [
-        "Arcana",
-        "Enganação (Deception)",
-        "Intuição (Insight)",
-        "Intimidação (Intimidation)",
-        "Persuasão (Persuasion)",
-        "Religião (Religion)",
+        { label: "Arcana", value: "arcana" },
+        { label: "Enganação (Deception)", value: "deception" },
+        { label: "Intuição (Insight)", value: "insight" },
+        { label: "Intimidação (Intimidation)", value: "intimidation" },
+        { label: "Persuasão (Persuasion)", value: "persuasion" },
+        { label: "Religião (Religion)", value: "religion" },
       ],
     },
     equipmentOptions: [
       [
-        { name: "lightCrossbow", amount: 1, ammo: 20 },
-        { name: "simpleWeapon", amount: 1 },
+        { index: "crossbow-light", amount: 1, ammo: 20 },
+        { category_range: "Simple", amount: 1 },
       ],
       [
-        { name: "componentPouch", amount: 1 },
-        { name: "arcaneFocus", amount: 1 },
+        { index: "component-pouch", amount: 1 },
+        { gear_category: "arcane-foci", amount: 1 },
       ],
       [
-        { name: "dungeoneersPack", amount: 1 },
-        { name: "explorersPack", amount: 1 },
+        { index: "dungeoneers-pack", amount: 1 },
+        { index: "explorers-pack", amount: 1 },
       ],
-      [{ name: "dagger", amount: 2 }],
+      [{ index: "dagger", amount: 2 }],
     ],
   },
 }

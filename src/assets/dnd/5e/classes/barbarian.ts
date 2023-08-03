@@ -144,25 +144,28 @@ const barbarian: DnD5eClass = {
     skills: {
       amount: 2,
       options: [
-        "Lidar com animais (Animal Handling)",
-        "Atletismo (Athletics)",
-        "Intimidação (Intimidation)",
-        "Natureza (Nature)",
-        "Percepção (Perception)",
-        "Sobrevivência (Survival)",
+        {
+          label: "Lidar com animais (Animal Handling)",
+          value: "animal_handling",
+        },
+        { label: "Atletismo (Athletics)", value: "athletics" },
+        { label: "Intimidação (Intimidation)", value: "intimidation" },
+        { label: "Natureza (Nature)", value: "nature" },
+        { label: "Percepção (Perception)", value: "perception" },
+        { label: "Sobrevivência (Survival)", value: "survival" },
       ],
     },
     equipmentOptions: [
       [
-        { name: "greataxe", amount: 1 },
-        { name: "martialMeleeWeapon", amount: 1 },
+        { index: "greataxe", amount: 1 },
+        { category_range: "Martial Melee", amount: 1 },
       ],
       [
-        { name: "handaxe", amount: 2 },
-        { name: "simpleWeapon", amount: 1 },
+        { index: "handaxe", amount: 2 },
+        { category_range: "Simple", amount: 1 },
       ],
-      [{ name: "explorersPack", amount: 1 }],
-      [{ name: "javelin", amount: 4 }],
+      [{ index: "explorers-pack", amount: 1 }],
+      [{ index: "javelin", amount: 4 }],
     ],
   },
 }

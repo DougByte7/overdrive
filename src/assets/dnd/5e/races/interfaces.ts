@@ -16,7 +16,8 @@ interface DnD5eSkills {
 
 export interface DnD5eTrait {
   name: string
-  description: string
+  description: string | string[]
+  options?: Array<LabelValue<string> & { group?: string }>
 }
 
 export interface DnD5eSubrace {

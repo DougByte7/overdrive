@@ -183,24 +183,24 @@ const monk: DnD5eClass = {
     skills: {
       amount: 2,
       options: [
-        "Acrobacia (Acrobatics)",
-        "Atletismo (Athletics)",
-        "História (History)",
-        "Intuição (Insight)",
-        "Religião (Religion)",
-        "Furtividade (Stealth)",
+        { label: "Acrobacia (Acrobatics)", value: "acrobatics" },
+        { label: "Atletismo (Athletics)", value: "athletics" },
+        { label: "História (History)", value: "history" },
+        { label: "Intuição (Insight)", value: "insight" },
+        { label: "Religião (Religion)", value: "religion" },
+        { label: "Furtividade (Stealth)", value: "stealth" },
       ],
     },
     equipmentOptions: [
       [
-        { name: "shortsword", amount: 1 },
-        { name: "simpleWeapon", amount: 1 },
+        { index: "shortsword", amount: 1 },
+        { category_range: "Simple", amount: 1 },
       ],
       [
-        { name: "dungeoneersPack", amount: 1 },
-        { name: "explorersPack", amount: 1 },
+        { index: "dungeoneers-pack", amount: 1 },
+        { index: "explorers-pack", amount: 1 },
       ],
-      [{ name: "dart", amount: 10 }],
+      [{ index: "dart", amount: 10 }],
     ],
   },
 }

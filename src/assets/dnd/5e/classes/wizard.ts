@@ -170,28 +170,28 @@ const wizard: DnD5eClass = {
     skills: {
       amount: 2,
       options: [
-        "Arcana",
-        "História (History)",
-        "Intuição (Insight)",
-        "Investigação (Investigation)",
-        "Medicina (Medicine)",
-        "Religião (Religion)",
+        { label: "Arcana", value: "arcana" },
+        { label: "História (History)", value: "history" },
+        { label: "Intuição (Insight)", value: "insight" },
+        { label: "Investigação (Investigation)", value: "investigation" },
+        { label: "Medicina (Medicine)", value: "medicine" },
+        { label: "Religião (Religion)", value: "religion" },
       ],
     },
     equipmentOptions: [
       [
-        { name: "quarterstaff", amount: 1 },
-        { name: "dagger", amount: 1 },
+        { index: "quarterstaff", amount: 1 },
+        { index: "dagger", amount: 1 },
       ],
       [
-        { name: "componentPouch", amount: 1 },
-        { name: "arcaneFocus", amount: 1 },
+        { index: "component-pouch", amount: 1 },
+        { gear_category: "arcane-foci", amount: 1 },
       ],
       [
-        { name: "scholarsPack", amount: 1 },
-        { name: "explorersPack", amount: 1 },
+        { index: "scholars-pack", amount: 1 },
+        { index: "explorers-pack", amount: 1 },
       ],
-      [{ name: "spellbook", amount: 2 }],
+      [{ index: "spellbook", amount: 1 }],
     ],
   },
 }
