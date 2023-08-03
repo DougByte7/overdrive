@@ -236,7 +236,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
               <Paper key={i} withBorder p="xs">
                 <Radio.Group onChange={handleSelectItem(i)}>
                   {item.map((itemData, j) => {
-                    const key = `${i}${j}`
+                    const key = `1${i}${j}`
                     const [equipmentLabel, data] = buildRadioData(key, itemData)
 
                     const value = `[${getRadioValue(
@@ -276,7 +276,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
                                           searchable
                                           nothingFound="Nada encontrado"
                                           onChange={handleSetRadioValue(
-                                            `${i}${j}${k}`
+                                            `1${i}${j}${k}`
                                           )}
                                         />
                                       )

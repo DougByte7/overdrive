@@ -44,23 +44,28 @@ export enum Steps {
   ATTRIBUTE,
   FEATURES,
   ITEMS,
-  SPELLS,
+  //SPELLS,
   REVIEW,
   FINAL,
   CLOSE,
 }
 
 export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
-  const [form] = useAtom(characterFormAton)
+  const [form, setForm] = useAtom(characterFormAton)
   const [attrMethod] = useAtom(attrMethodAtom)
   const [availablePoints] = useAtom(pointBuyAtom)
   const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton)
 
   const [step, setStep] = useState(Steps.DESCRIPTION)
 
+  const resetForm = () => setForm(characterFormAton.init)
+
   const handledPrev = () => {
     const prevStep = step - 1
-    if (prevStep === Steps.UNSET) onCancel()
+    if (prevStep === Steps.UNSET) {
+      resetForm()
+      onCancel()
+    }
 
     setStep(prevStep)
   }
@@ -84,8 +89,9 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
       /**
        * @todo Go to character sheet on linked adventure or empty board
        */
-
+      resetForm()
       onCancel()
+      location.reload()
     }
     setStep((step) => step + 1)
   }
@@ -166,14 +172,14 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
         {(styles) => <ItemsSelection styles={styles} />}
       </Transition>
 
-      <Transition mounted={step === Steps.SPELLS} transition="fade">
+      {/* <Transition mounted={step === Steps.SPELLS} transition="fade">
         {(styles) => (
           <SpellsSelection
             styles={styles}
             onSkip={() => setStep((step) => step + 1)}
           />
         )}
-      </Transition>
+      </Transition> */}
 
       <Transition mounted={step === Steps.REVIEW} transition="fade">
         {(styles) => <ReviewOptions styles={styles} setStep={setStep} />}
