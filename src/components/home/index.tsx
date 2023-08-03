@@ -27,6 +27,24 @@ export default function HomeComponent({
     })
   }
 
+  // useEffect(() => {
+  //   Promise.all(
+  //     equipment.map((res) =>
+  //       fetch(`https://www.dnd5eapi.co${res.url}`).then((res) => res.json())
+  //     )
+  //   ).then((res) => {
+  //     console.log(res)
+  //   })
+  // }, [])
+
+  // const allItems = [
+  //   ...Object.values(equipment["adventuring-gear"]).flat(),
+  //   ...Object.values(equipment.armor).flat(),
+  //   ...Object.values(equipment["mounts-and-vehicles"]).flat(),
+  //   ...Object.values(equipment.tools).flat(),
+  //   ...Object.values(equipment.weapon).flat(),
+  // ]
+
   return (
     <>
       <main

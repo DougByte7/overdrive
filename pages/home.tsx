@@ -1,8 +1,9 @@
 import useRouteGuard from "@/hooks/routeGuard"
 import { LoadingOverlay } from "@mantine/core"
 import HomeComponent from "@/components/home"
-import races from "@/assets/dnd/5e/races"
-import classes from "@/assets/dnd/5e/classes"
+import races, { DnD5eRaceName } from "@/assets/dnd/5e/races"
+import classes, { DnD5eClassName } from "@/assets/dnd/5e/classes"
+import { CharacterForm } from "@/components/home/character-builder/interfaces"
 
 export default function Home() {
   const authStatus = useRouteGuard()
@@ -39,14 +40,14 @@ export default function Home() {
   ]
 
   const characters = JSON.parse(localStorage.getItem("characters") ?? "[]").map(
-    (character: any, i: number) => {
+    (character: CharacterForm, i: number) => {
       return {
         id: i,
-        campaignName:
-          races[character.race as keyof typeof races].name +
-          ", " +
-          classes[character.class as keyof typeof classes].name +
-          ".",
+        campaignName: `${races[character.race as DnD5eRaceName].name}, ${
+          (character as any).class
+            ? classes[(character as any).class as DnD5eClassName]?.name
+            : character.classes.map((c) => classes[c].name).join(" / ")
+        }.`,
         campaignId: "1",
         name: character.name,
         imgSrc: character.picture,
