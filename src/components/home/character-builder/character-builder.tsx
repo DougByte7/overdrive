@@ -70,7 +70,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
     setStep(prevStep)
   }
   const handleNext = () => {
-    if (step === Steps.FINAL) {
+    if (step + 1 === Steps.FINAL) {
       try {
         const characters = JSON.parse(
           localStorage.getItem("characters") ?? "[]"
@@ -85,7 +85,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
       }
     }
 
-    if (step === Steps.CLOSE) {
+    if (step + 1 === Steps.CLOSE) {
       /**
        * @todo Go to character sheet on linked adventure or empty board
        */
