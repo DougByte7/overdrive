@@ -27,12 +27,17 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
       setForm((form) => {
         form.race = race
 
-        form.strength.bonus = races[race].boost?.strength ?? 0
-        form.dexterity.bonus = races[race].boost?.dexterity ?? 0
-        form.constitution.bonus = races[race].boost?.constitution ?? 0
-        form.intelligence.bonus = races[race].boost?.intelligence ?? 0
-        form.wisdom.bonus = races[race].boost?.wisdom ?? 0
-        form.charisma.bonus = races[race].boost?.charisma ?? 0
+        form.strength.total = form.strength.bonus =
+          races[race].boost?.strength ?? 0
+        form.dexterity.total = form.dexterity.bonus =
+          races[race].boost?.dexterity ?? 0
+        form.constitution.total = form.constitution.bonus =
+          races[race].boost?.constitution ?? 0
+        form.intelligence.total = form.intelligence.bonus =
+          races[race].boost?.intelligence ?? 0
+        form.wisdom.total = form.wisdom.bonus = races[race].boost?.wisdom ?? 0
+        form.charisma.total = form.charisma.bonus =
+          races[race].boost?.charisma ?? 0
 
         return { ...form }
       })

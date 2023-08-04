@@ -39,12 +39,22 @@ export default function Home() {
     },
   ]
 
-  const characters = JSON.parse(localStorage.getItem("characters") ?? "[]").map(
+  let storedCharacters = JSON.parse(
+    localStorage.getItem("characters") ?? "[]"
+  ) as any[]
+
+  if (localStorage.getItem("characters")) {
+    const newStore = storedCharacters.filter((c) => c.classes)
+    localStorage.setItem("characters", JSON.stringify(newStore))
+    storedCharacters = newStore
+  }
+
+  const characters = storedCharacters.map(
     (character: CharacterForm, i: number) => {
       return {
         id: i,
         campaignName: `${races[character.race!].name}, ${character.classes
-          .map((c) => classes[c].name)
+          ?.map((c) => classes[c].name)
           .join(" / ")}.`,
         campaignId: "1",
         name: character.name,
