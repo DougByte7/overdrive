@@ -30,6 +30,7 @@ import AttributeSelection from "./components/5e/attribute-selection"
 import ReviewOptions from "./components/5e/review-options"
 import FeaturesSelection from "./components/5e/features-selection"
 import ItemsSelection from "./components/5e/item-selection"
+import SpellSelection from "./components/5e/spell-selection"
 
 interface CharacterBuilderProps {
   onCancel: VoidFunction
@@ -44,7 +45,7 @@ export enum Steps {
   ATTRIBUTE,
   FEATURES,
   ITEMS,
-  //SPELLS,
+  SPELLS,
   REVIEW,
   FINAL,
   CLOSE,
@@ -114,12 +115,12 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
         return (
           (attrMethod !== "pointbuy" &&
             !(
-              form.strength &&
-              form.dexterity &&
-              form.constitution &&
-              form.intelligence &&
-              form.wisdom &&
-              form.charisma
+              form.strength.base &&
+              form.dexterity.base &&
+              form.constitution.base &&
+              form.intelligence.base &&
+              form.wisdom.base &&
+              form.charisma.base
             )) ||
           (attrMethod === "pointbuy" && availablePoints > 0)
         )
@@ -172,14 +173,14 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
         {(styles) => <ItemsSelection styles={styles} />}
       </Transition>
 
-      {/* <Transition mounted={step === Steps.SPELLS} transition="fade">
+      <Transition mounted={step === Steps.SPELLS} transition="fade">
         {(styles) => (
-          <SpellsSelection
+          <SpellSelection
             styles={styles}
             onSkip={() => setStep((step) => step + 1)}
           />
         )}
-      </Transition> */}
+      </Transition>
 
       <Transition mounted={step === Steps.REVIEW} transition="fade">
         {(styles) => <ReviewOptions styles={styles} setStep={setStep} />}

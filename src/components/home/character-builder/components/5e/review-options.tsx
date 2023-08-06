@@ -15,15 +15,25 @@ import {
   Badge,
   ActionIcon,
   Accordion,
+  Divider,
 } from "@mantine/core"
 import { useAtom } from "jotai"
 import { characterFormAton, avatarPreviewUrlAton } from "../../state"
-import type { CSSProperties, Dispatch, SetStateAction } from "react"
+import {
+  Fragment,
+  type CSSProperties,
+  type Dispatch,
+  type SetStateAction,
+} from "react"
 import { IconPencil } from "@tabler/icons"
 import abilityScores from "@/assets/dnd/5e/abilityScores"
 import { Steps } from "../../character-builder"
+import type {
+  WithAmount,
+  EquipmentIndex,
+} from "@/assets/dnd/5e/classes/interfaces"
 import equipmentList from "@/assets/dnd/5e/equipment.json"
-import { WithAmount, EquipmentIndex } from "@/assets/dnd/5e/classes/interfaces"
+import spells from "@/assets/dnd/5e/spells.json"
 
 interface ReviewOptionsProps {
   styles: CSSProperties
@@ -264,6 +274,62 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
           </Stack>
         </Paper>
       </Box>
+
+      {!!form.spells.size && (
+        <Box>
+          <Paper withBorder p="md">
+            <Group>
+              <Text
+                css={css`
+                  flex-grow: 1;
+                `}
+                weight={600}
+              >
+                Magias
+              </Text>
+              <EditButton step={Steps.SPELLS} setStep={setStep} />
+            </Group>
+
+            <Space h="md" />
+
+            <Stack>
+              {Array.from(form.spells)
+                .sort((a, b) => {
+                  return a < b ? -1 : a > b ? 1 : 0
+                })
+                .map((spellName) => {
+                  return spells.find((spell) => spell.name === spellName)
+                }, [] as typeof spells)
+                .sort((a, b) => {
+                  const a0 = isNaN(+a!.level!) ? 0 : +a!.level!
+                  const b0 = isNaN(+b!.level!) ? 0 : +b!.level!
+                  return a0 - b0
+                })
+                .map((spell, i, arr) => {
+                  const showDivider =
+                    i === 0 || spell?.level !== arr[i - 1]?.level
+
+                  return (
+                    <Fragment key={`${spell}${i}`}>
+                      {showDivider && (
+                        <Divider
+                          mt="md"
+                          labelPosition="center"
+                          label={
+                            spell?.level === "cantrip"
+                              ? "Truques"
+                              : `${spell?.level}º Nível`
+                          }
+                        />
+                      )}
+                      <Text>{spell!.name}</Text>
+                    </Fragment>
+                  )
+                })}
+            </Stack>
+          </Paper>
+        </Box>
+      )}
     </Stack>
   )
 }
