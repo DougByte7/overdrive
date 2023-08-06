@@ -59,7 +59,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
   const [step, setStep] = useState(Steps.DESCRIPTION)
 
-  const { spellsKnown, cantripKnown } = classes[form.classes[0]]
+  const { spellsKnown, cantripKnown } = classes[form.classes[0]] ?? {}
   const hasCantrips = cantripKnown?.length
   const hasSpells = !!spellsKnown && spellsKnown !== Infinity
   const shouldSkipSpellStep = !(hasCantrips || hasSpells)
