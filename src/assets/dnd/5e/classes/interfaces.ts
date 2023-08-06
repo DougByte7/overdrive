@@ -61,6 +61,9 @@ export interface DnD5eClass {
     dice: Dice
     average: number
   }
+  cantripKnown?: number[]
+  spellsKnown?: number[] | number
+  spellsSlots?: number[][]
   proficiencies: {
     armor?: Armor[]
     weapon: Weapon[]
@@ -70,7 +73,7 @@ export interface DnD5eClass {
       amount: number
       options: LabelValue<Skill>[]
     }
-    equipmentOptions: Array<Array<EquipmentOption>>
+    equipmentOptions: EquipmentOption[][]
   }
 }
 
