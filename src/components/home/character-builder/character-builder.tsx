@@ -59,6 +59,11 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
   const [step, setStep] = useState(Steps.DESCRIPTION)
 
+  const { spellsKnown, cantripKnown } = classes[form.classes[0]]
+  const hasCantrips = cantripKnown?.length
+  const hasSpells = !!spellsKnown && spellsKnown !== Infinity
+  const shouldSkipSpellStep = !(hasCantrips || hasSpells)
+
   const resetForm = () => setForm(characterFormAton.init)
 
   const handledPrev = () => {
@@ -68,7 +73,11 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
       onCancel()
     }
 
-    setStep(prevStep)
+    if (step === Steps.REVIEW && shouldSkipSpellStep) {
+      setStep((step) => step - 2)
+    } else {
+      setStep(prevStep)
+    }
   }
   const handleNext = () => {
     if (step + 1 === Steps.FINAL) {
@@ -95,10 +104,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
       location.reload()
     }
 
-    const { spellsKnown, cantripKnown } = classes[form.classes[0]]
-    const hasCantrips = cantripKnown?.length
-    const hasSpells = !!spellsKnown && spellsKnown !== Infinity
-    if (step === Steps.ITEMS && !(hasCantrips || hasSpells)) {
+    if (step === Steps.ITEMS && shouldSkipSpellStep) {
       setStep((step) => step + 2)
     } else {
       setStep((step) => step + 1)

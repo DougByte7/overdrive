@@ -29,19 +29,23 @@ export default function SpellSelection({ styles }: ClassSelectionProps) {
   const hasSpells = !!spellsKnown && spellsKnown !== Infinity
 
   const cantrips = useMemo(() => {
-    return spells.filter((spell) =>
-      hasCantrips
-        ? spell.tags.includes("cantrip") && spell.tags.includes(form.classes[0])
-        : []
-    )
+    return hasCantrips
+      ? spells.filter(
+          (spell) =>
+            spell.tags.includes("cantrip") &&
+            spell.tags.includes(form.classes[0])
+        )
+      : []
   }, [form.classes])
 
   const firstLevel = useMemo(() => {
-    return spells.filter((spell) =>
-      hasSpells
-        ? spell.tags.includes("level1") && spell.tags.includes(form.classes[0])
-        : []
-    )
+    return hasSpells
+      ? spells.filter(
+          (spell) =>
+            spell.tags.includes("level1") &&
+            spell.tags.includes(form.classes[0])
+        )
+      : []
   }, [form.classes])
 
   return (
