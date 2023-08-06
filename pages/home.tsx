@@ -49,6 +49,9 @@ export default function Home() {
     storedCharacters = newStore
   }
 
+  /**
+   * @todo Create a generic interface for every system
+   */
   const characters = storedCharacters.map(
     (character: CharacterForm, i: number) => {
       return {
@@ -62,25 +65,6 @@ export default function Home() {
       }
     }
   )
-
-  // [
-  //   {
-  //     id: "1",
-  //     campaignName: "Maldição de Strahd",
-  //     campaignId: "1",
-  //     name: "Anóriel Heinhardt",
-  //     imgSrc:
-  //       "https://i.pinimg.com/564x/fa/73/88/fa7388b1240d66cb712e15f7533d34cd.jpg",
-  //   },
-  //   {
-  //     id: "2",
-  //     campaignName: "Rising from the Last War",
-  //     campaignId: "2",
-  //     name: "NPC - Arlow",
-  //     imgSrc:
-  //       "https://i.pinimg.com/564x/29/f0/f4/29f0f4a55670997585dc912836b0cb8a.jpg",
-  //   },
-  // ]
 
   return <HomeComponent campaigns={campaigns} characters={characters} />
 }

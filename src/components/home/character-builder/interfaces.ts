@@ -18,6 +18,7 @@ export interface CharacterForm {
   features: Record<string, string>
   proficiencies: Skill[]
   items: WithAmount<EquipmentIndex>[]
+  spells: Set<string>
 }
 
 export interface AttributeScore {
