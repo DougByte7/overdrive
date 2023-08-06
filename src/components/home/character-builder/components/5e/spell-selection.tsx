@@ -20,19 +20,13 @@ import spells from "@/assets/dnd/5e/spells.json"
 
 interface ClassSelectionProps {
   styles: CSSProperties
-  onSkip: VoidFunction
 }
-export default function SpellSelection({
-  styles,
-  onSkip,
-}: ClassSelectionProps) {
+export default function SpellSelection({ styles }: ClassSelectionProps) {
   const [form] = useAtom(characterFormAton)
 
   const { spellsKnown, cantripKnown } = classes[form.classes[0]]
   const hasCantrips = cantripKnown?.length
   const hasSpells = !!spellsKnown && spellsKnown !== Infinity
-
-  if (!(hasCantrips || hasSpells)) onSkip()
 
   const cantrips = useMemo(() => {
     return spells.filter((spell) =>

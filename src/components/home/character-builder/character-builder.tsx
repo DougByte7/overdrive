@@ -94,7 +94,15 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
       onCancel()
       location.reload()
     }
-    setStep((step) => step + 1)
+
+    const { spellsKnown, cantripKnown } = classes[form.classes[0]]
+    const hasCantrips = cantripKnown?.length
+    const hasSpells = !!spellsKnown && spellsKnown !== Infinity
+    if (step === Steps.ITEMS && !(hasCantrips || hasSpells)) {
+      setStep((step) => step + 2)
+    } else {
+      setStep((step) => step + 1)
+    }
   }
 
   const isInvalidFormStep = () => {
@@ -174,12 +182,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
       </Transition>
 
       <Transition mounted={step === Steps.SPELLS} transition="fade">
-        {(styles) => (
-          <SpellSelection
-            styles={styles}
-            onSkip={() => setStep((step) => step + 1)}
-          />
-        )}
+        {(styles) => <SpellSelection styles={styles} />}
       </Transition>
 
       <Transition mounted={step === Steps.REVIEW} transition="fade">
