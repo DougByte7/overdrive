@@ -11,7 +11,7 @@ import {
   BackgroundImage,
   Card,
 } from "@mantine/core"
-import { IconChevronLeft } from "@tabler/icons"
+import { IconChevronLeft } from "@tabler/icons-react"
 import { useState } from "react"
 import races from "@/assets/dnd/5e/races"
 import classes from "@/assets/dnd/5e/classes"
@@ -31,6 +31,8 @@ import ReviewOptions from "./components/5e/review-options"
 import FeaturesSelection from "./components/5e/features-selection"
 import ItemsSelection from "./components/5e/item-selection"
 import SpellSelection from "./components/5e/spell-selection"
+import { notifications } from "@mantine/notifications"
+import { captureException } from "@sentry/nextjs"
 
 interface CharacterBuilderProps {
   onCancel: VoidFunction
@@ -90,8 +92,12 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
           "characters",
           JSON.stringify([...characters, form])
         )
-      } catch {
-        console.error("Erro ao salvar personagem local")
+      } catch (e) {
+        captureException(e)
+        notifications.show({
+          title: "Erro",
+          message: "Não foi possível salvar seu personagem! Tente novamente.",
+        })
       }
     }
 

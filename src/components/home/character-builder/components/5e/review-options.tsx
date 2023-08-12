@@ -25,7 +25,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react"
-import { IconPencil } from "@tabler/icons"
+import { IconPencil } from "@tabler/icons-react"
 import abilityScores from "@/assets/dnd/5e/abilityScores"
 import { Steps } from "../../character-builder"
 import type {

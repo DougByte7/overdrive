@@ -21,16 +21,6 @@ export default function CardCharacter({
   const fallbackImg =
     "https://img.freepik.com/vetores-gratis/guerreiro-escandinavo-de-personagem-viking-no-capacete_107791-15005.jpg?w=1380&t=st=1687125692~exp=1687126292~hmac=608bcc92a79a2fd9ae1a6b449b8537c476bdd3165c0c00c9f6ceaffa751d253d"
 
-  function handleJoinRoom() {
-    console.log(campaignId, id)
-
-    notifications.show({
-      title: "Vish :/",
-      message: "Desculpe, mas essa função ainda está em desenvolvimento.",
-      color: "red",
-    })
-  }
-
   return (
     <Card radius="md" w={223} h={275} p={0}>
       <BackgroundImage src={imgSrc ?? fallbackImg} radius="md" h="100%">
@@ -53,8 +43,14 @@ export default function CardCharacter({
             {name}
           </Text>
 
-          <Button size="md" pos="absolute" bottom={16} onClick={handleJoinRoom}>
-            Entrar
+          <Button
+            size="md"
+            pos="absolute"
+            bottom={16}
+            component="a"
+            href={`/character/${id}`}
+          >
+            Visualizar
           </Button>
         </div>
       </BackgroundImage>

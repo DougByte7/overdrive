@@ -4,7 +4,7 @@ import { useDisclosure } from "@mantine/hooks"
 import CardCampaign from "./card-campaign"
 import CardCharacter from "./card-character"
 import SideScrollingBox from "./side-scrolling-box"
-import { IconPlus, IconSearch } from "@tabler/icons"
+import { IconPlus, IconSearch } from "@tabler/icons-react"
 import CharacterBuilder from "./character-builder/character-builder"
 import { notifications } from "@mantine/notifications"
 
@@ -168,7 +168,7 @@ export default function HomeComponent({
                 name={character.name}
                 campaignName={character.campaignName}
                 campaignId={character.campaignId}
-                id={character.id}
+                id={character.id ?? i}
               />
             ))}
           </SideScrollingBox>

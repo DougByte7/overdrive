@@ -3,6 +3,7 @@ import { WithAmount, EquipmentIndex } from "@/assets/dnd/5e/classes/interfaces"
 import { DnD5eRaceName } from "@/assets/dnd/5e/races"
 
 export interface CharacterForm {
+  id?: string
   name: string
   picture: File | null | string
   backstory: string
