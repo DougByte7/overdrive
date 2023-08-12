@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { Card, Button, Text, BackgroundImage } from "@mantine/core"
-import { notifications } from "@mantine/notifications"
 
 interface CardCharacterProps {
   imgSrc: string
