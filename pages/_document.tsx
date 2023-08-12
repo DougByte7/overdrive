@@ -6,10 +6,6 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width"
-        />
         <link rel="shortcut icon" href="/d10-electric.svg" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

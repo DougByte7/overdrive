@@ -14,7 +14,7 @@ import {
   Badge,
   Text,
 } from "@mantine/core"
-import { IconInfoCircle, IconMinus, IconPlus } from "@tabler/icons"
+import { IconInfoCircle, IconMinus, IconPlus } from "@tabler/icons-react"
 import { attrMethodAtom, characterFormAton, pointBuyAtom } from "../../state"
 import { useAtom } from "jotai"
 import {
