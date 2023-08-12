@@ -14,7 +14,7 @@ export default function CardCharacter({
   imgSrc,
   name,
   campaignName,
-  campaignId,
+  //campaignId,
   id,
 }: CardCharacterProps) {
   const fallbackImg =
