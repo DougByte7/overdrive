@@ -1,13 +1,13 @@
-import useRouteGuard from "@/hooks/routeGuard"
-import { LoadingOverlay } from "@mantine/core"
+// import useRouteGuard from "@/hooks/routeGuard"
+// import { LoadingOverlay } from "@mantine/core"
 import HomeComponent from "@/components/home"
 import races from "@/assets/dnd/5e/races"
 import classes from "@/assets/dnd/5e/classes"
 import { CharacterForm } from "@/components/home/character-builder/interfaces"
 
 export default function Home() {
-  const authStatus = useRouteGuard()
-  if (authStatus !== "authenticated") return <LoadingOverlay visible />
+  // const authStatus = useRouteGuard()
+  // if (authStatus !== "authenticated") return <LoadingOverlay visible />
 
   const campaigns: unknown[] = []
   // [
