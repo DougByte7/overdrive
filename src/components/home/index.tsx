@@ -1,12 +1,20 @@
 import { css } from "@emotion/react"
-import { Card, Modal, TextInput, Title, Text, ActionIcon } from "@mantine/core"
-import { useDisclosure } from "@mantine/hooks"
-import CardCampaign from "./card-campaign"
+import {
+  Card,
+  Modal,
+  TextInput,
+  Title,
+  Text,
+  ActionIcon,
+  Transition,
+} from "@mantine/core"
+import { useDebouncedState, useDisclosure } from "@mantine/hooks"
+//import CardCampaign from "./card-campaign"
 import CardCharacter from "./card-character"
 import SideScrollingBox from "./side-scrolling-box"
 import { IconPlus, IconSearch } from "@tabler/icons-react"
 import CharacterBuilder from "./character-builder/character-builder"
-import { notifications } from "@mantine/notifications"
+import { ChangeEventHandler, useEffect, useState } from "react"
 
 interface HomeComponentProps {
   campaigns: any[]
@@ -14,36 +22,40 @@ interface HomeComponentProps {
 }
 
 export default function HomeComponent({
-  campaigns,
+  //  campaigns,
   characters,
 }: HomeComponentProps) {
   const [opened, { open, close }] = useDisclosure(false)
+  const [search, setSearch] = useDebouncedState("", 200)
+  const [filteredCharacters, setFilteredCharacters] = useState(characters)
 
-  const handleNewBoard = () => {
-    notifications.show({
-      title: "Vish :/",
-      message: "Desculpe, mas essa função ainda está em desenvolvimento.",
-      color: "red",
-    })
+  // const handleNewBoard = () => {
+  //   notifications.show({
+  //     title: "Vish :/",
+  //     message: "Desculpe, mas essa função ainda está em desenvolvimento.",
+  //     color: "red",
+  //   })
+  // }
+
+  const removeDiacritics = (string: string) =>
+    string.normalize("NFD").replace(/\p{Diacritic}/gu, "")
+
+  const handleFilter: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (!characters.length) return
+    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()))
   }
 
-  // useEffect(() => {
-  //   Promise.all(
-  //     equipment.map((res) =>
-  //       fetch(`https://www.dnd5eapi.co${res.url}`).then((res) => res.json())
-  //     )
-  //   ).then((res) => {
-  //     console.log(res)
-  //   })
-  // }, [])
+  useEffect(() => {
+    if (!search) return setFilteredCharacters(characters)
 
-  // const allItems = [
-  //   ...Object.values(equipment["adventuring-gear"]).flat(),
-  //   ...Object.values(equipment.armor).flat(),
-  //   ...Object.values(equipment["mounts-and-vehicles"]).flat(),
-  //   ...Object.values(equipment.tools).flat(),
-  //   ...Object.values(equipment.weapon).flat(),
-  // ]
+    setFilteredCharacters(
+      characters.filter(
+        (char) =>
+          removeDiacritics(char.name.toLowerCase()).includes(search) ||
+          removeDiacritics(char.campaignName.toLowerCase()).includes(search)
+      )
+    )
+  }, [search])
 
   return (
     <>
@@ -53,6 +65,7 @@ export default function HomeComponent({
         `}
       >
         <TextInput
+          type="search"
           mr={16}
           ml={16}
           sx={{
@@ -68,9 +81,10 @@ export default function HomeComponent({
           size="lg"
           placeholder="O que está procurando?"
           icon={<IconSearch color="var(--do_color_primary_base)" size={24} />}
+          onChange={handleFilter}
         />
 
-        <div>
+        {/* <div>
           <Title size="h3" mt="xl" mb="md" mr={16} ml={16}>
             Minhas campanhas
           </Title>
@@ -121,7 +135,7 @@ export default function HomeComponent({
               />
             ))}
           </SideScrollingBox>
-        </div>
+        </div> */}
 
         <div>
           <Title size="h3" mt="xl" mb="md" mr={16} ml={16}>
@@ -129,47 +143,53 @@ export default function HomeComponent({
           </Title>
 
           <SideScrollingBox>
-            <Card
-              css={css`
-                background-color: var(--do_color_primary_light_50);
-                border: 1px dashed rgba(0, 0, 0, 0.25);
-                border-radius: var(--do_border_radius_md);
-                display: flex;
-                align-content: center;
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 8px;
-              `}
-              w={223}
-              h={275}
-            >
-              <Text weight={600} align="center">
-                Criar um personagem
-              </Text>
-
-              <Text size="sm" align="center">
-                Crie um personagem para utilizar onde quiser!
-              </Text>
-
-              <ActionIcon
-                mt="sm"
-                size="xl"
-                color="brand"
-                variant="filled"
-                onClick={open}
+            {!search && (
+              <Card
+                css={css`
+                  background-color: var(--do_color_primary_light_50);
+                  border: 1px dashed rgba(0, 0, 0, 0.25);
+                  border-radius: var(--do_border_radius_md);
+                  display: flex;
+                  align-content: center;
+                  justify-content: center;
+                  flex-wrap: wrap;
+                  gap: 8px;
+                `}
+                w={223}
+                h={275}
               >
-                <IconPlus size="1.5rem" />
-              </ActionIcon>
-            </Card>
-            {characters.map((character, i) => (
-              <CardCharacter
-                key={i}
-                imgSrc={character.imgSrc}
-                name={character.name}
-                campaignName={character.campaignName}
-                campaignId={character.campaignId}
-                id={character.id ?? i}
-              />
+                <Text weight={600} align="center">
+                  Criar um personagem
+                </Text>
+
+                <Text size="sm" align="center">
+                  Crie um personagem para utilizar onde quiser!
+                </Text>
+
+                <ActionIcon
+                  mt="sm"
+                  size="xl"
+                  color="brand"
+                  variant="filled"
+                  onClick={open}
+                >
+                  <IconPlus size="1.5rem" />
+                </ActionIcon>
+              </Card>
+            )}
+            {filteredCharacters.map((character, i) => (
+              <Transition key={i} mounted={true} transition="fade">
+                {(styles) => (
+                  <CardCharacter
+                    style={styles}
+                    imgSrc={character.imgSrc}
+                    name={character.name}
+                    campaignName={character.campaignName}
+                    campaignId={character.campaignId}
+                    id={character.id ?? i}
+                  />
+                )}
+              </Transition>
             ))}
           </SideScrollingBox>
         </div>

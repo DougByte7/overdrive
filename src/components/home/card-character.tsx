@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { Card, Button, Text, BackgroundImage } from "@mantine/core"
+import { CSSProperties } from "react"
 
 interface CardCharacterProps {
+  style: CSSProperties
   imgSrc: string
   name: string
   campaignName: string
@@ -11,6 +13,7 @@ interface CardCharacterProps {
 }
 
 export default function CardCharacter({
+  style,
   imgSrc,
   name,
   campaignName,
@@ -21,7 +24,7 @@ export default function CardCharacter({
     "https://img.freepik.com/vetores-gratis/guerreiro-escandinavo-de-personagem-viking-no-capacete_107791-15005.jpg?w=1380&t=st=1687125692~exp=1687126292~hmac=608bcc92a79a2fd9ae1a6b449b8537c476bdd3165c0c00c9f6ceaffa751d253d"
 
   return (
-    <Card radius="md" w={223} h={275} p={0}>
+    <Card style={style} radius="md" w={223} h={275} p={0}>
       <BackgroundImage src={imgSrc ?? fallbackImg} radius="md" h="100%">
         <div
           css={css`

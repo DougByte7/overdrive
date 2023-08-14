@@ -231,6 +231,20 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                   )
                 })}
               </Stack>
+
+              <Stack spacing="xs" maw={400}>
+                <Text size="lg" fw="bold">
+                  História do personagem
+                </Text>
+                <Text
+                  css={css`
+                    hyphens: auto;
+                  `}
+                >
+                  {character.backstory ||
+                    "Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos. Lorem Ipsum sobreviveu não só a cinco séculos, como também ao salto para a editoração eletrônica, permanecendo essencialmente inalterado. Se popularizou na década de 60, quando a Letraset lançou decalques contendo passagens de Lorem Ipsum, e mais recentemente quando passou a ser integrado a softwares de editoração eletrônica como Aldus PageMaker."}
+                </Text>
+              </Stack>
             </>
           )}
 
@@ -251,8 +265,8 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                         <Stack spacing={0}>
                           <Text fw="bold">{data.name}</Text>
                           <Text title={data.desc.join("")} size="sm">
-                            {data.desc.join("").substring(0, 45)}
-                            {data.desc.join("").length > 45 && "..."}
+                            {data.desc.join("").substring(0, 40)}
+                            {data.desc.join("").length > 40 && "..."}
                           </Text>
                         </Stack>
                       </Group>
@@ -456,11 +470,19 @@ const pageTitleStyles = css`
 `
 
 const mainStyles = css`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  align-items: center;
+  justify-content: center;
   gap: 16px;
   padding-inline: 16px;
   padding-bottom: 86px;
+
+  @media screen and (min-width: 720px) {
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    justify-content: start;
+  }
 `
 
 const iconTextStyles = css`
