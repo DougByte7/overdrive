@@ -251,8 +251,8 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                         <Stack spacing={0}>
                           <Text fw="bold">{data.name}</Text>
                           <Text title={data.desc.join("")} size="sm">
-                            {data.desc.join("").substring(0, 45)}
-                            {data.desc.join("").length > 45 && "..."}
+                            {data.desc.join("").substring(0, 40)}
+                            {data.desc.join("").length > 40 && "..."}
                           </Text>
                         </Stack>
                       </Group>
