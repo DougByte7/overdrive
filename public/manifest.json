@@ -25,15 +25,17 @@
   "screenshots": [
     {
       "src": "/images/screenshot_412x915.png",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "sizes": "412x915",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "Página inicial, onde você pode gerenciar seus personagens."
     },
     {
       "src": "/images/screenshot_720p.png",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "sizes": "1280x720",
-      "form_factor": "wide"
+      "form_factor": "wide",
+      "label": "Tabuleiro virtual para se aventurar!"
     }
   ]
 }

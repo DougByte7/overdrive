@@ -24,7 +24,7 @@
     "@mantine/nprogress": "^6.0.0",
     "@mantine/tiptap": "^6.0.0",
     "@sentry/nextjs": "^7.38.0",
-    "@tabler/icons": "1.119.0",
+    "@tabler/icons-react": "^2.30.0",
     "@tiptap/extension-link": "^2.0.0-beta.212",
     "@tiptap/react": "^2.0.0-beta.212",
     "@tiptap/starter-kit": "^2.0.0-beta.212",

@@ -3,6 +3,7 @@
   --do_color_primary_base: #8100be;
   --do_color_primary_light_50: #f6f0fa;
 
+  --do_color_support_light_30: #e3e3e3;
   --do_color_support_dark_30: #2d2f33;
 
   --do_color_info: #41b4f5;
@@ -20,4 +21,5 @@
   --do_border_color: var(--do_text_color_500);
   --do_border_radius_sm: 4px;
   --do_border_radius_md: 8px;
+  --do_border_radius_lg: 16px;
 }
