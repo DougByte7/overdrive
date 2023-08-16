@@ -27,15 +27,17 @@ import classes from "@/assets/dnd/5e/classes"
 import races from "@/assets/dnd/5e/races"
 import equipment from "@/assets/dnd/5e/equipment.json"
 import { CSSProperties, useState } from "react"
+import CharacterFooter from "./components/footer/nav"
+import { useAtom } from "jotai"
+import { activeTabAtom } from "./state"
 
 interface CharacterSheetProps {
   characterId: string
 }
 export default function CharacterSheet({ characterId }: CharacterSheetProps) {
   const { characters } = useCharacter()
-  const [activeTab, setActiveTab] = useState<"basic" | "inventory" | "skills">(
-    "basic"
-  )
+  const [activeTab] = useAtom(activeTabAtom)
+
   const [selectedItem, setSelectedItem] = useState<
     (typeof equipment)[number] | null
   >(null)
@@ -241,8 +243,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                     hyphens: auto;
                   `}
                 >
-                  {character.backstory ||
-                    "Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos. Lorem Ipsum sobreviveu não só a cinco séculos, como também ao salto para a editoração eletrônica, permanecendo essencialmente inalterado. Se popularizou na década de 60, quando a Letraset lançou decalques contendo passagens de Lorem Ipsum, e mais recentemente quando passou a ser integrado a softwares de editoração eletrônica como Aldus PageMaker."}
+                  {character.backstory}
                 </Text>
               </Stack>
             </>
@@ -250,7 +251,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
 
           {activeTab === "inventory" && (
             <>
-              <Stack>
+              <Group>
                 {items.map((item, i) => {
                   const data = equipment.find((e) => e.index === item)
                   if (!data) return
@@ -258,6 +259,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                   return (
                     <UnstyledButton
                       key={item + i}
+                      w="100%"
                       onClick={handleSetSelectedItem(data)}
                     >
                       <Group>
@@ -265,15 +267,15 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                         <Stack spacing={0}>
                           <Text fw="bold">{data.name}</Text>
                           <Text title={data.desc.join("")} size="sm">
-                            {data.desc.join("").substring(0, 40)}
-                            {data.desc.join("").length > 40 && "..."}
+                            {data.desc.join("").substring(0, 35)}
+                            {data.desc.join("").length > 35 && "..."}
                           </Text>
                         </Stack>
                       </Group>
                     </UnstyledButton>
                   )
                 })}
-              </Stack>
+              </Group>
 
               <Transition mounted={!!selectedItem} transition="fade">
                 {(styles) => (
@@ -412,52 +414,8 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
             </Stack>
           )}
         </main>
-        <footer css={footerStyles}>
-          <Group h={70} spacing={0}>
-            <button css={footerBtnStyles} onClick={() => setActiveTab("basic")}>
-              <div
-                aria-hidden={true}
-                css={customIconStyles(
-                  `/icons/${
-                    activeTab === "basic" ? "bold" : "linear"
-                  }/user-octagon.svg`,
-                  activeTab === "basic"
-                )}
-              />
-              Básico
-            </button>
-            <button
-              css={footerBtnStyles}
-              onClick={() => setActiveTab("inventory")}
-            >
-              <div
-                aria-hidden={true}
-                css={customIconStyles(
-                  `/icons/${
-                    activeTab === "inventory" ? "bold" : "linear"
-                  }/archive.svg`,
-                  activeTab === "inventory"
-                )}
-              />
-              Inventário
-            </button>
-            <button
-              css={footerBtnStyles}
-              onClick={() => setActiveTab("skills")}
-            >
-              <div
-                aria-hidden={true}
-                css={customIconStyles(
-                  `/icons/${
-                    activeTab === "skills" ? "bold" : "linear"
-                  }/book.svg`,
-                  activeTab === "skills"
-                )}
-              />
-              Habilidades
-            </button>
-          </Group>
-        </footer>
+
+        <CharacterFooter />
       </>
     )
   )
@@ -475,7 +433,7 @@ const mainStyles = css`
   justify-content: center;
   gap: 16px;
   padding-inline: 16px;
-  padding-bottom: 86px;
+  padding-bottom: 102px;
 
   @media screen and (min-width: 720px) {
     grid-template-columns: auto auto;
@@ -503,37 +461,6 @@ const attributeNumberStyles = css`
   background: var(--do_color_primary_light_50);
   font-size: var(--do_text_size_lg);
   font-weight: bold;
-`
-const footerBtnStyles = css`
-  all: unset;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-top: 1px solid var(--do_color_support_light_30);
-  width: 33%;
-  height: 100%;
-  text-align: center;
-
-  &:not(:last-child) {
-    border-right: 1px solid var(--do_color_support_light_30);
-  }
-`
-const footerStyles = css`
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: var(--do_text_color_600);
-`
-
-const customIconStyles = (path: string, isActive: boolean) => css`
-  width: 24px;
-  height: 24px;
-  background-color: ${isActive
-    ? "var(--do_color_primary_base)"
-    : "var(--do_color_support_dark_30)"};
-  mask: url(${path}) no-repeat center;
 `
 
 const backdropStyles: CSSProperties = {
