@@ -30,6 +30,7 @@ import { CSSProperties, useState } from "react"
 import CharacterFooter from "./components/footer/nav"
 import { useAtom } from "jotai"
 import { activeTabAtom } from "./state"
+import Grimoire from "./components/grimoire"
 
 interface CharacterSheetProps {
   characterId: string
@@ -413,6 +414,8 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
               })}
             </Stack>
           )}
+
+          {activeTab === "magic" && <Grimoire character={character} />}
         </main>
 
         <CharacterFooter />

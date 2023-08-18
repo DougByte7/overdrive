@@ -3,7 +3,6 @@ import { css } from "@emotion/react"
 import {
   Menu,
   Burger,
-  Anchor,
   Flex,
   UnstyledButton,
   Stack,
@@ -14,9 +13,11 @@ import { useDisclosure } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
 import { IconUser, IconLogout, IconCrystalBall } from "@tabler/icons-react"
 import { useAtom } from "jotai"
+import { useRouter } from "next/router"
 
 export default function CharacterFooter() {
   const [activeTab, setActiveTab] = useAtom(activeTabAtom)
+  const router = useRouter()
   const [opened, { toggle }] = useDisclosure(false)
   const menuLabel = opened ? "Fechar menu" : "Abrir menu"
 
@@ -45,10 +46,9 @@ export default function CharacterFooter() {
         <Menu.Dropdown>
           <Menu.Item
             icon={<i css={customIconStyles("/d10-electric.svg", false)} />}
+            onClick={() => router.push("/home")}
           >
-            <Anchor href="/home" color="default">
-              Início
-            </Anchor>
+            Início
           </Menu.Item>
 
           <Menu.Divider />
@@ -156,6 +156,7 @@ const footerStyles = css`
   height: 72px;
   background: var(--do_text_color_600);
   border-top: 1px solid var(--do_color_support_light_30);
+  z-index: 10;
 `
 
 const menuStyles = css`
