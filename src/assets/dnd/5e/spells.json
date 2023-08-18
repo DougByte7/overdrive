@@ -1,6 +1,6 @@
 [
   {
-    "casting_time": "1 minute",
+    "casting_time": "1 action",
     "classes": ["wizard"],
     "components": {
       "material": true,
@@ -14,7 +14,7 @@
     "higher_levels": "When you cast this spell using a spell slot of 3rd Level or higher, the damage (both initial and later) increases by 1d4 for each slot level above 2nd.",
     "level": "2",
     "name": "Acid Arrow",
-    "range": "Self (10-foot-radius hemisphere)",
+    "range": "90 feet",
     "ritual": false,
     "school": "evocation",
     "tags": ["wizard", "level2"],

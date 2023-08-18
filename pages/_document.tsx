@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
 import { Html, Head, Main, NextScript } from "next/document"
 
 export default function Document() {
@@ -19,46 +17,10 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body css={styles}>
+      <body>
         <Main />
         <NextScript />
       </body>
     </Html>
   )
 }
-
-const styles = css`
-  &,
-  * {
-    /* width */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-      background: var(--do_color_primary_base);
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--do_color_primary_dark_10);
-    }
-
-    /* Remove Arrows/Spinners */
-    & input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button,
-    input[type="number"] {
-      /* Chrome, Safari, Edge, Opera */
-      -webkit-appearance: none;
-      /* Firefox */
-      -moz-appearance: textfield;
-    }
-  }
-`
