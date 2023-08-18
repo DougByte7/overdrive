@@ -88,9 +88,13 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
           localStorage.getItem("characters") ?? "[]"
         )
         form.picture ??= `/images/fantasy/races/${form.race}.png`
+
         localStorage.setItem(
           "characters",
-          JSON.stringify([...characters, form])
+          JSON.stringify([
+            ...characters,
+            { ...form, spells: Array.from(form.spells) },
+          ])
         )
       } catch (e) {
         captureException(e)
