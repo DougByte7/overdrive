@@ -11,7 +11,13 @@ import {
 } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { notifications } from "@mantine/notifications"
-import { IconUser, IconLogout, IconCrystalBall } from "@tabler/icons-react"
+import {
+  IconUser,
+  IconLogout,
+  IconCrystalBall,
+  IconHome,
+  IconSkull,
+} from "@tabler/icons-react"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 
@@ -44,11 +50,14 @@ export default function CharacterFooter() {
           />
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item
-            icon={<i css={customIconStyles("/d10-electric.svg", false)} />}
-            onClick={() => router.push("/home")}
-          >
+          <Menu.Item icon={<IconHome />} onClick={() => router.push("/home")}>
             Início
+          </Menu.Item>
+          <Menu.Item
+            icon={<IconSkull />}
+            onClick={() => router.push("/monsters")}
+          >
+            Monstros
           </Menu.Item>
 
           <Menu.Divider />
