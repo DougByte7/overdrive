@@ -44,7 +44,7 @@ export default function Grimoire({ character }: GrimoireProps) {
   }
 
   const spellList = character
-    ? character.spells.size
+    ? character.spells?.size
       ? Array.from(character.spells).map((spellName) =>
           spells.find((spell) => spell.name === spellName)
         )
@@ -61,7 +61,7 @@ export default function Grimoire({ character }: GrimoireProps) {
 
   return (
     <>
-      <Tabs defaultValue="prepared" w="100vw">
+      <Tabs w="100vw" defaultValue="prepared">
         <Tabs.List>
           <Tabs.Tab value="prepared">Preparadas</Tabs.Tab>
           <Tabs.Tab value="know">Conhecidas</Tabs.Tab>
@@ -69,7 +69,7 @@ export default function Grimoire({ character }: GrimoireProps) {
         </Tabs.List>
         <Tabs.Panel value="prepared" p="md">
           <Stack spacing="xs">
-            {character?.spells.size ? (
+            {character?.spells?.size ? (
               Array.from(character.spells).map((spell) => {
                 return (
                   <Group key={spell} position="apart">
