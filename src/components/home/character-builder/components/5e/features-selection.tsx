@@ -33,7 +33,7 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
   }, [form.race, setForm])
 
   const classFeatures = useMemo(() => {
-    return classes[form.classes[0]!].features.reduce((acc, feature) => {
+    return classes[form.classes[0].name!].features.reduce((acc, feature) => {
       if (!feature.options) return acc
 
       return [
@@ -72,7 +72,7 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
    * @todo filter proficiencies from background
    */
   const proficiencies = useMemo(() => {
-    const { skills } = classes[form.classes[0]].proficiencies
+    const { skills } = classes[form.classes[0].name].proficiencies
     const options = []
     for (let i = 0; i < skills.amount; i++) {
       options.push(

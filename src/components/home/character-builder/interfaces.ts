@@ -8,7 +8,7 @@ export interface CharacterForm {
   picture: File | null | string
   backstory: string
   race: DnD5eRaceName | null
-  classes: DnD5eClassName[]
+  classes: Array<{ name: DnD5eClassName; level: number }>
   strength: AttributeScore
   dexterity: AttributeScore
   constitution: AttributeScore

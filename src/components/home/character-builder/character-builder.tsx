@@ -61,7 +61,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
   const [step, setStep] = useState(Steps.DESCRIPTION)
 
-  const { spellsKnown, cantripKnown } = classes[form.classes[0]] ?? {}
+  const { spellsKnown, cantripKnown } = classes[form.classes[0]?.name] ?? {}
   const hasCantrips = cantripKnown?.length
   const hasSpells = !!spellsKnown && spellsKnown !== Infinity
   const shouldSkipSpellStep = !(hasCantrips || hasSpells)
@@ -234,7 +234,8 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
                   `}
                 >
                   <Text weight={500} color="var(--do_text_color_300)" size="sm">
-                    {races[form.race!].name},{classes[form.classes[0]].name}.
+                    {races[form.race!].name},
+                    {classes[form.classes[0].name].name}.
                   </Text>
 
                   <Text size="lg" color="var(--do_text_color_600)">

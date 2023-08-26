@@ -24,7 +24,7 @@ interface ClassSelectionProps {
 export default function SpellSelection({ styles }: ClassSelectionProps) {
   const [form] = useAtom(characterFormAton)
 
-  const { spellsKnown, cantripKnown } = classes[form.classes[0]]
+  const { spellsKnown, cantripKnown } = classes[form.classes[0].name]
   const hasCantrips = cantripKnown?.length
   const hasSpells = !!spellsKnown && spellsKnown !== Infinity
 
@@ -33,7 +33,7 @@ export default function SpellSelection({ styles }: ClassSelectionProps) {
       ? spells.filter(
           (spell) =>
             spell.tags.includes("cantrip") &&
-            spell.tags.includes(form.classes[0])
+            spell.tags.includes(form.classes[0].name)
         )
       : []
   }, [form.classes])
@@ -43,7 +43,7 @@ export default function SpellSelection({ styles }: ClassSelectionProps) {
       ? spells.filter(
           (spell) =>
             spell.tags.includes("level1") &&
-            spell.tags.includes(form.classes[0])
+            spell.tags.includes(form.classes[0].name)
         )
       : []
   }, [form.classes])
