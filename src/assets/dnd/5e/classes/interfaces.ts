@@ -2,7 +2,9 @@ export interface DnD5eFeature {
   name: string
   level: number | number[]
   description: string | string[]
+  amount?: number[]
   options?: LabelValue<string>[]
+  misc?: Record<string, string[]>
 }
 
 export interface DnD5eSubClass {

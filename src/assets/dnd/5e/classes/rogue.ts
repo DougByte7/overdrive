@@ -32,7 +32,7 @@ const features: DnD5eFeature[] = [
       "No 3° nível, você escolhe um arquétipo que deseja emular no uso de suas habilidades de ladino, como o de Ladrão. A escolha do seu arquétipo concede a você recursos no 3° nível e novamente no 9°, 13° e 17° níveis.",
   },
   {
-    name: "Melhoria de Habilidade",
+    name: "Melhoria de Atributo",
     level: [4, 8, 10, 12, 16, 19],
     description:
       "Quando você alcança o 4° nível e novamente no 8°, 10°, 12°, 16° e 19° níveis, você pode aumentar um valor de habilidade de sua escolha em 2, ou aumentar dois valores de habilidade de sua escolha em 1. Você não pode aumentar um valor de habilidade acima de 20 usando essa característica.",

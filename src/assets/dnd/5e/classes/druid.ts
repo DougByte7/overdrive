@@ -69,8 +69,8 @@ const features: DnD5eFeature[] = [
       "Ao chegar ao 2º nível, você escolhe se identificar com um círculo druídico, como o Círculo da Terra. Sua escolha concede recursos a você no 2º nível e novamente no 6º, 10º e 14º nível.",
   },
   {
-    name: "Aumento no valor de atributo",
-    level: 4,
+    name: "Melhoria de Atributo",
+    level: [4, 8, 12, 16, 19],
     description:
       "Quando você chegar ao 4º nível e novamente no 8º, 12º, 16º e 19º nível, você pode aumentar um atributo de sua escolha em 2, ou pode aumentar dois atributos de sua escolha em 1. Como normal, você não pode aumentar um atributo acima de 20 usando este recurso.",
   },

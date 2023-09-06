@@ -38,4 +38,32 @@ const abilityScores: Record<Attribute, AbilityScore> = {
     description: "Mede a força da personalidade",
   },
 }
+
+export const attributeOptions: LabelValue<Attribute>[] = [
+  {
+    value: "strength",
+    label: "Força",
+  },
+  {
+    value: "dexterity",
+    label: "Destreza",
+  },
+  {
+    value: "constitution",
+    label: "Constituição",
+  },
+  {
+    value: "intelligence",
+    label: "Inteligência",
+  },
+  {
+    value: "wisdom",
+    label: "Sabedoria",
+  },
+  {
+    value: "charisma",
+    label: "Carisma",
+  },
+]
+
 export default abilityScores

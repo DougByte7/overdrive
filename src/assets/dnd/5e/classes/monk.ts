@@ -56,7 +56,7 @@ const features: DnD5eFeature[] = [
       "A partir do 3º nível, você pode usar sua reação para desviar ou pegar o projétil quando atingido por um ataque de arma à distância. Quando você faz isso, o dano que você sofre do ataque é reduzido por 1d10 + seu modificador de Destreza + seu nível de monge. Se você reduzir o dano a 0, você pode pegar o projétil se ele for pequeno o suficiente para segurar em uma mão e você tiver pelo menos uma mão livre. Se você pegar um projétil dessa maneira, pode gastar 1 ponto de ki para fazer um ataque à distância com a arma ou munição que acabou de pegar, como parte da mesma reação. Você faz esse ataque com proficiência, independentemente de suas proficiências em armas, e o projétil conta como uma arma de monge para o ataque, o que tem um alcance normal de 4 espaços (6m / 20ft) e um alcance longo de 12 espaços (18m / 60ft).",
   },
   {
-    name: "Aumento no valor de atributo",
+    name: "Melhoria de Atributo",
     level: [4, 8, 12, 16, 19],
     description:
       "Quando você alcança o 4º nível e novamente no 8º, 12º, 16º e 19º nível, você pode aumentar um atributo de sua escolha em 2 ou aumentar dois atributos de sua escolha em 1. Como de costume, você não pode aumentar um atributo acima de 20 usando essa característica.",

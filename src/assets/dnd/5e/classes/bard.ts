@@ -72,8 +72,8 @@ const features: DnD5eFeature[] = [
   },
 
   {
-    name: "Aumento no valor de atributo",
-    level: 4,
+    name: "Melhoria de Atributo",
+    level: [4, 8, 12, 16, 19],
     description:
       "Quando você atinge o 4º nível e novamente no 8º, 12º, 16º e 19º níveis, pode aumentar um valor de habilidade de sua escolha em 2 ou aumentar dois valores de habilidade de sua escolha em 1. Como de costume, você não pode aumentar um valor de habilidade acima de 20 usando este recurso.",
   },

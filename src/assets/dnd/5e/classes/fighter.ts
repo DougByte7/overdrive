@@ -41,7 +41,7 @@ const features: DnD5eFeature[] = [
       "No 3º nível, você escolhe uma especialização que você se esforça para emular em seus estilos e técnicas de combate, como o Campeão. A especialização que você escolhe concede recursos para você no 3º nível e novamente no 7º, 10º, 15º e 18º níveis.",
   },
   {
-    name: "Aumento no valor de atributo",
+    name: "Melhoria de Atributo",
     level: [4, 6, 8, 12, 14, 16, 19],
     description:
       "Quando você atinge o 4º nível, e novamente no 6º, 8º, 12º, 14º, 16º e 19º níveis, você pode aumentar um atributo de sua escolha em 2, ou pode aumentar dois atributos de sua escolha em 1. Como normal, você não pode aumentar um atributo acima de 20 usando essa habilidade.",

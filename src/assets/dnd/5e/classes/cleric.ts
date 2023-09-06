@@ -56,8 +56,8 @@ const features: DnD5eFeature[] = [
       "Como uma ação, você apresenta seu símbolo sagrado e profere uma oração censurando os mortos-vivos. Cada morto-vivo que pode vê-lo ou ouvi-lo dentro de 6 espaços (9m / 30ft) de você deve fazer um teste de resistência de Sabedoria. Se a criatura falhar em seu teste de resistência, ela é expulsa por 1 minuto ou até receber qualquer dano. Uma criatura expulsa deve gastar seus turnos tentando se afastar de você o máximo possível e não pode se mover voluntariamente para um espaço dentro de 6 espaços (9m / 30ft) de você. Também não pode tomar reações. Para sua ação, ela só pode usar a ação Desviar ou tentar escapar de um efeito que a impede de se mover. Se não houver lugar para se mover, a criatura pode usar a ação Esquivar.",
   },
   {
-    name: "Aumento no valor de atributo",
-    level: 4,
+    name: "Melhoria de Atributo",
+    level: [4, 8, 12, 16, 19],
     description:
       "Quando você alcança o 4º nível e novamente no 8º, 12º, 16º e 19º nível, pode aumentar um atributo de sua escolha em 2, ou pode aumentar dois atributos de sua escolha em 1. Como de costume, você não pode aumentar um atributo acima de 20 usando essa habilidade.",
   },

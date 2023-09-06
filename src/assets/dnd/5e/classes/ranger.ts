@@ -56,7 +56,7 @@ const features: DnD5eFeature[] = [
       "A partir do 3º nível, você pode usar sua ação e gastar um espaço de magia de patrulheiro para focar sua consciência na região ao seu redor. Por 1 minuto por nível do espaço de magia que você gastar, você pode sentir se os seguintes tipos de criaturas estão presentes a até 1,5km (1 milha) de você (ou até 10km (6 milhas) se você estiver em seu terreno predileto): aberrações, celestiais, dragões, elementais, fadas, demônios e mortos-vivos. Este recurso não revela a localização ou o número das criaturas.",
   },
   {
-    name: "Melhoria de Habilidade",
+    name: "Melhoria de Atributo",
     level: [4, 8, 12, 16, 19],
     description:
       "Ao atingir o 4º nível, e novamente no 8º, 12º, 16º e 19º nível, você pode aumentar um atributo de sua escolha em 2, ou pode aumentar dois atributos de sua escolha em 1. Como de costume, você não pode aumentar um atributo acima de 20 usando esse recurso.",
