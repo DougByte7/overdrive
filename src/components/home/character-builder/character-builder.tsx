@@ -63,7 +63,10 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
   const { spellsKnown, cantripKnown } = classes[form.classes[0]?.name] ?? {}
   const hasCantrips = cantripKnown?.length
-  const hasSpells = !!spellsKnown && spellsKnown !== Infinity
+  const hasSpells =
+    !!spellsKnown &&
+    ((typeof spellsKnown === "number" && spellsKnown !== Infinity) ||
+      (Array.isArray(spellsKnown) && !!spellsKnown[0]))
   const shouldSkipSpellStep = !(hasCantrips || hasSpells)
 
   const resetForm = () => setForm(characterFormAton.init)
