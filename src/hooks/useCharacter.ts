@@ -25,11 +25,22 @@ export default function useCharacter() {
     }
   }
 
-  const updateCharacter = (id: string, newCharacter: CharacterForm) => {
+  const updateCharacter = (
+    id: string | number,
+    newCharacter: CharacterForm
+  ) => {
     const index = characters.findIndex((char) => char.id === id)
     if (index > -1) {
       setCharacters((prev) => {
         prev[index] = newCharacter
+        return prev
+      })
+    } else {
+      /**
+       * @todo remove this else when the id is properly defined
+       */
+      setCharacters((prev) => {
+        prev[id as number] = newCharacter
         return prev
       })
     }

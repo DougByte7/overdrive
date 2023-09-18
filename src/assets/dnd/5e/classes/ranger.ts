@@ -3,13 +3,13 @@ import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
 const features: DnD5eFeature[] = [
   {
     name: "Inimigo Favorito",
-    level: 1,
+    level: [1, 6, 14],
     description:
-      "A partir do 1º nível, você possui uma grande experiência estudando, rastreando, caçando e até mesmo conversando com um tipo específico de inimigo. Escolha um tipo de inimigo favorito: aberrações, bestas, celestiais, construtos, dragões, elementais, fadas, demônios, gigantes, monstros, criaturas disformes, plantas ou mortos-vivos. Alternativamente, você pode selecionar duas raças de humanoides (como gnolls e orcs) como inimigos favoritos. Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear seus inimigos favoritos, bem como em testes de Inteligência para lembrar informações sobre eles. Quando você adquire esta habilidade, também aprende um idioma de sua escolha que é falado pelos seus inimigos favoritos, se eles falarem um.",
+      "A partir do 1º nível, você possui uma grande experiência estudando, rastreando, caçando e até mesmo conversando com um tipo específico de inimigo. Escolha um tipo de inimigo favorito: aberrações, bestas, celestiais, construtos, dragões, elementais, fadas, demônios, gigantes, monstros, criaturas disformes, plantas ou mortos-vivos. Alternativamente, você pode selecionar duas raças de humanoides (como gnolls e orcs) como inimigos favoritos. Você tem vantagem em testes de Sabedoria (Sobrevivência) para rastrear seus inimigos favoritos, bem como em testes de Inteligência para lembrar informações sobre eles. Quando você adquire esta habilidade, também aprende um idioma de sua escolha que é falado pelos seus inimigos favoritos, se eles falarem um. Você escolhe um inimigo favorito adicional, bem como um idioma associado, no 6º e 14º níveis. À medida que você ganha níveis, suas escolhas devem refletir os tipos de monstros que você encontrou em suas aventuras.",
   },
   {
     name: "Explorador Natural",
-    level: 1,
+    level: [1, 6, 10],
     description:
       "Você é particularmente familiarizado com um tipo de ambiente natural e é hábil em viajar e sobreviver nessas regiões. Escolha um tipo de terreno favorito: ártico, costa, deserto, floresta, pastagem, montanha ou pântano. Quando você faz um teste de Inteligência ou Sabedoria relacionado ao seu terreno favorito, seu bônus de proficiência é dobrado se estiver usando uma habilidade que você é proficiente. Enquanto viaja por uma hora ou mais no seu terreno favorito, você obtém os seguintes benefícios: terreno difícil não diminui a velocidade de movimento do seu grupo; seu grupo não pode se perder, exceto por meios mágicos; mesmo quando você está envolvido em outra atividade enquanto viaja (como forragear, navegar ou rastrear), você permanece alerta ao perigo; se você está viajando sozinho, pode se mover furtivamente a uma velocidade normal; quando forrageia, encontra o dobro de comida do que encontraria normalmente; ao rastrear outras criaturas, você também aprende o número exato, o tamanho e quando elas passaram pela área. Você escolhe tipos adicionais de terreno favorito no 6º e no 10º nível.",
   },
@@ -18,6 +18,39 @@ const features: DnD5eFeature[] = [
     level: 2,
     description:
       "Ao chegar no 2º nível, você adota um estilo particular de combate como sua especialidade. Escolha uma das opções a seguir. Você não pode escolher uma opção de Estilo de Combate mais de uma vez, mesmo que mais tarde você tenha a chance de escolher novamente.",
+    options: [
+      { label: "Arquearia", value: "archery" },
+      { label: "Defesa", value: "defense" },
+      { label: "Duelo", value: "dueling" },
+      { label: "Combate com Arma Grande", value: "great_weapon_fighting" },
+      { label: "Proteção", value: "protection" },
+      { label: "Combate com Duas Armas", value: "two_weapon_fighting" },
+    ],
+    misc: {
+      archery: [
+        "Arquearia",
+        "Você recebe um bônus de +2 em rolagens de ataque que você faz com armas de longo alcance.",
+      ],
+      defense: [
+        "Defesa",
+        "Enquanto estiver usando armadura, você recebe um bônus de +1 na CA (Classe de Armadura).",
+      ],
+      dueling: [
+        "Duelo",
+        "Quando estiver empunhando uma arma de combate corpo a corpo em uma mão e nenhuma outra arma, você recebe um bônus de +2 em rolagens de dano com essa arma.",
+      ],
+      great_weapon_fighting: [
+        "Combate com Arma Grande",
+        "Quando você rolar um 1 ou 2 em um dado de dano para um ataque que você fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo se for um 1 ou 2. A arma deve ter a propriedade 'duas mãos' ou 'versátil' para você obter esse benefício.",
+      ],
+      protection: [
+        "Proteção: Quando uma criatura que você pode ver ataca um alvo que não seja você e esteja a até 1.5m (5ft) de você, você pode usar sua reação para impor desvantagem na rolagem de ataque. Você deve estar empunhando um escudo.",
+      ],
+      two_weapon_fighting: [
+        "Combate com Duas Armas",
+        "Quando você se envolve em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.",
+      ],
+    },
   },
   {
     name: "Magias",
@@ -108,25 +141,96 @@ const hunter: DnD5eSubClass = {
       name: "Presas do Caçador",
       level: 3,
       description:
-        "No 3º nível, você ganha uma das seguintes características à sua escolha. Colossus Slayer. Sua tenacidade pode desgastar os inimigos mais potentes. Quando você atinge uma criatura com um ataque de arma, a criatura recebe 1d8 de dano extra se estiver abaixo de seu máximo de pontos de vida. Você só pode causar este dano extra uma vez por turno. Giant Killer. Quando uma criatura Grande ou maior dentro de 1 espaço (1,5m / 5ft) de você acerta ou erra um ataque contra você, você pode usar sua reação para atacar essa criatura imediatamente após o ataque dela, desde que você possa ver a criatura. Horde Breaker. Uma vez em cada um de seus turnos quando você faz um ataque com arma, você pode fazer outro ataque com a mesma arma contra uma criatura diferente que esteja dentro de 1 espaço (1,5m / 5ft) do alvo original e dentro do alcance de sua arma.",
+        "No 3º nível, você ganha uma das seguintes características à sua escolha.",
+      options: [
+        { label: "Colossus Slayer", value: "Colossus Slayer" },
+        { label: "Giant Killer", value: "Giant Killer" },
+        { label: "Horde Breaker", value: "Horde Breaker" },
+      ],
+      misc: {
+        "Colossus Slayer": [
+          "Colossus Slayer",
+          "Sua tenacidade pode desgastar os inimigos mais potentes. Quando você atinge uma criatura com um ataque de arma, a criatura recebe 1d8 de dano extra se estiver abaixo de seu máximo de pontos de vida. Você só pode causar este dano extra uma vez por turno.",
+        ],
+        "Giant Killer": [
+          "Giant Killer",
+          "Quando uma criatura Grande ou maior dentro de 1 espaço (1,5m / 5ft) de você acerta ou erra um ataque contra você, você pode usar sua reação para atacar essa criatura imediatamente após o ataque dela, desde que você possa ver a criatura",
+        ],
+        "Horde Breaker": [
+          "Horde Breaker",
+          "Uma vez em cada um de seus turnos quando você faz um ataque com arma, você pode fazer outro ataque com a mesma arma contra uma criatura diferente que esteja dentro de 1 espaço (1,5m / 5ft) do alvo original e dentro do alcance de sua arma.",
+        ],
+      },
     },
     {
       name: "Táticas Defensivas",
       level: 7,
       description:
-        "No 7º nível, você ganha uma das seguintes características de sua escolha. Fugir da Multidão. Ataques de oportunidade contra você são feitos com desvantagem. Defesa Multiataque. Quando uma criatura acerta você com um ataque, você ganha um bônus de +4 na CA contra todos os ataques subsequentes feitos por essa criatura pelo resto do turno. Força de Vontade. Você tem vantagem em testes de resistência contra ser amedrontado.",
+        "No 7º nível, você ganha uma das seguintes características de sua escolha.",
+      options: [
+        { label: "Fugir da Multidão", value: "escape_the_horde" },
+        { label: "Defesa Multiataque", value: "multiattack_defense" },
+        { label: "Vontade de Aço", value: "steel_will" },
+      ],
+      misc: {
+        escape_the_horde: [
+          "Fugir da Multidão",
+          "Ataques de oportunidade contra você são feitos com desvantagem.",
+        ],
+        multiattack_defense: [
+          "Defesa Multiataque",
+          "Quando uma criatura acerta você com um ataque, você ganha um bônus de +4 na CA contra todos os ataques subsequentes feitos por essa criatura pelo resto do turno. ",
+        ],
+        steel_will: [
+          "Vontade de Aço",
+          "Você tem vantagem em testes de resistência contra ser amedrontado.",
+        ],
+      },
     },
     {
       name: "Multiataque",
       level: 11,
       description:
-        "No 11º nível, você ganha uma das seguintes características de sua escolha. Chuva de Flechas. Você pode usar sua ação para fazer um ataque à distância contra qualquer número de criaturas a até 10 pés de um ponto que você possa ver dentro do alcance de sua arma. Você deve ter munição para cada alvo, como normal, e faz um rolamento de ataque separado para cada alvo. Ataque de Redemoinho. Você pode usar sua ação para fazer um ataque corpo-a-corpo contra qualquer número de criaturas a até 5 pés de você, com um rolamento de ataque separado para cada alvo.",
+        "No 11º nível, você ganha uma das seguintes características de sua escolha.",
+      options: [
+        { label: "Chuva de Flechas", value: "volley" },
+        { label: "Ataque de Redemoinho", value: "whirlwind_attack" },
+      ],
+      misc: {
+        volley: [
+          "Chuva de Flechas",
+          "Você pode usar sua ação para fazer um ataque à distância contra qualquer número de criaturas a até 10 pés de um ponto que você possa ver dentro do alcance de sua arma. Você deve ter munição para cada alvo, como normal, e faz um rolamento de ataque separado para cada alvo.",
+        ],
+        whirlwind_attack: [
+          "Ataque de Redemoinho",
+          "Você pode usar sua ação para fazer um ataque corpo-a-corpo contra qualquer número de criaturas a até 5 pés de você, com um rolamento de ataque separado para cada alvo.",
+        ],
+      },
     },
     {
       name: "Defesa Superior do Caçador",
       level: 15,
       description:
-        "No 15º nível, você ganha uma das seguintes características de sua escolha. Evasão. Quando você é submetido a um efeito, como o sopro de fogo de um dragão vermelho ou um feitiço de raio, que permite que você faça um teste de resistência de Destreza para sofrer apenas metade do dano, você não sofre dano se tiver sucesso no teste de resistência e apenas metade do dano se falhar. Manter-se contra a Maré. Quando uma criatura hostil erra você com um ataque corpo-a-corpo, você pode usar sua reação para fazer com que aquela criatura repita o mesmo ataque contra outra criatura (que não ela mesma) de sua escolha. Esquiva Desviante. Quando um atacante que você pode ver acerta você com um ataque, você pode usar sua reação para reduzir pela metade o dano do ataque contra você.",
+        "No 15º nível, você ganha uma das seguintes características de sua escolha.",
+      options: [
+        { label: "Evasão", value: "evasion" },
+        { label: "Manter-se contra a Maré", value: "stand_against_the_tide" },
+        { label: "Esquiva Sinistra", value: "uncanny_dodge" },
+      ],
+      misc: {
+        evasion: [
+          "Evasão",
+          "Quando você é submetido a um efeito, como o sopro de fogo de um dragão vermelho ou um feitiço de raio, que permite que você faça um teste de resistência de Destreza para sofrer apenas metade do dano, você não sofre dano se tiver sucesso no teste de resistência e apenas metade do dano se falhar.",
+        ],
+        stand_against_the_tide: [
+          "Manter-se contra a Maré",
+          "Quando uma criatura hostil erra você com um ataque corpo-a-corpo, você pode usar sua reação para fazer com que aquela criatura repita o mesmo ataque contra outra criatura (que não ela mesma) de sua escolha. ",
+        ],
+        uncanny_dodge: [
+          "Esquiva Sinistra",
+          "Quando um atacante que você pode ver acerta você com um ataque, você pode usar sua reação para reduzir pela metade o dano do ataque contra você.",
+        ],
+      },
     },
   ],
 }

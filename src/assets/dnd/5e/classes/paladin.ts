@@ -87,21 +87,21 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Aura de Proteção",
-    level: 6,
+    level: [6, 18],
     description:
       "Começando no 6º nível, sempre que você ou uma criatura amigável dentro de 2 espaços ( 3m / 10ft ) de você precisar fazer um teste de resistência, a criatura recebe um bônus ao teste de resistência igual ao seu modificador de Carisma (com um bônus mínimo de +1). Você precisa estar consciente para conceder esse bônus. No 18º nível, o alcance desta aura aumenta para 6 espaços ( 9m / 30ft ).",
   },
   {
     name: "Aura de Coragem",
-    level: 10,
+    level: [10, 18],
     description:
-      "Começando no 10º nível, você e as criaturas amigáveis ​​dentro de 2 espaços ( 3m / 10ft ) de você não podem ficar amedrontados enquanto você estiver consciente. No 18º nível, o alcance desta aura aumenta para 6 espaços ( 9m / 30ft ).",
+      "Começando no 10º nível, você e as criaturas amigáveis dentro de 2 espaços ( 3m / 10ft ) de você não podem ficar amedrontados enquanto você estiver consciente. No 18º nível, o alcance desta aura aumenta para 6 espaços ( 9m / 30ft ).",
   },
   {
-    name: "Divine Smite Aprimorado",
+    name: "Golpe Divino Aprimorado",
     level: 11,
     description:
-      "A partir do 11º nível, você está tão impregnado de poder divino que todos os seus ataques com arma corpo a corpo carregam poder divino com eles. Sempre que você acertar uma criatura com uma arma corpo a corpo, a criatura recebe um dano adicional de 1d8 de dano radiante. Se você também usar o Divine Smite com um ataque, adicione esse dano ao dano adicional do seu Divine Smite.",
+      "A partir do 11º nível, você está tão impregnado de poder divino que todos os seus ataques com arma corpo a corpo carregam poder divino com eles. Sempre que você acertar uma criatura com uma arma corpo a corpo, a criatura recebe um dano adicional de 1d8 de dano radiante. Se você também usar o Golpe Divino com um ataque, adicione esse dano ao dano adicional do seu Golpe Divino.",
   },
   {
     name: "Toque Purificador",
@@ -137,14 +137,16 @@ const devotion: DnD5eSubClass = {
     {
       name: "Magias do Juramento",
       level: 3,
-      description: `Você ganha magias de juramento nos níveis de paladino listados.
-        | Nível de Paladino | Magias |
-        |------|--------------------------------------------|
-        | 3rd  | protection	from	evil	and	good,	sanctuary |
-        | 5th  | lesser	restoration,	zone	of	truth       |
-        | 9th  | beacon	of	hope,	dispel	magic             |
-        | 13th | freedom	of	movement,	guardian	of	faith |
-        | 17th | commune,	flame	strike                      |`,
+      description: [
+        "Você ganha magias de juramento nos níveis de paladino listados.",
+        "| Nível de Paladino | Magias |",
+        "|-|-|",
+        "| 3rd  | protection	from	evil	and	good,	sanctuary |",
+        "| 5th  | lesser	restoration,	zone	of	truth       |",
+        "| 9th  | beacon	of	hope,	dispel	magic             |",
+        "| 13th | freedom	of	movement,	guardian	of	faith   |",
+        "| 17th | commune,	flame	strike                      |",
+      ],
     },
     {
       name: "Canalizar Divindade",
@@ -170,6 +172,18 @@ const devotion: DnD5eSubClass = {
       description:
         "No 20º nível, com uma ação, você pode emanar uma aura de luz solar. Por 1 minuto, luz brilhante brilha em um raio de 6 espaços (9m / 30ft) a partir de você, e luz fraca brilha a 6 espaços (9m / 30ft) além disso. Sempre que uma criatura inimiga começa seu turno na luz brilhante, ela sofre 10 de dano radiante. Além disso, durante a duração, você tem vantagem em testes de resistência contra magias lançadas por fiends ou undead. Depois de usar essa habilidade, você não pode usá-la novamente até terminar um descanso longo.",
     },
+  ],
+  spells: [
+    "Protection from Evil and Good",
+    "Sanctuary",
+    "Lesser Restoration",
+    "Zone of Truth",
+    "Beacon of Hope",
+    "Dispel Magic",
+    "Freedom of Movement",
+    "Guardian of Faith",
+    "Commune",
+    "Flame Strike",
   ],
 }
 
@@ -254,7 +268,4 @@ description: string em português;
 }
 
 Texto:
-
-
-
 */

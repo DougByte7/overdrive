@@ -3,7 +3,7 @@ import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
 const features: DnD5eFeature[] = [
   {
     name: "Expertise",
-    level: 1,
+    level: [1, 6],
     description:
       "No 1º nível, escolha duas proficiências em perícias ou uma proficiência em perícia e uma proficiência em ferramentas de ladrão. O seu bônus de proficiência é dobrado para qualquer teste de habilidade que você fizer que use uma das proficiências escolhidas. No 6º nível, você pode escolher mais duas de suas proficiências (em perícias ou com ferramentas de ladrão) para obter esse benefício.",
   },

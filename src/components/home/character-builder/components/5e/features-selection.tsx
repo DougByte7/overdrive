@@ -30,7 +30,7 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
         />,
       ]
     }, [] as ReactNode[])
-  }, [form.race, setForm])
+  }, [form])
 
   const classFeatures = useMemo(() => {
     return classes[form.classes[0].name!].features.reduce((acc, feature) => {
@@ -66,7 +66,7 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
         </>,
       ]
     }, [] as ReactNode[])
-  }, [form.classes, form.features, setForm])
+  }, [form])
 
   /**
    * @todo filter proficiencies from background

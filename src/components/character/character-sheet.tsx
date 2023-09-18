@@ -16,6 +16,7 @@ import {
   Transition,
   Spoiler,
   List,
+  Button,
 } from "@mantine/core"
 import {
   IconChevronLeft,
@@ -26,11 +27,13 @@ import CharacterPortrait from "./components/character-portrait"
 import classes from "@/assets/dnd/5e/classes"
 import races from "@/assets/dnd/5e/races"
 import equipment from "@/assets/dnd/5e/equipment.json"
-import { CSSProperties, useState } from "react"
+import { CSSProperties, useEffect, useState } from "react"
 import CharacterFooter from "./components/footer/nav"
 import { useAtom } from "jotai"
-import { activeTabAtom } from "./state"
+import { activeTabAtom, characterAtom } from "./state"
 import Grimoire from "./components/grimoire"
+import ModalLevelUp from "./components/modal-level-up"
+import { useDisclosure } from "@mantine/hooks"
 
 interface CharacterSheetProps {
   characterId: string
@@ -38,12 +41,18 @@ interface CharacterSheetProps {
 export default function CharacterSheet({ characterId }: CharacterSheetProps) {
   const { characters } = useCharacter()
   const [activeTab] = useAtom(activeTabAtom)
+  const [character, setCharacter] = useAtom(characterAtom)
+  const [modalLvUpOpened, modalLvUpHandles] = useDisclosure(false)
 
   const [selectedItem, setSelectedItem] = useState<
     (typeof equipment)[number] | null
   >(null)
 
-  const character = characters[+characterId]
+  useEffect(() => {
+    if (!characters[+characterId]) return
+
+    setCharacter(characters[+characterId])
+  }, [characters])
 
   const attributeOptions: LabelValue<Attribute>[] = [
     {
@@ -132,7 +141,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
     character && (
       <>
         <header>
-          <Group p="md">
+          <Group p="md" position="apart">
             <ActionIcon
               size="xl"
               variant="light"
@@ -149,6 +158,12 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
             <Title css={pageTitleStyles} size="md">
               Personagem
             </Title>
+
+            {character.classes.reduce((acc, c) => acc + c.level, 0) < 20 && (
+              <Button size="xs" compact onClick={modalLvUpHandles.open}>
+                Level Up
+              </Button>
+            )}
           </Group>
         </header>
         <main css={mainStyles}>
@@ -158,7 +173,10 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                 imgSrc={character.picture as string}
                 name={character.name}
                 label={`${races[character.race!].name}, ${character.classes
-                  .map((classIndex) => classes[classIndex].name)
+                  .map(
+                    (classIndex) =>
+                      `${classes[classIndex.name].name} lv${classIndex.level}`
+                  )
                   .join(", ")}.`}
               />
               <Group position="center">
@@ -203,8 +221,15 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                       fw="bold"
                       color="var(--do_text_color_600)"
                     >
-                      {+classes[character.classes[0]].hp.dice.replace("d", "") +
-                        getModifier(character.constitution.total)}{" "}
+                      {character.classes.reduce((acc, c) => {
+                        const { average } = classes[c.name].hp
+                        return (
+                          acc +
+                          (average - 1) * 2 +
+                          getModifier(character.constitution.total) * c.level +
+                          average * (c.level - 1)
+                        )
+                      }, 0)}
                     </Text>
                   </Box>
                   <Text size="sm" fw="bold" color="var(--do_text_color_300)">
@@ -419,6 +444,11 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
         </main>
 
         <CharacterFooter />
+        <ModalLevelUp
+          characterId={+characterId}
+          isOpen={modalLvUpOpened}
+          onClose={modalLvUpHandles.close}
+        />
       </>
     )
   )
