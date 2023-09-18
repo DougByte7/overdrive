@@ -25,7 +25,7 @@ import { css } from "@emotion/react"
 interface SpellDetailsProps {
   backdrop?: boolean
   verticalOffset?: number
-  h: string | number
+  h?: string | number
 }
 export function SpellDetails({
   backdrop = true,

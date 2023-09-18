@@ -20,14 +20,16 @@ export default function Grimoire({ character }: GrimoireProps) {
   }
 
   const spellList = character
-    ? character.spells?.size
+    ? character.spells?.length
       ? Array.from(character.spells).map((spellName) =>
           spells.find((spell) => spell.name === spellName)
         )
       : spells
           .filter((spell) =>
             spell.classes.some((classIndex) =>
-              character.classes.includes(classIndex as DnD5eClassName)
+              character.classes.find(
+                (c) => c.name === (classIndex as DnD5eClassName)
+              )
             )
           )
           .sort(sortByLevel)
@@ -45,7 +47,7 @@ export default function Grimoire({ character }: GrimoireProps) {
         </Tabs.List>
         <Tabs.Panel value="prepared" p="md">
           <Stack spacing="xs">
-            {character?.spells?.size ? (
+            {character?.spells?.length ? (
               Array.from(character.spells).map((spell) => {
                 return (
                   <Group key={spell} position="apart">
