@@ -45,22 +45,22 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Forma Selvagem",
-    level: 2,
-    description: `
-    A partir do 2º nível, você pode usar sua ação para assumir magicamente a forma de uma besta que você já viu antes. Você pode usar esse recurso duas vezes. Você recupera os usos gastos quando termina um descanso curto ou longo. Seu nível de druida determina as bestas em que você pode se transformar, conforme mostrado na tabela Formas Selvagens. No 2º nível, por exemplo, você pode se transformar em qualquer besta que tenha um nível de desafio de 1/4 ou menor que não tenha deslocamento de voo ou natação. 
-    | Nível | Máx. DC | Limitações                       | Exemplo       |
-    | ------|---------|----------------------------------|---------------|
-    | 2º    | 1/4     | Sem velocidade de voo ou natação | Lobo          |
-    | 4º    | 1/2     | Sem velocidade de vôo            | Crocodilo     |
-    | 8º    | 1       | —                                | Águia gigante |
-    
-    Você pode permanecer na forma de besta por um número de horas igual à metade do seu nível de druida (arredondado para baixo). Você então volta à sua forma normal, a menos que gaste outro uso dessa característica. Você pode voltar à sua forma normal antes usando uma ação bônus no seu turno. Você reverte automaticamente se ficar inconsciente, cair a 0 pontos de vida ou morrer. Enquanto você está transformado, as seguintes regras se aplicam:
-    • Suas estatísticas de jogo são substituídas pelas estatísticas da besta, mas você mantém seu alinhamento, personalidade e pontuações de Inteligência, Sabedoria e Carisma. Você também retém todas as suas perícias e proficiências em testes de resistência, além de ganhar as da criatura. Se a criatura tiver a mesma proficiência que você e o bônus em seu bloco de estatísticas for maior que o seu, use o bônus da criatura em vez do seu. Se a criatura tiver alguma ação lendária ou de covil, você não poderá usá-la.
-    • Ao se transformar, você assume os pontos de vida e Dados de Vida da besta. Quando você volta à sua forma normal, você retorna ao número de pontos de vida que tinha antes de se transformar. No entanto, se você reverter como resultado de cair para 0 pontos de vida, qualquer excesso de dano será transferido para sua forma normal. Por exemplo, se você sofrer 10 de dano na forma animal e tiver apenas 1 ponto de vida sobrando, você reverte e recebe 9 de dano. Contanto que o excesso de dano não reduza sua forma normal a 0 pontos de vida, você não fica inconsciente.
-    • Você não pode lançar feitiços, e sua habilidade de falar ou realizar qualquer ação que exija as mãos é limitada às capacidades de sua forma de besta. Transformar não quebra sua concentração em um feitiço que você já lançou, entretanto, ou o impede de realizar ações que fazem parte de um feitiço, como chamar um raio, que você já lançou.
-    • Você retém o benefício de quaisquer recursos de sua classe, raça ou outra fonte e pode usá-los se a nova forma for fisicamente capaz de fazê-lo. No entanto, você não pode usar nenhum de seus sentidos especiais, como visão no escuro, a menos que sua nova forma também tenha esse sentido.
-    • Você escolhe se seu equipamento cai no chão em seu espaço, se funde em sua nova forma ou é usado por ela. O equipamento usado funciona normalmente, mas o Mestre decide se é prático para a nova forma usar uma peça de equipamento, com base na forma e tamanho da criatura. Seu equipamento não muda de tamanho ou forma para combinar com a nova forma, e qualquer equipamento que a nova forma não possa usar deve cair no chão ou se fundir a ele. O equipamento que se funde com o formulário não tem efeito até que você saia do formulário.
-    `,
+    level: [2, 4, 8],
+    description: [
+      "A partir do 2º nível, você pode usar sua ação para assumir magicamente a forma de uma besta que você já viu antes. Você pode usar esse recurso duas vezes. Você recupera os usos gastos quando termina um descanso curto ou longo. Seu nível de druida determina as bestas em que você pode se transformar, conforme mostrado na tabela Formas Selvagens. No 2º nível, por exemplo, você pode se transformar em qualquer besta que tenha um nível de desafio de 1/4 ou menor que não tenha deslocamento de voo ou natação.",
+      "| Nv    | Máx. CD | Limitações                       | Exemplo       |",
+      "| ------|---------|----------------------------------|---------------|",
+      "| 2º    | 1/4     | Sem velocidade de voo ou natação | Lobo          |",
+      "| 4º    | 1/2     | Sem velocidade de vôo            | Crocodilo     |",
+      "| 8º    | 1       | —                                | Águia gigante |",
+      "",
+      "Você pode permanecer na forma de besta por um número de horas igual à metade do seu nível de druida (arredondado para baixo). Você então volta à sua forma normal, a menos que gaste outro uso dessa característica. Você pode voltar à sua forma normal antes usando uma ação bônus no seu turno. Você reverte automaticamente se ficar inconsciente, cair a 0 pontos de vida ou morrer. Enquanto você está transformado, as seguintes regras se aplicam:",
+      "- Suas estatísticas de jogo são substituídas pelas estatísticas da besta, mas você mantém seu alinhamento, personalidade e pontuações de Inteligência, Sabedoria e Carisma. Você também retém todas as suas perícias e proficiências em testes de resistência, além de ganhar as da criatura. Se a criatura tiver a mesma proficiência que você e o bônus em seu bloco de estatísticas for maior que o seu, use o bônus da criatura em vez do seu. Se a criatura tiver alguma ação lendária ou de covil, você não poderá usá-la.",
+      "- Ao se transformar, você assume os pontos de vida e Dados de Vida da besta. Quando você volta à sua forma normal, você retorna ao número de pontos de vida que tinha antes de se transformar. No entanto, se você reverter como resultado de cair para 0 pontos de vida, qualquer excesso de dano será transferido para sua forma normal. Por exemplo, se você sofrer 10 de dano na forma animal e tiver apenas 1 ponto de vida sobrando, você reverte e recebe 9 de dano. Contanto que o excesso de dano não reduza sua forma normal a 0 pontos de vida, você não fica inconsciente.",
+      "- Você não pode lançar feitiços, e sua habilidade de falar ou realizar qualquer ação que exija as mãos é limitada às capacidades de sua forma de besta. Transformar não quebra sua concentração em um feitiço que você já lançou, entretanto, ou o impede de realizar ações que fazem parte de um feitiço, como chamar um raio, que você já lançou.",
+      "- Você retém o benefício de quaisquer recursos de sua classe, raça ou outra fonte e pode usá-los se a nova forma for fisicamente capaz de fazê-lo. No entanto, você não pode usar nenhum de seus sentidos especiais, como visão no escuro, a menos que sua nova forma também tenha esse sentido.",
+      "- Você escolhe se seu equipamento cai no chão em seu espaço, se funde em sua nova forma ou é usado por ela. O equipamento usado funciona normalmente, mas o Mestre decide se é prático para a nova forma usar uma peça de equipamento, com base na forma e tamanho da criatura. Seu equipamento não muda de tamanho ou forma para combinar com a nova forma, e qualquer equipamento que a nova forma não possa usar deve cair no chão ou se fundir a ele. O equipamento que se funde com o formulário não tem efeito até que você saia do formulário.",
+    ],
   },
   {
     name: "Círculo Druídico",
@@ -69,8 +69,8 @@ const features: DnD5eFeature[] = [
       "Ao chegar ao 2º nível, você escolhe se identificar com um círculo druídico, como o Círculo da Terra. Sua escolha concede recursos a você no 2º nível e novamente no 6º, 10º e 14º nível.",
   },
   {
-    name: "Aumento no valor de atributo",
-    level: 4,
+    name: "Melhoria de Atributo",
+    level: [4, 8, 12, 16, 19],
     description:
       "Quando você chegar ao 4º nível e novamente no 8º, 12º, 16º e 19º nível, você pode aumentar um atributo de sua escolha em 2, ou pode aumentar dois atributos de sua escolha em 1. Como normal, você não pode aumentar um atributo acima de 20 usando este recurso.",
   },
@@ -125,69 +125,99 @@ const earth: DnD5eSubClass = {
     },
     {
       name: "Feitiços de Círculo",
-      level: [2, 5, 7, 8],
-      description: `
-      Sua conexão mística com a terra o infunde com a capacidade de lançar certos feitiços. Nos níveis 3, 5, 7 e 9, você ganha acesso a feitiços de círculo conectados à terra onde se tornou um druida. Escolha essa terra - ártica, costa, deserto, floresta, pastagem, montanha ou pântano - e consulte a lista associada de feitiços.
-
-Assim que você ganhar acesso a um feitiço de círculo, sempre terá ele preparado, e ele não contará contra o número de feitiços que pode preparar a cada dia. Se você ganhar acesso a um feitiço que não aparece na lista de feitiços de druida, o feitiço ainda é um feitiço de druida para você.
-
-Ártico
-| Druid Level | Circle Spells                |
-|-------------|------------------------------|
-| 3rd         | hold person, spike growth    |
-| 5th         | sleet	storm, slow |
-| 7th         | freedom of movement, ice storm |
-| 9th         | commune with nature, cone of cold |
-
-
-Costa:
-| Druid Level | Circle Spells                |
-|-------------|------------------------------|
-| 3rd         | hold person, spike growth    |
-| 5th         | sleet storm, slow            |
-| 7th         | freedom of movement, ice storm|
-| 9th         | commune with nature, cone of cold|
-
-Deserto:
-| Druid Level | Circle Spells                       |
-|-------------|-------------------------------------|
-| 3rd         | blur, silence                       |
-| 5th         | create food and water, protection from energy|
-| 7th         | blight, hallucinatory terrain        |
-| 9th         | insect plague, wall of stone         |
-
-Floresta:
-| Druid Level | Circle Spells              |
-|-------------|----------------------------|
-| 3rd         | barkskin, spider climb     |
-| 5th         | call lightning, plant growth|
-| 7th         | divination, freedom of movement|
-| 9th         | commune with nature, tree stride|
-
-Pastagem:
-| Druid Level | Circle Spells           |
-|-------------|-------------------------|
-| 3rd         | invisibility, pass without trace|
-| 5th         | daylight, haste          |
-| 7th         | divination, freedom of movement|
-| 9th         | dream, insect plague     |
-
-Montanha:
-| Druid Level | Circle Spells                |
-|-------------|------------------------------|
-| 3rd         | spider climb, spike growth   |
-| 5th         | lightning bolt, meld into stone|
-| 7th         | stone shape, stoneskin       |
-| 9th         | passwall, wall of stone      |
-
-Pantano:
-| Druid Level | Circle Spells                |
-|-------------|------------------------------|
-| 3rd         | acid arrow, darkness         |
-| 5th         | water walk, stinking cloud   |
-| 7th         | freedom of movement, locate creature|
-| 9th         | insect plague, scrying        |
-      `,
+      level: [3, 5, 7, 9],
+      description: [
+        "Sua conexão mística com a terra o infunde com a capacidade de lançar certos feitiços. Nos níveis 3, 5, 7 e 9, você ganha acesso a feitiços de círculo conectados à terra onde se tornou um druida. Escolha essa terra - ártica, costa, deserto, floresta, pastagem, montanha ou pântano - e consulte a lista associada de feitiços.",
+        "Assim que você ganhar acesso a um feitiço de círculo, sempre terá ele preparado, e ele não contará contra o número de feitiços que pode preparar a cada dia. Se você ganhar acesso a um feitiço que não aparece na lista de feitiços de druida, o feitiço ainda é um feitiço de druida para você.",
+      ],
+      options: [
+        { label: "Ártico", value: "arctic" },
+        { label: "Costa", value: "coast" },
+        { label: "Deserto", value: "desert" },
+        { label: "Floresta", value: "forest" },
+        { label: "Pastagem", value: "grassland" },
+        { label: "Montanha", value: "mountain" },
+        { label: "Pântano", value: "swamp" },
+      ],
+      misc: {
+        arctic: [
+          "Ártico",
+          "Hold Person",
+          "Spike Growth",
+          "Sleet Storm",
+          "Slow",
+          "Freedom of Movement",
+          "Ice Storm",
+          "Commune with Nature",
+          "Cone of Cold",
+        ],
+        coast: [
+          "Costa",
+          "Mirror Image",
+          "Misty Step",
+          "Water Breathing",
+          "Water Walk",
+          "Control Water",
+          "Freedom of Movement",
+          "Conjure Elemental",
+          "Scrying",
+        ],
+        desert: [
+          "Deserto",
+          "Blur",
+          "Silence",
+          "Create Food and Water",
+          "Protection from Energy",
+          "Blight",
+          "Hallucinatory Terrain",
+          "Insect Plague",
+          "Wall of Stone",
+        ],
+        forest: [
+          "Floresta",
+          "Barkskin",
+          "Spider Climb",
+          "Call Lightning",
+          "Plant Growth",
+          "Divination",
+          "Freedom of Movement",
+          "Commune with Nature",
+          "Tree Stride",
+        ],
+        grassland: [
+          "Pastagem",
+          "Invisibility",
+          "Pass without Trace",
+          "Daylight",
+          "Haste",
+          "Divination",
+          "Freedom of Movement",
+          "Dream",
+          "Insect Plague",
+        ],
+        mountain: [
+          "Montanha",
+          "Spider Climb",
+          "Spike Growth",
+          "Lightning Bolt",
+          "Meld into Stone",
+          "Stone Shape",
+          "Stoneskin",
+          "Passwall",
+          "Wall of Stone",
+        ],
+        swamp: [
+          "Pântano",
+          "Acid Arrow",
+          "Darkness",
+          "Water Walk",
+          "Stinking Cloud",
+          "Freedom of Movement",
+          "Locate Creature",
+          "Insect Plague",
+          "Scrying",
+        ],
+      },
     },
     {
       name: "Passos da Terra",
@@ -264,7 +294,7 @@ const druid: DnD5eClass = {
       ],
       [
         { index: "scimitar", amount: 1 },
-        { index: "Simple Melee", amount: 1 },
+        { category_range: "Simple Melee", amount: 1 },
       ],
       [{ index: "leather-armor", amount: 1 }],
       [{ index: "explorers-pack", amount: 1 }],

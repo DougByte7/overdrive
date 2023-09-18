@@ -135,10 +135,10 @@ const evocation: DnD5eSubClass = {
         "A partir do 2º nível, você pode criar bolsões de segurança relativa dentro dos efeitos de suas magias de evocação. Quando você lança uma magia de evocação que afeta outras criaturas que pode ver, pode escolher um número delas igual a 1 + o nível da magia. As criaturas escolhidas têm sucesso automático nos seus testes de resistência contra a magia e não sofrem dano se normalmente receberiam metade do dano em um teste bem-sucedido.",
     },
     {
-      name: "Cantrip Poderoso",
+      name: "Truque Poderoso",
       level: 6,
       description:
-        "A partir do 6º nível, seus cantrips de dano afetam até mesmo criaturas que evitam a maior parte do efeito. Quando uma criatura tem sucesso em um teste de resistência contra seu cantrip, a criatura recebe metade do dano do cantrip (se houver) mas não sofre nenhum efeito adicional do cantrip.",
+        "A partir do 6º nível, seus truques de dano afetam até mesmo criaturas que evitam a maior parte do efeito. Quando uma criatura tem sucesso em um teste de resistência contra seu truque, a criatura recebe metade do dano do truque (se houver) mas não sofre nenhum efeito adicional do truque.",
     },
     {
       name: "Evocação Aprimorada",
@@ -165,7 +165,10 @@ const wizard: DnD5eClass = {
     average: 4,
   },
   cantripKnown: [3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-  spellsKnown: 6,
+  spellsKnown: [
+    6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42,
+    44,
+  ],
   spellsSlots: [
     [Infinity, 2],
     [Infinity, 3],

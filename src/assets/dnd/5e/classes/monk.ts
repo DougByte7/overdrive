@@ -39,7 +39,7 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Movimento sem Armadura",
-    level: 2,
+    level: [2, 9],
     description:
       "A partir do 2º nível, seu deslocamento aumenta em 2 espaços (3m / 10ft) enquanto você não estiver usando armadura ou empunhando um escudo. Este bônus aumenta quando você atinge determinados níveis de monge, como mostrado na tabela do Monge. No 9º nível, você adquire a habilidade de se mover ao longo de superfícies verticais e através de líquidos em seu turno sem cair durante o movimento.",
   },
@@ -56,7 +56,7 @@ const features: DnD5eFeature[] = [
       "A partir do 3º nível, você pode usar sua reação para desviar ou pegar o projétil quando atingido por um ataque de arma à distância. Quando você faz isso, o dano que você sofre do ataque é reduzido por 1d10 + seu modificador de Destreza + seu nível de monge. Se você reduzir o dano a 0, você pode pegar o projétil se ele for pequeno o suficiente para segurar em uma mão e você tiver pelo menos uma mão livre. Se você pegar um projétil dessa maneira, pode gastar 1 ponto de ki para fazer um ataque à distância com a arma ou munição que acabou de pegar, como parte da mesma reação. Você faz esse ataque com proficiência, independentemente de suas proficiências em armas, e o projétil conta como uma arma de monge para o ataque, o que tem um alcance normal de 4 espaços (6m / 20ft) e um alcance longo de 12 espaços (18m / 60ft).",
   },
   {
-    name: "Aumento no valor de atributo",
+    name: "Melhoria de Atributo",
     level: [4, 8, 12, 16, 19],
     description:
       "Quando você alcança o 4º nível e novamente no 8º, 12º, 16º e 19º nível, você pode aumentar um atributo de sua escolha em 2 ou aumentar dois atributos de sua escolha em 1. Como de costume, você não pode aumentar um atributo acima de 20 usando essa característica.",
@@ -143,8 +143,12 @@ const openHand: DnD5eSubClass = {
     {
       name: "Técnica da Mão Aberta",
       level: 3,
-      description:
-        "A partir do momento em que você escolhe esta tradição no 3º nível, pode manipular o ki do seu inimigo quando canaliza o seu próprio. Sempre que você acerta uma criatura com um dos ataques concedidos por sua Enxurrada de Golpes, pode impor um dos seguintes efeitos a esse alvo: • Ele deve ser bem sucedido em um teste de resistência de Destreza ou ficará caído. • Ele deve fazer um teste de resistência de Força. Se falhar, você pode empurrá-lo até 3 espaços (7,5m / 15ft) de distância de você. • Ele não pode fazer reações até o final do seu próximo turno.",
+      description: [
+        "A partir do momento em que você escolhe esta tradição no 3º nível, pode manipular o ki do seu inimigo quando canaliza o seu próprio. Sempre que você acerta uma criatura com um dos ataques concedidos por sua Enxurrada de Golpes, pode impor um dos seguintes efeitos a esse alvo:",
+        "- Ele deve ser bem sucedido em um teste de resistência de Destreza ou ficará caído.",
+        "- Ele deve fazer um teste de resistência de Força. Se falhar, você pode empurrá-lo até 3 espaços (7,5m / 15ft) de distância de você.",
+        "- Ele não pode fazer reações até o final do seu próximo turno.",
+      ],
     },
     {
       name: "Integridade do Corpo",
@@ -215,4 +219,5 @@ description: string em português;
 }
 
 Texto:
+
 */

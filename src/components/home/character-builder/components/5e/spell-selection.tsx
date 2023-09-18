@@ -24,7 +24,7 @@ interface ClassSelectionProps {
 export default function SpellSelection({ styles }: ClassSelectionProps) {
   const [form] = useAtom(characterFormAton)
 
-  const { spellsKnown, cantripKnown } = classes[form.classes[0]]
+  const { spellsKnown, cantripKnown } = classes[form.classes[0].name]
   const hasCantrips = cantripKnown?.length
   const hasSpells = !!spellsKnown && spellsKnown !== Infinity
 
@@ -33,7 +33,7 @@ export default function SpellSelection({ styles }: ClassSelectionProps) {
       ? spells.filter(
           (spell) =>
             spell.tags.includes("cantrip") &&
-            spell.tags.includes(form.classes[0])
+            spell.tags.includes(form.classes[0].name)
         )
       : []
   }, [form.classes])
@@ -43,7 +43,7 @@ export default function SpellSelection({ styles }: ClassSelectionProps) {
       ? spells.filter(
           (spell) =>
             spell.tags.includes("level1") &&
-            spell.tags.includes(form.classes[0])
+            spell.tags.includes(form.classes[0].name)
         )
       : []
   }, [form.classes])
@@ -88,11 +88,11 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
     (spellName: string): MouseEventHandler<HTMLButtonElement> =>
     (_) => {
       setForm((form) => {
-        if (form.spells.has(spellName)) {
-          form.spells.delete(spellName)
+        if (form.spells.includes(spellName)) {
+          form.spells = form.spells.filter((s) => s !== spellName)
           decrement()
         } else if (count < maxSpells) {
-          form.spells.add(spellName)
+          form.spells.push(spellName)
           increment()
         }
         return { ...form }
@@ -146,7 +146,7 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
               css={css`
                 border-radius: inherit;
                 border: 1px solid
-                  ${form.spells.has(spell.name)
+                  ${form.spells.includes(spell.name)
                     ? "var(--do_color_primary_base)"
                     : "transparent"};
               `}

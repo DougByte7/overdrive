@@ -8,18 +8,18 @@ export interface CharacterForm {
   picture: File | null | string
   backstory: string
   race: DnD5eRaceName | null
-  classes: DnD5eClassName[]
+  classes: Array<{ name: DnD5eClassName; level: number }>
   strength: AttributeScore
   dexterity: AttributeScore
   constitution: AttributeScore
   intelligence: AttributeScore
   wisdom: AttributeScore
   charisma: AttributeScore
-  traits: Record<string, string>
-  features: Record<string, string>
+  traits: Record<string, string | string[]>
+  features: Record<string, string | string[]>
   proficiencies: Skill[]
   items: WithAmount<EquipmentIndex>[]
-  spells: Set<string>
+  spells: string[]
 }
 
 export interface AttributeScore {

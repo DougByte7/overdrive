@@ -22,9 +22,17 @@ import { useAtom } from "jotai"
 import { selectedSpellAton } from "../../state"
 import { css } from "@emotion/react"
 
-export function SpellDetails() {
+interface SpellDetailsProps {
+  backdrop?: boolean
+  verticalOffset?: number
+  h: string | number
+}
+export function SpellDetails({
+  backdrop = true,
+  verticalOffset = 72,
+  h = "auto",
+}: SpellDetailsProps) {
   const [selectedSpell, setSelectedSpell] = useAtom(selectedSpellAton)
-  console.log(selectedSpell)
 
   const focusTrapRef = useFocusTrap(!!selectedSpell)
 
@@ -38,7 +46,7 @@ export function SpellDetails() {
 
   return (
     <>
-      <Transition mounted={!!selectedSpell} transition="fade">
+      <Transition mounted={backdrop && !!selectedSpell} transition="fade">
         {(styles) => (
           <div
             style={{ ...styles, ...backdropStyles }}
@@ -48,7 +56,10 @@ export function SpellDetails() {
       </Transition>
       <Transition mounted={!!selectedSpell} transition="slide-up">
         {(styles) => (
-          <div ref={focusTrapRef} style={{ ...styles, ...spellInfoStyles }}>
+          <div
+            ref={focusTrapRef}
+            style={{ ...styles, ...spellInfoStyles(verticalOffset, h) }}
+          >
             <ActionIcon
               size="xl"
               variant="light"
@@ -259,10 +270,13 @@ const backdropStyles: CSSProperties = {
   background: "rgba(0, 0, 0, 0.6)",
   zIndex: 3,
 }
-const spellInfoStyles: CSSProperties = {
+const spellInfoStyles = (
+  verticalOffset: number,
+  h: string | number
+): CSSProperties => ({
   position: "fixed",
   right: 0,
-  bottom: 72,
+  bottom: verticalOffset,
   left: 0,
   zIndex: 4,
   borderTopRightRadius: "var(--do_border_radius_lg)",
@@ -270,7 +284,8 @@ const spellInfoStyles: CSSProperties = {
   padding: 16,
   paddingBottom: 32,
   minHeight: 550,
+  height: h,
   maxHeight: "calc(100vh - 150px)",
   overflow: "auto",
   background: "var(--do_text_color_600)",
-}
+})

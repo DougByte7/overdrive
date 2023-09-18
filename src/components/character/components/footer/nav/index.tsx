@@ -67,7 +67,6 @@ export default function CharacterFooter() {
             Características de classe
           </Menu.Item>
           <Menu.Item onClick={handleNotImplemented}>Ações</Menu.Item>
-          <Menu.Item onClick={handleNotImplemented}>Subir de nível</Menu.Item>
 
           <Menu.Divider />
           <Menu.Label>Conta</Menu.Label>

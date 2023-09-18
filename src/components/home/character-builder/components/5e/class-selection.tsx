@@ -25,7 +25,7 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
   const handleSelectClass =
     (className: DnD5eClassName): MouseEventHandler<HTMLButtonElement> =>
     (_) => {
-      setForm((form) => ({ ...form, classes: [className] }))
+      setForm((form) => ({ ...form, classes: [{ name: className, level: 1 }] }))
     }
 
   return (
@@ -74,7 +74,7 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
               css={css`
                 border-radius: inherit;
                 border: 1px solid
-                  ${form.classes[0] === classKey
+                  ${form.classes[0]?.name === classKey
                     ? "var(--do_color_primary_base)"
                     : "transparent"};
               `}

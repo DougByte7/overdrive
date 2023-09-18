@@ -39,7 +39,7 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Inspiração Bárdica",
-    level: 1,
+    level: [1, 5, 10, 15],
     description:
       "Você pode inspirar os outros através de palavras inspiradoras ou música. Para fazer isso, você usa uma ação bônus em seu turno para escolher uma criatura que não seja você dentro de 60 pés de você que possa ouvi-lo. Essa criatura ganha um dado de Inspiração Bárdica, um d6. Uma vez dentro dos próximos 10 minutos, a criatura pode rolar o dado e adicionar o número rolado a um teste de habilidade, rolagem de ataque ou jogada de resistência que ela faça. A criatura pode esperar até depois de rolar o d20 antes de decidir usar o dado de Inspiração Bárdica, mas deve decidir antes do Mestre dizer se o teste tem sucesso ou falha. Uma vez que o dado de Inspiração Bárdica é rolado, ele é perdido. Uma criatura só pode ter um dado de Inspiração Bárdica de cada vez. Você pode usar essa habilidade um número de vezes igual ao seu modificador de Carisma (um mínimo de uma vez). Você recupera quaisquer usos gastos quando termina um descanso longo. Seu dado de Inspiração Bárdica muda quando você alcança certos níveis nesta classe. O dado se torna um d8 no 5º nível, um d10 no 10º nível e um d12 no 15º nível.",
   },
@@ -52,7 +52,7 @@ const features: DnD5eFeature[] = [
 
   {
     name: "Canção de Descanso",
-    level: 2,
+    level: [2, 9, 13, 17],
     description:
       "A partir do 2º nível, você pode usar música suave ou oratória para ajudar a revigorar seus aliados feridos durante um descanso curto. Se você ou quaisquer criaturas amigáveis que possam ouvir sua performance recuperarem pontos de vida ao final do descanso curto, gastando um ou mais Dados de Vida, cada uma dessas criaturas recupera um extra de 1d6 pontos de vida. Os pontos de vida extras aumentam quando você atinge determinados níveis nesta classe: para 1d8 no 9º nível, para 1d10 no 13º nível e para 1d12 no 17º nível.",
   },
@@ -66,14 +66,14 @@ const features: DnD5eFeature[] = [
 
   {
     name: "Perícia",
-    level: 3,
+    level: [3, 10],
     description:
       "No 3º nível, escolha duas das suas proficiências em habilidades. Seu bônus de proficiência é dobrado em qualquer teste de habilidade que você fizer que use qualquer uma das proficiências escolhidas. No 10º nível, você pode escolher mais duas proficiências em habilidades para obter este benefício.",
   },
 
   {
-    name: "Aumento no valor de atributo",
-    level: 4,
+    name: "Melhoria de Atributo",
+    level: [4, 8, 12, 16, 19],
     description:
       "Quando você atinge o 4º nível e novamente no 8º, 12º, 16º e 19º níveis, pode aumentar um valor de habilidade de sua escolha em 2 ou aumentar dois valores de habilidade de sua escolha em 1. Como de costume, você não pode aumentar um valor de habilidade acima de 20 usando este recurso.",
   },
@@ -91,7 +91,7 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Segredos Mágicos",
-    level: 10,
+    level: [10, 14, 18],
     description:
       "A partir do 10º nível, você saqueou conhecimento mágico de uma ampla variedade de disciplinas. Escolha dois feitiços de qualquer classe, incluindo esta. O feitiço que você escolher deve ser de um nível que você possa conjurar, conforme mostrado na tabela do Bardo, ou um truque. Os feitiços escolhidos contam como feitiços de bardo para você e estão incluídos no número na coluna de Feitiços Conhecidos da tabela do Bardo. Você aprende mais dois feitiços de qualquer classe no 14º nível e novamente no 18º nível.",
   },

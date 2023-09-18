@@ -45,7 +45,7 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Canalizar Divindade",
-    level: 2,
+    level: [2, 6, 18],
     description:
       "Você ganha a habilidade de canalizar energia divina diretamente de sua divindade, usando essa energia para alimentar efeitos mágicos. Você começa com dois efeitos: Turn Undead e um efeito determinado pelo seu domínio. Alguns domínios concedem efeitos adicionais conforme você avança nos níveis, como observado na descrição do domínio. Ao usar sua Channel Divinity, você escolhe qual efeito criar. Você deve então terminar um descanso curto ou longo para usar sua Channel Divinity novamente. Alguns efeitos de Channel Divinity exigem testes de resistência. Quando você usa tal efeito desta classe, o DC é igual ao seu DC de salvamento de feitiço de clérigo. A partir do 6º nível, você pode usar sua Channel Divinity duas vezes entre descansos e, a partir do 18º nível, pode usá-la três vezes entre descansos. Quando você termina um descanso curto ou longo, recupera seus usos gastos.",
   },
@@ -56,20 +56,20 @@ const features: DnD5eFeature[] = [
       "Como uma ação, você apresenta seu símbolo sagrado e profere uma oração censurando os mortos-vivos. Cada morto-vivo que pode vê-lo ou ouvi-lo dentro de 6 espaços (9m / 30ft) de você deve fazer um teste de resistência de Sabedoria. Se a criatura falhar em seu teste de resistência, ela é expulsa por 1 minuto ou até receber qualquer dano. Uma criatura expulsa deve gastar seus turnos tentando se afastar de você o máximo possível e não pode se mover voluntariamente para um espaço dentro de 6 espaços (9m / 30ft) de você. Também não pode tomar reações. Para sua ação, ela só pode usar a ação Desviar ou tentar escapar de um efeito que a impede de se mover. Se não houver lugar para se mover, a criatura pode usar a ação Esquivar.",
   },
   {
-    name: "Aumento no valor de atributo",
-    level: 4,
+    name: "Melhoria de Atributo",
+    level: [4, 8, 12, 16, 19],
     description:
       "Quando você alcança o 4º nível e novamente no 8º, 12º, 16º e 19º nível, pode aumentar um atributo de sua escolha em 2, ou pode aumentar dois atributos de sua escolha em 1. Como de costume, você não pode aumentar um atributo acima de 20 usando essa habilidade.",
   },
   {
     name: "Destruir Mortos-vivos",
-    level: 5,
+    level: [5, 8, 11, 14, 17],
     description:
       "A partir do 5º nível, quando um morto-vivo falha em seu teste de resistência contra sua habilidade Expulsar Morto-vivo, a criatura é instantaneamente destruída se sua classificação de desafio estiver igual ou abaixo de um determinado limite, como mostrado na tabela Destruir Mortos-vivos. Destruir Mortos-Vivos no Nível 5 do Clérigo: CR 1/2 ou menos, 8º nível 1 ou menos, 11º nível 2 ou menos, 14º nível 3 ou menos, 17º nível 4 ou menos.",
   },
   {
     name: "Intervenção Divina",
-    level: 10,
+    level: [10, 20],
     description:
       "A partir do 10º nível, você pode chamar a intervenção do seu deus em seu favor quando sua necessidade é grande. Pedir a ajuda do seu deus exige que você use sua ação. Descreva a assistência que você procura e role os dados percentuais. Se você rolar um número igual ou menor que o seu nível de clérigo, seu deus intervém. O Mestre escolhe a natureza da intervenção; o efeito de qualquer magia de clérigo ou de magia de domínio de clérigo seria apropriado. Se seu deus intervir, você não pode usar essa habilidade novamente por 7 dias. Caso contrário, você pode usá-la novamente depois de terminar um descanso longo. No 20º nível, seu chamado para a intervenção é bem-sucedido automaticamente, sem necessidade de rolagem.",
   },
@@ -78,7 +78,7 @@ const features: DnD5eFeature[] = [
 const life: DnD5eSubClass = {
   name: "Domínio da Vida",
   description:
-    "O Domínio da Vida enfoca a energia positiva vibrante - uma das forças fundamentais do universo - que sustenta toda a vida. Os deuses da vida promovem vitalidade e saúde através da cura dos doentes e feridos, cuidando dos necessitados e expulsando as forças da morte e da morte-viva. Quase qualquer divindade não maligna pode afirmar influência sobre este domínio, especialmente deidades agrícolas (como Chauntea, Arawai e Demeter), deuses solares (como Lathander, Pelor e Re-Horakhty), deuses da cura ou resistência (como Ilmater, Mishakal, Apollo e Diancecht) e deuses do lar e da comunidade (como Hestia, Hathor e Boldrei).",
+    "O Domínio da Vida foca a energia positiva vibrante - uma das forças fundamentais do universo - que sustenta toda a vida. Os deuses da vida promovem vitalidade e saúde através da cura dos doentes e feridos, cuidando dos necessitados e expulsando as forças da morte e da morte-viva. Quase qualquer divindade não maligna pode afirmar influência sobre este domínio, especialmente deidades agrícolas (como Chauntea, Arawai e Demeter), deuses solares (como Lathander, Pelor e Re-Horakhty), deuses da cura ou resistência (como Ilmater, Mishakal, Apollo e Diancecht) e deuses do lar e da comunidade (como Hestia, Hathor e Boldrei).",
   features: [
     {
       name: "Magias do Domínio da Vida",
@@ -112,7 +112,7 @@ const life: DnD5eSubClass = {
     },
     {
       name: "Ataque Divino",
-      level: 8,
+      level: [8, 14],
       description:
         "No 8º nível, você ganha a habilidade de infundir seus ataques de armas com energia divina. Uma vez em cada um de seus turnos, quando você atinge uma criatura com um ataque de arma, você pode fazer com que o ataque cause um dano radiante extra de 1d8 ao alvo. Quando você atinge o 14º nível, o dano extra aumenta para 2d8.",
     },
@@ -122,6 +122,18 @@ const life: DnD5eSubClass = {
       description:
         "A partir do 17º nível, quando você normalmente rolaria um ou mais dados para restaurar pontos de vida com um feitiço, você usa em vez disso o número mais alto possível para cada dado. Por exemplo, em vez de restaurar 2d6 pontos de vida a uma criatura, você restaura 12.",
     },
+  ],
+  spells: [
+    "Bless",
+    "Cure Wounds",
+    "Lesser Restoration",
+    "Spiritual Weapon",
+    "Beacon of Hope",
+    "Revivify",
+    "Death Ward",
+    "Guardian of Faith",
+    "Mass Cure Wounds",
+    "Raise Dead",
   ],
 }
 
@@ -137,26 +149,26 @@ const cleric: DnD5eClass = {
   cantripKnown: [3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
   spellsKnown: Infinity,
   spellsSlots: [
-    [Infinity, 2],
-    [Infinity, 3],
-    [Infinity, 4, 2],
-    [Infinity, 4, 3],
-    [Infinity, 4, 3, 2],
-    [Infinity, 4, 3, 3],
-    [Infinity, 4, 3, 3, 1],
-    [Infinity, 4, 3, 3, 2],
-    [Infinity, 4, 3, 3, 3, 1],
-    [Infinity, 4, 3, 3, 3, 2],
-    [Infinity, 4, 3, 3, 3, 2, 1],
-    [Infinity, 4, 3, 3, 3, 2, 1],
-    [Infinity, 4, 3, 3, 3, 2, 1, 1],
-    [Infinity, 4, 3, 3, 3, 2, 1, 1],
-    [Infinity, 4, 3, 3, 3, 2, 1, 1, 1],
-    [Infinity, 4, 3, 3, 3, 2, 1, 1, 1],
-    [Infinity, 4, 3, 3, 3, 2, 1, 1, 1, 1],
-    [Infinity, 4, 3, 3, 3, 3, 1, 1, 1, 1],
-    [Infinity, 4, 3, 3, 3, 3, 2, 1, 1, 1],
-    [Infinity, 4, 3, 3, 3, 3, 2, 2, 1, 1],
+    [Infinity, 2], // 1
+    [Infinity, 3], // 2
+    [Infinity, 4, 2], // 3
+    [Infinity, 4, 3], // 4
+    [Infinity, 4, 3, 2], // 5
+    [Infinity, 4, 3, 3], // 6
+    [Infinity, 4, 3, 3, 1], // 7
+    [Infinity, 4, 3, 3, 2], // 8
+    [Infinity, 4, 3, 3, 3, 1], // 9
+    [Infinity, 4, 3, 3, 3, 2], // 10
+    [Infinity, 4, 3, 3, 3, 2, 1], // 11
+    [Infinity, 4, 3, 3, 3, 2, 1], // 12
+    [Infinity, 4, 3, 3, 3, 2, 1, 1], // 13
+    [Infinity, 4, 3, 3, 3, 2, 1, 1], // 14
+    [Infinity, 4, 3, 3, 3, 2, 1, 1, 1], // 15
+    [Infinity, 4, 3, 3, 3, 2, 1, 1, 1], // 16
+    [Infinity, 4, 3, 3, 3, 2, 1, 1, 1, 1], // 17
+    [Infinity, 4, 3, 3, 3, 3, 1, 1, 1, 1], // 18
+    [Infinity, 4, 3, 3, 3, 3, 2, 1, 1, 1], // 19
+    [Infinity, 4, 3, 3, 3, 3, 2, 2, 1, 1], // 20
   ],
   proficiencies: {
     armor: ["light", "medium", "shield"],

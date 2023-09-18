@@ -2,13 +2,17 @@ export interface DnD5eFeature {
   name: string
   level: number | number[]
   description: string | string[]
+  amount?: number[]
   options?: LabelValue<string>[]
+  misc?: Record<string, string[]>
 }
 
 export interface DnD5eSubClass {
   name: string
   description: string
   features: DnD5eFeature[]
+  spells?: string[]
+  expandedSpellList?: string[]
 }
 
 export type DiceFaces = 4 | 6 | 8 | 10 | 12 | 20

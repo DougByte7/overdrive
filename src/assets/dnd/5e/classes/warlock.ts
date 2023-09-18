@@ -45,15 +45,349 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Invocações Místicas",
-    level: 2,
-    description:
+    level: [2, 5, 7, 9, 12, 15, 18],
+    description: [
       "Em seu estudo do conhecimento oculto, você descobriu invocações místicas, fragmentos de conhecimento proibido que lhe conferem uma habilidade mágica duradoura. No 2º nível, você obtém duas invocações místicas de sua escolha. Suas opções de invocação estão detalhadas no final da descrição da classe. Quando você alcança certos níveis de bruxo, obtém invocações adicionais de sua escolha, conforme mostrado na coluna Invocações Conhecidas da tabela Warlock. Além disso, quando você sobe de nível nesta classe, pode escolher uma das invocações que conhece e substituí-la por outra invocação que poderia aprender naquele nível.",
+    ],
+    amount: [0, 2, 2, 2, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8],
+    options: [
+      {
+        label: "Agonizing Blast",
+        value: "agonizing-blast",
+      },
+      {
+        label: "Armor of Shadows",
+        value: "armor-of-shadows",
+      },
+      {
+        label: "Ascendant Step",
+        value: "ascendant-step",
+      },
+      {
+        label: "Beast Speech",
+        value: "beast-speech",
+      },
+      {
+        label: "Beguiling Influence",
+        value: "beguiling-influence",
+      },
+      {
+        label: "Bewitching Whispers",
+        value: "bewitching-whispers",
+      },
+      {
+        label: "Book of Ancient Secrets",
+        value: "book-of-ancient-secrets",
+      },
+      {
+        label: "Chains of Carceri",
+        value: "chains-of-carceri",
+      },
+      {
+        label: "Devil's Sight",
+        value: "devils-sight",
+      },
+      {
+        label: "Dreadful Word",
+        value: "dreadful-word",
+      },
+      {
+        label: "Eldritch Sight",
+        value: "eldritch-sight",
+      },
+      {
+        label: "Eldritch Spear",
+        value: "eldritch-spear",
+      },
+      {
+        label: "Eyes of the Rune Keeper",
+        value: "eyes-of-the-rune-keeper",
+      },
+      {
+        label: "Fiendish Vigor",
+        value: "fiendish-vigor",
+      },
+      {
+        label: "Gaze of Two Minds",
+        value: "gaze-of-two-minds",
+      },
+      {
+        label: "Lifedrinker",
+        value: "lifedrinker",
+      },
+      {
+        label: "Mask of Many Faces",
+        value: "mask-of-many-faces",
+      },
+      {
+        label: "Master of Myriad Forms",
+        value: "master-of-myriad-forms",
+      },
+      {
+        label: "Minions of Chaos",
+        value: "minions-of-chaos",
+      },
+      {
+        label: "Mire the Mind",
+        value: "mire-the-mind",
+      },
+      {
+        label: "Misty Visions",
+        value: "misty-visions",
+      },
+      {
+        label: "One with Shadows",
+        value: "one-with-shadows",
+      },
+      {
+        label: "Otherworldly Leap",
+        value: "otherworldly-leap",
+      },
+      {
+        label: "Repelling Blast",
+        value: "repelling-blast",
+      },
+      {
+        label: "Sculptor of Flesh",
+        value: "sculptor-of-flesh",
+      },
+      {
+        label: "Sign of Ill Omen",
+        value: "sign-of-ill-omen",
+      },
+      {
+        label: "Thief of Five Fates",
+        value: "thief-of-five-fates",
+      },
+      {
+        label: "Thirsting Blade",
+        value: "thirsting-blade",
+      },
+      {
+        label: "Visions of Distant Realms",
+        value: "visions-of-distant-realms",
+      },
+      {
+        label: "Voice of the Chain Master",
+        value: "voice-of-the-chain-master",
+      },
+      {
+        label: "Whispers of the Grave",
+        value: "whispers-of-the-grave",
+      },
+      {
+        label: "Witch Sight",
+        value: "witch-sight",
+      },
+    ],
+    misc: {
+      "agonizing-blast": [
+        "Agonizing Blast",
+        "Prerequisite: eldritch blast cantrip",
+        "When you cast eldritch blast, add your Charisma modifier to the damage it deals on a hit.",
+      ],
+      "armor-of-shadows": [
+        "Armor of Shadows",
+        "You can cast mage armor on yourself at will, without expending a spell slot or material components.",
+      ],
+      "ascendant-step": [
+        "Ascendant Step",
+        "Prerequisite: 9th level",
+        "You can cast levitate on yourself at will, without expending a spell slot or material components.",
+      ],
+
+      "beast-speech": [
+        "Beast Speech",
+        "You can cast speak with animals at will, without expending a spell slot",
+      ],
+      "beguiling-influence": [
+        "Beguiling Influence",
+        "You gain proficiency in the Deception and Persuasion skills",
+      ],
+      "bewitching-whispers": [
+        "Bewitching Whispers",
+        "Prerequisite: 7th level",
+        "You can cast compulsion once using a warlock spell slot",
+        "You can't do so again until you finish a long rest",
+      ],
+      "book-of-ancient-secrets": [
+        "Book of Ancient Secrets",
+        "Prerequisite: Pact of the Tome feature",
+        "You can now inscribe magical rituals in your Book of Shadows",
+        "Choose two 1st-level spells that have the ritual tag from any class's spell list",
+        "The spells appear in the book and don't count against the number of spells you know",
+        "With your Book of Shadows in hand, you can cast the chosen spells as rituals",
+        "You can also cast a warlock spell you know as a ritual if it has the ritual tag",
+        "On your adventures, you can add other ritual spells to your Book of Shadows",
+        "When you find such a spell, you can add it to the book if the spell's level is equal to or less than half your warlock level (rounded up) and if you can spare the time to transcribe the spell",
+        "For each level of the spell, the transcription process takes 2 hours and costs 50 gp for the rare inks needed to inscribe it",
+      ],
+      "chains-of-carceri": [
+        "Chains of Carceri",
+        "Prerequisite: 15th level, Pact of the Chain feature",
+        "You can cast hold monster at will—targeting a celestial, fiend, or elemental—without expending a spell slot or material components",
+        "You must finish a long rest before you can use this invocation on the same creature again",
+      ],
+      "devils-sight": [
+        "Devil's Sight",
+        "You can see normally in darkness, both magical and nonmagical, to a distance of 120 feet",
+      ],
+      "dreadful-word": [
+        "Dreadful Word",
+        "Prerequisite: 7th level",
+        "You can cast confusion once using a warlock spell slot",
+        "You can't do so again until you finish a long rest",
+      ],
+      "eldritch-sight": [
+        "Eldritch Sight",
+        "You can cast detect magic at will, without expending a spell slot",
+      ],
+      "eldritch-spear": [
+        "Eldritch Spear",
+        "Prerequisite: eldritch blast cantrip",
+        "When you cast eldritch blast, its range is 300 feet",
+      ],
+      "eyes-of-the-rune-keeper": [
+        "Eyes of the Rune Keeper",
+        "You can read all writing",
+      ],
+      "fiendish-vigor": [
+        "Fiendish Vigor",
+        "You can cast false life on yourself at will as a 1st-level spell, without expending a spell slot or material components",
+      ],
+      "gaze-of-two-minds": [
+        "Gaze of Two Minds",
+        "You can use your action to touch a willing humanoid and perceive through its senses until the end of your next turn",
+        "As long as the creature is on the same plane of existence as you, you can use your action on subsequent turns to maintain this connection, extending the duration until the end of your next turn",
+        "While perceiving through the other creature's senses, you benefit from any special senses possessed by that creature, and you are blinded and deafened to your own surroundings",
+      ],
+      lifedrinker: [
+        "Lifedrinker",
+        "Prerequisite: 12th level, Pact of the Blade feature",
+        "When you hit a creature with your pact weapon, the creature takes extra necrotic damage equal to your Charisma modifier (minimum 1)",
+      ],
+      "mask-of-many-faces": [
+        "Mask of Many Faces",
+        "You can cast disguise self at will, without expending a spell slot",
+      ],
+      "master-of-myriad-forms": [
+        "Master of Myriad Forms",
+        "Prerequisite: 15th level",
+        "You can cast alter self at will, without expending a spell slot",
+      ],
+      "minions-of-chaos": [
+        "Minions of Chaos",
+        "Prerequisite: 9th level",
+        "You can cast conjure elemental once using a warlock spell slot",
+        "You can't do so again until you finish a long rest",
+      ],
+      "mire-the-mind": [
+        "Mire the Mind",
+        "Prerequisite: 5th level",
+        "You can cast slow once using a warlock spell slot",
+        "You can't do so again until you finish a long rest",
+      ],
+      "misty-visions": [
+        "Misty Visions: You can cast silent image at will, without expending a spell slot or material components",
+      ],
+      "one-with-shadows": [
+        "One with Shadows",
+        "Prerequisite: 5th level",
+        "When you are in an area of dim light or darkness, you can use your action to become invisible until you move or take an action or a reaction",
+      ],
+      "otherworldly-leap": [
+        "Otherworldly Leap",
+        "Prerequisite: 9th level",
+        "You can cast jump on yourself at will, without expending a spell slot or material components",
+      ],
+      "repelling-blast": [
+        "Repelling Blast",
+        "Prerequisite: eldritch blast cantrip",
+        "When you hit a creature with eldritch blast, you can push the creature up to 10 feet away from you in a straight line",
+      ],
+      "sculptor-of-flesh": [
+        "Sculptor of Flesh",
+        "Prerequisite: 7th level",
+        "You can cast polymorph once using a warlock spell slot",
+        "You can't do so again until you finish a long rest",
+      ],
+      "sign-of-ill-omen": [
+        "Sign of Ill Omen",
+        "Prerequisite: 5th level",
+        "You can cast bestow curse once using a warlock spell slot",
+        "You can't do so again until you finish a long rest",
+      ],
+      "thief-of-five-fates": [
+        "Thief of Five Fates",
+        "You can cast bane once using a warlock spell slot",
+        "You can't do so again until you finish a long rest",
+      ],
+      "thirsting-blade": [
+        "Thirsting Blade",
+        "Prerequisite: 5th level, Pact of the Blade feature",
+        "You can attack with your pact weapon twice, instead of once, whenever you take the Attack action on your turn",
+      ],
+      "visions-of-distant-realms": [
+        "Visions of Distant Realms",
+        "Prerequisite: 15th level",
+        "You can cast arcane eye at will, without expending a spell slot",
+      ],
+      "voice-of-the-chain-master": [
+        "Voice of the Chain Master",
+        "Prerequisite: Pact of the Chain feature",
+        "You can communicate telepathically with your familiar and perceive through your familiar's senses as long as you are on the same plane of existence",
+        "Additionally, while perceiving through your familiar's senses, you can also speak through your familiar in your own voice, even if your familiar is normally incapable of speech",
+      ],
+      "whispers-of-the-grave": [
+        "Whispers of the Grave",
+        "Prerequisite: 9th level",
+        "You can cast speak with dead at will, without expending a spell slot",
+      ],
+      "witch-sight": [
+        "Witch Sight",
+        "Prerequisite: 15th level",
+        "You can see the true form of any shapechanger or creature concealed by illusion or transmutation magic while the creature is within 30 feet of you and within line of sight",
+      ],
+    },
   },
   {
     name: "Dádiva do Pacto",
     level: 3,
     description:
       "No 3º nível, seu patrono sobrenatural concede um presente a você por seu serviço leal. Você ganha uma das seguintes características de sua escolha.",
+    options: [
+      {
+        label: "Pacto da Corrente",
+        value: "pact-of-the-chain",
+      },
+      {
+        label: "Pacto da Lâmina",
+        value: "pact-of-the-blade",
+      },
+      {
+        label: "Pacto do Tomo",
+        value: "pact-of-the-tome",
+      },
+    ],
+    misc: {
+      "pact-of-the-chain": [
+        "Pacto da Corrente",
+        "Você aprende a magia 'Find Familiar' e pode lançá-lo como um ritual. O feitiço não conta no número de feitiços que você conhece.",
+        "Quando você lança a magia, pode escolher uma das formas normais para o seu familiar ou uma das seguintes formas especiais: imp, pseudodragon, quasit ou sprite.",
+        "Além disso, quando você realiza a ação de Ataque, você pode renunciar a um dos seus próprios ataques para permitir que seu familiar faça um ataque próprio com sua reação.",
+      ],
+      "pact-of-the-blade": [
+        "Pacto da Lâmina",
+        "Você pode usar sua ação para criar uma arma de pacto em sua mão vazia. Você pode escolher a forma que esta arma corpo a corpo assume cada vez que a cria. Você é proficiente com ela enquanto a empunha. Esta arma conta como mágica para superar resistência e imunidade a ataques e dano não mágico.",
+        "Sua arma de pacto desaparece se estiver a mais de 1.5m (5ft) de você por 1 minuto ou mais. Ela também desaparece se você usar este recurso novamente, se a dispensar (sem ação necessária) ou se você morrer.",
+        "Você pode transformar uma arma mágica em sua arma de pacto realizando um ritual especial enquanto segura a arma. Você realiza o ritual ao longo de 1 hora, que pode ser feito durante um descanso curto. Em seguida, você pode dispensar a arma, enviando-a para um espaço extra-dimensional, e ela aparece sempre que você criar sua arma de pacto depois disso. Você não pode afetar um artefato ou uma arma consciente dessa maneira. A arma deixa de ser sua arma de pacto se você morrer, se realizar o ritual de 1 hora em uma arma diferente ou se usar um ritual de 1 hora para quebrar seu vínculo com ela. A arma aparece aos seus pés se estiver no espaço extra-dimensional quando o vínculo se rompe.",
+      ],
+      "pact-of-the-tome": [
+        "Pacto do Tomo",
+        "Seu patrono lhe concede um grimório chamado Livro das Sombras. Quando você obtém esse recurso, escolha três truques de qualquer lista de magias de classe (os três não precisam ser da mesma lista). Enquanto o livro estiver em sua pessoa, você pode lançar esses truques à vontade. Eles não contam no número de truques que você conhece. Se eles não estiverem na lista de magias do warlock, eles ainda são considerados magias de warlock para você.",
+        "Se você perder o seu Livro das Sombras, pode realizar uma cerimônia de 1 hora para receber um substituto do seu patrono. Essa cerimônia pode ser realizada durante um descanso curto ou longo e destrói o livro anterior. O livro se transforma em cinzas quando você morre.",
+      ],
+    },
   },
   {
     name: "Melhoria de Atributo",
@@ -63,7 +397,7 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Arcano Místico",
-    level: 11,
+    level: [11, 13, 15, 17],
     description:
       "No 11º nível, seu patrono concede a você um segredo mágico chamado arcano. Escolha um feitiço de 6º nível da lista de feitiços de bruxo como este arcano. Você pode conjurar seu feitiço arcano uma vez sem gastar um espaço de feitiço. Você deve terminar um descanso longo antes de poder fazê-lo novamente. Em níveis mais altos, você ganha mais feitiços de bruxo de sua escolha que podem ser conjurados desta maneira: um feitiço de 7º nível no 13º nível, um feitiço de 8º nível no 15º nível e um feitiço de 9º nível no 17º nível. Você recupera todos os usos do seu Arcano Místico quando termina um descanso longo.",
   },
@@ -115,6 +449,18 @@ const fiend: DnD5eSubClass = {
       description:
         "A partir do 14º nível, quando você acertar uma criatura com um ataque, você pode usar esta característica para transportar instantaneamente o alvo através dos planos inferiores. A criatura desaparece e é lançada através de uma paisagem aterrorizante. No final do seu próximo turno, o alvo retorna ao espaço que ocupava anteriormente ou ao espaço desocupado mais próximo. Se o alvo não for um demônio, ele sofre 10d10 de dano psíquico ao se recuperar de sua horrível experiência. Depois de usar esta característica, você não pode usá-la novamente até terminar um descanso longo.",
     },
+  ],
+  expandedSpellList: [
+    "Burning Hands",
+    "Command",
+    "Blindness/Deafness",
+    "Scorching Ray",
+    "Fireball",
+    "Stinking Cloud",
+    "Fire Shield",
+    "Wall of Fire",
+    "Flame Strike",
+    "Hallow",
   ],
 }
 
@@ -195,16 +541,3 @@ const warlock: DnD5eClass = {
 }
 
 export default warlock
-
-/*
-Analise o texto a seguir e gere um arquivo json para cada paragrafo traduzido seguindo este schema: {
-name: string em português;
-level: number | number[];
-description: string em português;
-}
-
-Texto:
-
-
-
-*/

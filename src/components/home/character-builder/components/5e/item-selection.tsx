@@ -230,7 +230,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
       </Box>
 
       <Stack spacing="md" pb={32} mih="calc(100% - 170px)">
-        {classes[form.classes[0]].proficiencies.equipmentOptions.map(
+        {classes[form.classes[0].name].proficiencies.equipmentOptions.map(
           (item, i) => {
             return (
               <Paper key={i} withBorder p="xs">

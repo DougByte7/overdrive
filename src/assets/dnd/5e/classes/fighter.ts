@@ -21,6 +21,31 @@ const features: DnD5eFeature[] = [
       { label: "Proteção", value: "protection" },
       { label: "Combate com Duas Armas", value: "two_weapon_fighting" },
     ],
+    misc: {
+      archery: [
+        "Arquearia",
+        "Você recebe um bônus de +2 em rolagens de ataque que você faz com armas de longo alcance.",
+      ],
+      defense: [
+        "Defesa",
+        "Enquanto estiver usando armadura, você recebe um bônus de +1 na CA (Classe de Armadura).",
+      ],
+      dueling: [
+        "Duelo",
+        "Quando estiver empunhando uma arma de combate corpo a corpo em uma mão e nenhuma outra arma, você recebe um bônus de +2 em rolagens de dano com essa arma.",
+      ],
+      great_weapon_fighting: [
+        "Combate com Arma Grande",
+        "Quando você rolar um 1 ou 2 em um dado de dano para um ataque que você fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo se for um 1 ou 2. A arma deve ter a propriedade 'duas mãos' ou 'versátil' para você obter esse benefício.",
+      ],
+      protection: [
+        "Proteção: Quando uma criatura que você pode ver ataca um alvo que não seja você e esteja a até 1.5m (5ft) de você, você pode usar sua reação para impor desvantagem na rolagem de ataque. Você deve estar empunhando um escudo.",
+      ],
+      two_weapon_fighting: [
+        "Combate com Duas Armas",
+        "Quando você se envolve em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.",
+      ],
+    },
   },
   {
     name: "Retomar folego",
@@ -29,8 +54,8 @@ const features: DnD5eFeature[] = [
       "Você tem um poço limitado de resistência que pode ser usado para se proteger de danos. Em seu turno, você pode usar uma ação bônus para recuperar pontos de vida iguais a 1d10 + seu nível de guerreiro. Depois de usar esse recurso, você deve terminar um descanso curto ou longo antes de poder usá-lo novamente.",
   },
   {
-    name: "Ataque Poderoso",
-    level: 2,
+    name: "Surto de ação",
+    level: [2, 17],
     description:
       "A partir do 2º nível, você pode se esforçar além dos seus limites normais por um momento. Em seu turno, você pode tomar uma ação adicional além de sua ação regular e uma possível ação bônus. Depois de usar esse recurso, você deve terminar um descanso curto ou longo antes de poder usá-lo novamente. A partir do 17º nível, você pode usá-lo duas vezes antes de um descanso, mas apenas uma vez no mesmo turno.",
   },
@@ -41,20 +66,20 @@ const features: DnD5eFeature[] = [
       "No 3º nível, você escolhe uma especialização que você se esforça para emular em seus estilos e técnicas de combate, como o Campeão. A especialização que você escolhe concede recursos para você no 3º nível e novamente no 7º, 10º, 15º e 18º níveis.",
   },
   {
-    name: "Aumento no valor de atributo",
+    name: "Melhoria de Atributo",
     level: [4, 6, 8, 12, 14, 16, 19],
     description:
       "Quando você atinge o 4º nível, e novamente no 6º, 8º, 12º, 14º, 16º e 19º níveis, você pode aumentar um atributo de sua escolha em 2, ou pode aumentar dois atributos de sua escolha em 1. Como normal, você não pode aumentar um atributo acima de 20 usando essa habilidade.",
   },
   {
     name: "Ataque Extra",
-    level: 5,
+    level: [5, 11, 20],
     description:
       "A partir do 5º nível, você pode atacar duas vezes, em vez de uma, sempre que tomar a ação de Ataque em seu turno. O número de ataques aumenta para três quando você alcança o 11º nível nesta classe e quatro quando alcança o 20º nível nesta classe.",
   },
   {
     name: "Indomável",
-    level: 9,
+    level: [9, 13, 17],
     description:
       "A partir do 9º nível, você pode rolar novamente uma jogada de salvamento que falhe. Se fizer isso, deve usar a nova jogada e não pode usar esse recurso novamente até terminar um descanso longo. Você pode usar esse recurso duas vezes entre descansos longos a partir do 13º nível e três vezes entre descansos longos a partir do 17º nível.",
   },

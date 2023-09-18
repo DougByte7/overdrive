@@ -45,7 +45,17 @@ export default function Home() {
   ) as any[]
 
   if (localStorage.getItem("characters")) {
-    const newStore = storedCharacters.filter((c) => c.classes)
+    const newStore = storedCharacters
+      .filter((c) => c.classes)
+      .map((s) => {
+        return typeof s.classes[0] === "string"
+          ? {
+              ...s,
+              classes: s.classes.map((c: any) => ({ name: c, level: 1 })),
+            }
+          : s
+      })
+
     localStorage.setItem("characters", JSON.stringify(newStore))
     storedCharacters = newStore
   }
@@ -58,7 +68,7 @@ export default function Home() {
       return {
         id: i,
         campaignName: `${races[character.race!].name}, ${character.classes
-          ?.map((c) => classes[c].name)
+          ?.map((c) => classes[c?.name].name)
           .join(" / ")}.`,
         campaignId: "1",
         name: character.name,

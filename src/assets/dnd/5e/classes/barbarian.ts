@@ -41,7 +41,7 @@ const features: DnD5eFeature[] = [
       "No 3º nível, você escolhe um caminho que molda a natureza da sua fúria. Escolha o Caminho do Berserker ou o Caminho do Guerreiro Totêmico, ambos detalhados no final da descrição da classe. Sua escolha concede recursos a você no 3º nível e novamente nos níveis 6º, 10º e 14º.",
   },
   {
-    name: "Aumento no valor de atributo",
+    name: "Melhoria de Atributo",
     level: [4, 8, 12, 16, 19],
     description:
       "Ao atingir o 4º nível, e novamente no 8º, 12º, 16º e 19º nível, você pode aumentar um atributo de sua escolha em 2 ou dois atributos de sua escolha em 1. Como normal, você não pode aumentar um atributo acima de 20 usando essa característica.",

@@ -152,7 +152,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
               weight={600}
             >
               {form.classes
-                .map((classKey) => classes[classKey].name)
+                .map((classKey) => classes[classKey.name].name)
                 .join(", ")}
             </Text>
             <EditButton step={Steps.CLASS} setStep={setStep} />
@@ -162,7 +162,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
 
           <Accordion variant="contained">
             {form.classes.map((classKey) =>
-              classes[classKey].features.map((feature) => (
+              classes[classKey.name].features.map((feature) => (
                 <Accordion.Item key={feature.name} value={feature.name}>
                   <Accordion.Control>
                     <Text weight={600}>
@@ -217,7 +217,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                 <Text key={`${v}${i}`}>
                   {k}:{" "}
                   {
-                    classes[form.classes[0]].features
+                    classes[form.classes[0].name].features
                       .find((f) => f.name === k)
                       ?.options?.find((o) => o.value === v)?.label
                   }
@@ -275,7 +275,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
         </Paper>
       </Box>
 
-      {!!form.spells.size && (
+      {!!form.spells.length && (
         <Box>
           <Paper withBorder p="md">
             <Group>

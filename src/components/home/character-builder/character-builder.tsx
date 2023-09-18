@@ -61,9 +61,12 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
   const [step, setStep] = useState(Steps.DESCRIPTION)
 
-  const { spellsKnown, cantripKnown } = classes[form.classes[0]] ?? {}
+  const { spellsKnown, cantripKnown } = classes[form.classes[0]?.name] ?? {}
   const hasCantrips = cantripKnown?.length
-  const hasSpells = !!spellsKnown && spellsKnown !== Infinity
+  const hasSpells =
+    !!spellsKnown &&
+    ((typeof spellsKnown === "number" && spellsKnown !== Infinity) ||
+      (Array.isArray(spellsKnown) && !!spellsKnown[0]))
   const shouldSkipSpellStep = !(hasCantrips || hasSpells)
 
   const resetForm = () => setForm(characterFormAton.init)
@@ -91,10 +94,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
         localStorage.setItem(
           "characters",
-          JSON.stringify([
-            ...characters,
-            { ...form, spells: Array.from(form.spells) },
-          ])
+          JSON.stringify([...characters, form])
         )
       } catch (e) {
         captureException(e)
@@ -234,7 +234,8 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
                   `}
                 >
                   <Text weight={500} color="var(--do_text_color_300)" size="sm">
-                    {races[form.race!].name},{classes[form.classes[0]].name}.
+                    {races[form.race!].name},
+                    {classes[form.classes[0].name].name}.
                   </Text>
 
                   <Text size="lg" color="var(--do_text_color_600)">
