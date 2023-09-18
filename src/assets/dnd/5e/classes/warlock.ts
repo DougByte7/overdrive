@@ -45,7 +45,7 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Invocações Místicas",
-    level: 2,
+    level: [2, 5, 7, 9, 12, 15, 18],
     description: [
       "Em seu estudo do conhecimento oculto, você descobriu invocações místicas, fragmentos de conhecimento proibido que lhe conferem uma habilidade mágica duradoura. No 2º nível, você obtém duas invocações místicas de sua escolha. Suas opções de invocação estão detalhadas no final da descrição da classe. Quando você alcança certos níveis de bruxo, obtém invocações adicionais de sua escolha, conforme mostrado na coluna Invocações Conhecidas da tabela Warlock. Além disso, quando você sobe de nível nesta classe, pode escolher uma das invocações que conhece e substituí-la por outra invocação que poderia aprender naquele nível.",
     ],
@@ -397,7 +397,7 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Arcano Místico",
-    level: 11,
+    level: [11, 13, 15, 17],
     description:
       "No 11º nível, seu patrono concede a você um segredo mágico chamado arcano. Escolha um feitiço de 6º nível da lista de feitiços de bruxo como este arcano. Você pode conjurar seu feitiço arcano uma vez sem gastar um espaço de feitiço. Você deve terminar um descanso longo antes de poder fazê-lo novamente. Em níveis mais altos, você ganha mais feitiços de bruxo de sua escolha que podem ser conjurados desta maneira: um feitiço de 7º nível no 13º nível, um feitiço de 8º nível no 15º nível e um feitiço de 9º nível no 17º nível. Você recupera todos os usos do seu Arcano Místico quando termina um descanso longo.",
   },
@@ -449,6 +449,18 @@ const fiend: DnD5eSubClass = {
       description:
         "A partir do 14º nível, quando você acertar uma criatura com um ataque, você pode usar esta característica para transportar instantaneamente o alvo através dos planos inferiores. A criatura desaparece e é lançada através de uma paisagem aterrorizante. No final do seu próximo turno, o alvo retorna ao espaço que ocupava anteriormente ou ao espaço desocupado mais próximo. Se o alvo não for um demônio, ele sofre 10d10 de dano psíquico ao se recuperar de sua horrível experiência. Depois de usar esta característica, você não pode usá-la novamente até terminar um descanso longo.",
     },
+  ],
+  expandedSpellList: [
+    "Burning Hands",
+    "Command",
+    "Blindness/Deafness",
+    "Scorching Ray",
+    "Fireball",
+    "Stinking Cloud",
+    "Fire Shield",
+    "Wall of Fire",
+    "Flame Strike",
+    "Hallow",
   ],
 }
 

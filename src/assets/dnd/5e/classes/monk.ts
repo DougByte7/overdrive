@@ -39,7 +39,7 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Movimento sem Armadura",
-    level: 2,
+    level: [2, 9],
     description:
       "A partir do 2º nível, seu deslocamento aumenta em 2 espaços (3m / 10ft) enquanto você não estiver usando armadura ou empunhando um escudo. Este bônus aumenta quando você atinge determinados níveis de monge, como mostrado na tabela do Monge. No 9º nível, você adquire a habilidade de se mover ao longo de superfícies verticais e através de líquidos em seu turno sem cair durante o movimento.",
   },
@@ -143,8 +143,12 @@ const openHand: DnD5eSubClass = {
     {
       name: "Técnica da Mão Aberta",
       level: 3,
-      description:
-        "A partir do momento em que você escolhe esta tradição no 3º nível, pode manipular o ki do seu inimigo quando canaliza o seu próprio. Sempre que você acerta uma criatura com um dos ataques concedidos por sua Enxurrada de Golpes, pode impor um dos seguintes efeitos a esse alvo: • Ele deve ser bem sucedido em um teste de resistência de Destreza ou ficará caído. • Ele deve fazer um teste de resistência de Força. Se falhar, você pode empurrá-lo até 3 espaços (7,5m / 15ft) de distância de você. • Ele não pode fazer reações até o final do seu próximo turno.",
+      description: [
+        "A partir do momento em que você escolhe esta tradição no 3º nível, pode manipular o ki do seu inimigo quando canaliza o seu próprio. Sempre que você acerta uma criatura com um dos ataques concedidos por sua Enxurrada de Golpes, pode impor um dos seguintes efeitos a esse alvo:",
+        "- Ele deve ser bem sucedido em um teste de resistência de Destreza ou ficará caído.",
+        "- Ele deve fazer um teste de resistência de Força. Se falhar, você pode empurrá-lo até 3 espaços (7,5m / 15ft) de distância de você.",
+        "- Ele não pode fazer reações até o final do seu próximo turno.",
+      ],
     },
     {
       name: "Integridade do Corpo",
@@ -215,4 +219,5 @@ description: string em português;
 }
 
 Texto:
+
 */

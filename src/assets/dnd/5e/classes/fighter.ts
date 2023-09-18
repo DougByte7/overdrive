@@ -29,8 +29,8 @@ const features: DnD5eFeature[] = [
       "Você tem um poço limitado de resistência que pode ser usado para se proteger de danos. Em seu turno, você pode usar uma ação bônus para recuperar pontos de vida iguais a 1d10 + seu nível de guerreiro. Depois de usar esse recurso, você deve terminar um descanso curto ou longo antes de poder usá-lo novamente.",
   },
   {
-    name: "Ataque Poderoso",
-    level: 2,
+    name: "Surto de ação",
+    level: [2, 17],
     description:
       "A partir do 2º nível, você pode se esforçar além dos seus limites normais por um momento. Em seu turno, você pode tomar uma ação adicional além de sua ação regular e uma possível ação bônus. Depois de usar esse recurso, você deve terminar um descanso curto ou longo antes de poder usá-lo novamente. A partir do 17º nível, você pode usá-lo duas vezes antes de um descanso, mas apenas uma vez no mesmo turno.",
   },
@@ -48,13 +48,13 @@ const features: DnD5eFeature[] = [
   },
   {
     name: "Ataque Extra",
-    level: 5,
+    level: [5, 11, 20],
     description:
       "A partir do 5º nível, você pode atacar duas vezes, em vez de uma, sempre que tomar a ação de Ataque em seu turno. O número de ataques aumenta para três quando você alcança o 11º nível nesta classe e quatro quando alcança o 20º nível nesta classe.",
   },
   {
     name: "Indomável",
-    level: 9,
+    level: [9, 13, 17],
     description:
       "A partir do 9º nível, você pode rolar novamente uma jogada de salvamento que falhe. Se fizer isso, deve usar a nova jogada e não pode usar esse recurso novamente até terminar um descanso longo. Você pode usar esse recurso duas vezes entre descansos longos a partir do 13º nível e três vezes entre descansos longos a partir do 17º nível.",
   },
