@@ -17,7 +17,7 @@ export const characterFormAton = atom<CharacterForm>({
   features: {},
   proficiencies: [],
   items: [],
-  spells: new Set([]),
+  spells: [],
 })
 
 export const avatarPreviewUrlAton = atom("")

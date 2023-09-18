@@ -275,7 +275,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
         </Paper>
       </Box>
 
-      {!!form.spells.size && (
+      {!!form.spells.length && (
         <Box>
           <Paper withBorder p="md">
             <Group>

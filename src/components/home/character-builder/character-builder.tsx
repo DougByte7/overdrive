@@ -91,10 +91,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
         localStorage.setItem(
           "characters",
-          JSON.stringify([
-            ...characters,
-            { ...form, spells: Array.from(form.spells) },
-          ])
+          JSON.stringify([...characters, form])
         )
       } catch (e) {
         captureException(e)
