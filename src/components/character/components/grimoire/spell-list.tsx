@@ -11,6 +11,13 @@ import {
   Box,
   ActionIcon,
   Space,
+  Button,
+  Switch,
+  TextInput,
+  Select,
+  Drawer,
+  Checkbox,
+  Radio,
 } from "@mantine/core"
 import { useClickOutside, useDisclosure } from "@mantine/hooks"
 import {
@@ -22,11 +29,21 @@ import {
   IconPlus,
   IconCircleDashed,
   IconWand,
+  IconFilter,
+  IconSearch,
 } from "@tabler/icons-react"
 import { useAtom } from "jotai"
-import { Fragment, MouseEventHandler, ReactNode, useState } from "react"
+import {
+  ChangeEventHandler,
+  Fragment,
+  MouseEventHandler,
+  ReactNode,
+  useMemo,
+  useState,
+} from "react"
 import { selectedSpellAton } from "../../state"
 import type { AddOrRemoveSpellEvent } from "./interfaces"
+import { removeDiacritics } from "@/utils/removeDiacritics"
 
 interface ToggleTipProps {
   label: string | string[]
@@ -278,39 +295,341 @@ export default function SpellList({
   isEdit,
   onAddOrRemoveSpell,
 }: SpellListProps) {
-  return (
-    <Stack spacing="xs">
-      {spells.map((spell, i, arr) => {
-        const prev = arr.at(i - 1)
-        const shouldShowLabel = i === 0 || prev?.level !== spell?.level
-        const levelLabel =
-          spell?.level === "cantrip" ? "Truques" : `Nível ${spell?.level}`
+  const initialFilter: {
+    className: string
+    level: string
+    school: string
+    concentration: string
+    ritual: string
+    verbal: boolean | "any"
+    somatic: boolean | "any"
+    material: boolean | "any"
+    castingTime: string
+    range: string
+    duration: string
+  } = {
+    className: "any",
+    level: "any",
+    school: "any",
+    concentration: "any",
+    ritual: "any",
+    verbal: "any",
+    somatic: "any",
+    material: "any",
+    castingTime: "any",
+    range: "any",
+    duration: "any",
+  }
+  const [search, setSearch] = useState("")
+  const [filters, setFilter] = useState(initialFilter)
+  const [preFilters, setPreFilter] = useState(filters)
+  const [opened, { open, close }] = useDisclosure(false)
 
-        return (
-          spell && (
-            <Fragment key={spell.name}>
-              {shouldShowLabel && (
-                <Divider
-                  css={dividerStyles}
-                  label={
-                    <Text fw="bold" size="lg">
-                      {levelLabel}
-                    </Text>
-                  }
-                  labelPosition="center"
-                  size="sm"
+  const filteredSpells = useMemo(() => {
+    const isAny = (filter: any) => filter === "any"
+
+    return spells.filter((s) => {
+      return (
+        s.name.toLowerCase().includes(search) &&
+        (isAny(filters.className) || s.classes.includes(filters.className)) &&
+        (isAny(filters.level) || s.level == filters.level) &&
+        (isAny(filters.school) || s.school === filters.school) &&
+        (isAny(filters.castingTime) ||
+          s.casting_time.toLowerCase().includes(filters.castingTime)) &&
+        (isAny(filters.range) ||
+          s.range.toLowerCase().includes(filters.range)) &&
+        (isAny(filters.duration) ||
+          s.duration.toLowerCase().includes(filters.duration)) &&
+        (isAny(filters.ritual) || s.ritual.toString() === filters.ritual) &&
+        (isAny(filters.concentration) ||
+          (filters.concentration === "true"
+            ? s.duration.toLowerCase().includes("concentration")
+            : !s.duration.toLowerCase().includes("concentration"))) &&
+        (isAny(filters.verbal) || s.components.verbal === filters.verbal) &&
+        (isAny(filters.somatic) || s.components.somatic === filters.somatic) &&
+        (isAny(filters.material) || s.components.material === filters.material)
+      )
+    })
+  }, [search, filters])
+
+  const filterValues = {
+    classNames: [
+      { label: "Classe", value: "any" },
+      { label: "Bardo", value: "bard" },
+      { label: "Bruxo", value: "warlock" },
+      { label: "Clérigo", value: "cleric" },
+      { label: "Druida", value: "druid" },
+      { label: "Feiticeiro", value: "sorcerer" },
+      { label: "Mago", value: "wizard" },
+      { label: "Paladino", value: "paladin" },
+      { label: "Patrulheiro", value: "ranger" },
+    ],
+    levels: [
+      { label: "Nível", value: "any" },
+      { label: "Truque", value: "cantrip" },
+      { label: "1", value: "1" },
+      { label: "2", value: "2" },
+      { label: "3", value: "3" },
+      { label: "4", value: "4" },
+      { label: "5", value: "5" },
+      { label: "6", value: "6" },
+      { label: "7", value: "7" },
+      { label: "8", value: "8" },
+      { label: "9", value: "9" },
+    ],
+    schools: [
+      { label: "Todas", value: "any" },
+      { label: "Necromancia", value: "necromancy" },
+      { label: "Transmutação", value: "transmutation" },
+      { label: "Abjuração", value: "abjuration" },
+      { label: "Ilusão", value: "illusion" },
+      { label: "Conjuração", value: "conjuration" },
+      { label: "Encantamento", value: "enchantment" },
+      { label: "Evocação", value: "evocation" },
+      { label: "Adivinhação", value: "divination" },
+    ],
+    castingTime: [
+      { label: "Todas", value: "any" },
+      { label: "Ação Bonus", value: "bonus" },
+      { label: "Ação", value: "1 action" },
+      { label: "Reação", value: "reaction" },
+      { label: "Minuto", value: "minute" },
+      { label: "Hora", value: "hour" },
+    ],
+    range: [
+      { label: "Todos", value: "any" },
+      { label: "Nenhum", value: "none" },
+      { label: "Pessoal", value: "self" },
+      { label: "Visão", value: "sight" },
+      { label: "Especial", value: "special" },
+      { label: "Alvo", value: "target" },
+      { label: "Toque", value: "touch" },
+      { label: "Sem limite", value: "unlimited" },
+    ],
+    duration: [
+      { label: "Todas", value: "any" },
+      { label: "Rodada", value: "round" },
+      { label: "Minuto", value: "minute" },
+      { label: "Hora", value: "hour" },
+      { label: "Dia", value: "day" },
+      { label: "Instantânea", value: "instantaneous" },
+      { label: "Especial", value: "special" },
+      { label: "Dissipada", value: "dispelled" },
+      { label: "Acionada", value: "triggered" },
+    ],
+  }
+
+  const handleSearch: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()))
+  }
+
+  const handleFilterClass = (className: string) => {
+    setFilter((prev) => ({ ...prev, className }))
+  }
+
+  const handleFilterLevel = (level: string) => {
+    setFilter((prev) => ({ ...prev, level }))
+  }
+
+  const handleClearFilters = () => {
+    setSearch("")
+    setFilter(initialFilter)
+    setPreFilter(initialFilter)
+    close()
+  }
+
+  const handleFilter = () => {
+    setFilter(preFilters)
+    close()
+  }
+
+  return (
+    <>
+      <Stack spacing="xs">
+        <Group position="apart" spacing="sm">
+          <TextInput
+            w="100%"
+            type="search"
+            placeholder="Que arcano deseja revelar?"
+            icon={<IconSearch />}
+            onChange={handleSearch}
+          />
+          <Select
+            w="30%"
+            value={filters.className}
+            data={filterValues.classNames}
+            onChange={handleFilterClass}
+          />
+          <Select
+            w="30%"
+            value={filters.level}
+            data={filterValues.levels}
+            onChange={handleFilterLevel}
+          />
+          <Button
+            leftIcon={<IconFilter size={16} />}
+            size="xs"
+            onClick={open}
+            uppercase
+          >
+            Filtrar
+          </Button>
+        </Group>
+
+        {filteredSpells.map((spell, i, arr) => {
+          const prev = arr.at(i - 1)
+          const shouldShowLabel = i === 0 || prev?.level !== spell?.level
+          const levelLabel =
+            spell?.level === "cantrip" ? "Truques" : `Nível ${spell?.level}`
+
+          return (
+            spell && (
+              <Fragment key={spell.name}>
+                {shouldShowLabel && (
+                  <Divider
+                    css={dividerStyles}
+                    label={
+                      <Text fw="bold" size="lg">
+                        {levelLabel}
+                      </Text>
+                    }
+                    labelPosition="center"
+                    size="sm"
+                  />
+                )}
+                <SpellCard
+                  spell={spell}
+                  isEdit={!!isEdit}
+                  onAddOrRemoveSpell={onAddOrRemoveSpell}
                 />
-              )}
-              <SpellCard
-                spell={spell}
-                isEdit={!!isEdit}
-                onAddOrRemoveSpell={onAddOrRemoveSpell}
-              />
-            </Fragment>
+              </Fragment>
+            )
           )
-        )
-      })}
-    </Stack>
+        })}
+      </Stack>
+      <Drawer opened={opened} onClose={close} title="Filtros">
+        <Stack h="calc(100vh - 76px)">
+          <Select
+            label="Escola"
+            value={preFilters.school}
+            data={filterValues.schools}
+            onChange={(school: string) =>
+              setPreFilter((prev) => ({ ...prev, school }))
+            }
+          />
+          <Select
+            label="Tempo de conjuração"
+            value={preFilters.castingTime}
+            data={filterValues.castingTime}
+            onChange={(castingTime: string) =>
+              setPreFilter((prev) => ({ ...prev, castingTime }))
+            }
+          />
+          <Select
+            label="Alcance"
+            value={preFilters.range}
+            data={filterValues.range}
+            onChange={(range: string) =>
+              setPreFilter((prev) => ({ ...prev, range }))
+            }
+          />
+          <Select
+            label="Duração"
+            value={preFilters.duration}
+            data={filterValues.duration}
+            onChange={(duration: string) =>
+              setPreFilter((prev) => ({ ...prev, duration }))
+            }
+          />
+
+          <Radio.Group
+            defaultValue="any"
+            label="Ritual"
+            onChange={(ritual: string) =>
+              setPreFilter((prev) => ({ ...prev, ritual }))
+            }
+          >
+            <Group>
+              <Radio value="true" label="Sim" />
+              <Radio value="false" label="Não" />
+              <Radio value="any" label="Todos" />
+            </Group>
+          </Radio.Group>
+
+          <Radio.Group
+            defaultValue={preFilters.concentration}
+            label="Concentração"
+            onChange={(concentration: string) =>
+              setPreFilter((prev) => ({ ...prev, concentration }))
+            }
+          >
+            <Group>
+              <Radio value="true" label="Sim" />
+              <Radio value="false" label="Não" />
+              <Radio value="any" label="Todos" />
+            </Group>
+          </Radio.Group>
+
+          <Checkbox.Group
+            defaultValue={["any", "verbal", "somatic", "material"].filter(
+              (v) => {
+                switch (v) {
+                  case "any":
+                    return preFilters.verbal === "any"
+                  case "verbal":
+                    return preFilters.verbal !== false
+                  case "somatic":
+                    return preFilters.somatic !== false
+                  case "material":
+                    return preFilters.material !== false
+                  default:
+                    return true
+                }
+              }
+            )}
+            label="Componentes"
+            onChange={(components: string[]) => {
+              setPreFilter((prev) => {
+                const hasAny = components.includes("any")
+                const verbal = hasAny ? "any" : components.includes("verbal")
+                const somatic = hasAny ? "any" : components.includes("somatic")
+                const material = hasAny
+                  ? "any"
+                  : components.includes("material")
+
+                return { ...prev, verbal, somatic, material }
+              })
+            }}
+          >
+            <Group>
+              <Checkbox value="any" label="Qualquer" />
+              <Checkbox
+                value="verbal"
+                label="Verbal"
+                disabled={preFilters.verbal === "any"}
+              />
+              <Checkbox
+                value="somatic"
+                label="Somático"
+                disabled={preFilters.somatic === "any"}
+              />
+              <Checkbox
+                value="material"
+                label="Material"
+                disabled={preFilters.material === "any"}
+              />
+            </Group>
+          </Checkbox.Group>
+
+          <Group position="right" mt="auto">
+            <Button variant="outline" onClick={handleClearFilters}>
+              Limpar
+            </Button>
+            <Button onClick={handleFilter}>Aplicar</Button>
+          </Group>
+        </Stack>
+      </Drawer>
+    </>
   )
 }
 
