@@ -21,9 +21,16 @@ export default function Grimoire({ character }: GrimoireProps) {
 
   const spellList = character
     ? character.spells?.length
-      ? Array.from(character.spells).map((spellName) =>
-          spells.find((spell) => spell.name === spellName)
-        )
+      ? character.spells
+          .map(
+            (spellName) =>
+              spells.find(
+                (spell) =>
+                  spell.name.toLocaleLowerCase() ===
+                  spellName.toLocaleLowerCase()
+              ) as DnD5eSpell
+          )
+          .sort(sortByLevel)
       : spells
           .filter((spell) =>
             spell.classes.some((classIndex) =>
@@ -64,7 +71,7 @@ export default function Grimoire({ character }: GrimoireProps) {
         <Tabs.Panel value="know" p="md">
           <Stack spacing="xs">
             {spellList.length ? (
-              <SpellList spells={spellList as DnD5eSpell[]} />
+              <SpellList spells={spellList} />
             ) : (
               <Text align="center">Nenhuma magia disponível</Text>
             )}
@@ -72,7 +79,7 @@ export default function Grimoire({ character }: GrimoireProps) {
         </Tabs.Panel>
 
         <Tabs.Panel value="all" p="md">
-          <SpellList spells={allSpellsSorted} />
+          <SpellList spells={allSpellsSorted} isEdit />
         </Tabs.Panel>
       </Tabs>
       <SpellDetails />
