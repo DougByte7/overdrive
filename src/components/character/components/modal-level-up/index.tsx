@@ -319,6 +319,8 @@ const NewFeatures = ({
       } else {
         prev!.spells.push(spellName)
       }
+
+      prev!.spells = [...new Set(prev!.spells)]
       return { ...prev! }
     })
     notifications.show({
