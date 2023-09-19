@@ -78,7 +78,7 @@ function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
   }
 
   const handleAddRemove = (spellName: string) => () => {
-    toggle()
+    if (isEdit) toggle()
     onAddOrRemoveSpell?.(spellName)
   }
 
