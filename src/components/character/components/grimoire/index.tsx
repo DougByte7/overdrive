@@ -7,13 +7,11 @@ import SpellList from "./spell-list"
 import { DnD5eSpell } from "@/assets/dnd/5e/interfaces"
 import classes from "@/assets/dnd/5e/classes"
 
-export type Spell = (typeof spells)[number]
-
 interface GrimoireProps {
   character: CharacterForm
 }
 export default function Grimoire({ character }: GrimoireProps) {
-  const sortByLevel = (arr: Spell[][], spell: Spell) => {
+  const sortByLevel = (arr: DnD5eSpell[][], spell: DnD5eSpell) => {
     const index = spell.level === "cantrip" ? 0 : +spell.level
     if (arr[index]) {
       arr[index].push(spell)
@@ -23,7 +21,7 @@ export default function Grimoire({ character }: GrimoireProps) {
 
     return arr
   }
-  const sortByName = (a: Spell, b: Spell) => {
+  const sortByName = (a: DnD5eSpell, b: DnD5eSpell) => {
     return a.name > b.name ? 1 : -1
   }
 
@@ -37,7 +35,7 @@ export default function Grimoire({ character }: GrimoireProps) {
               if (!spell.classes.includes(c.name)) return acc
 
               return sortByLevel(acc, spell)
-            }, [] as Spell[][])
+            }, [] as DnD5eSpell[][])
             .flatMap((spells) => spells.sort(sortByName))
         : character.spells
             .reduce((acc, spellName) => {
@@ -46,7 +44,7 @@ export default function Grimoire({ character }: GrimoireProps) {
               if (!spell) return acc
 
               return sortByLevel(acc, spell)
-            }, [] as Spell[][])
+            }, [] as DnD5eSpell[][])
             .flatMap((spells) => spells.sort(sortByName))
     })
   }, [character])
@@ -56,7 +54,7 @@ export default function Grimoire({ character }: GrimoireProps) {
       spells
         .reduce((acc, spell) => {
           return sortByLevel(acc, spell)
-        }, [] as Spell[][])
+        }, [] as DnD5eSpell[][])
         .flatMap((spells) => spells.sort(sortByName)),
     []
   )
@@ -78,7 +76,7 @@ export default function Grimoire({ character }: GrimoireProps) {
           if (!spell) return acc
 
           return sortByLevel(acc, spell)
-        }, [] as Spell[][])
+        }, [] as DnD5eSpell[][])
         .flatMap((spells) => spells.sort(sortByName)),
     ]
   }, [character])
