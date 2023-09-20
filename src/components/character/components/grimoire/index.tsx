@@ -109,7 +109,7 @@ export default function Grimoire({ character }: GrimoireProps) {
           <SpellList spells={allSpellsSorted} isEdit />
         </Tabs.Panel>
       </Tabs>
-      <SpellDetails />
+      <SpellDetails verticalOffset={0} />
     </>
   )
 }
