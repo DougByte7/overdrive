@@ -34,7 +34,12 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
 
   const classFeatures = useMemo(() => {
     return classes[form.classes[0].name!].features.reduce((acc, feature) => {
-      if (!feature.options) return acc
+      if (
+        (Array.isArray(feature.level) && !feature.level.includes(1)) ||
+        (typeof feature.level === "number" && feature.level > 1) ||
+        !feature.options
+      )
+        return acc
 
       return [
         ...acc,
@@ -51,17 +56,7 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
             }
           />
           {form.features[feature.name] && (
-            <Code>
-              {(feature.description as string[])
-                .find((desc) =>
-                  desc.startsWith(
-                    feature.options!.find(
-                      (op) => op.value === form.features[feature.name]
-                    )!.label
-                  )
-                )
-                ?.replace(/.+:\s/, "")}
-            </Code>
+            <Code>{feature.misc?.[feature.name]}</Code>
           )}
         </>,
       ]
