@@ -32,8 +32,7 @@ import CharacterFooter from "./components/footer/nav"
 import { useAtom } from "jotai"
 import { activeTabAtom, characterAtom } from "./state"
 import Grimoire from "./components/grimoire"
-import ModalLevelUp from "./components/modal-level-up"
-import { useDisclosure } from "@mantine/hooks"
+import Link from "next/link"
 
 interface CharacterSheetProps {
   characterId: string
@@ -42,7 +41,6 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
   const { characters } = useCharacter()
   const [activeTab] = useAtom(activeTabAtom)
   const [character, setCharacter] = useAtom(characterAtom)
-  const [modalLvUpOpened, modalLvUpHandles] = useDisclosure(false)
 
   const [selectedItem, setSelectedItem] = useState<
     (typeof equipment)[number] | null
@@ -160,9 +158,11 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
             </Title>
 
             {character.classes.reduce((acc, c) => acc + c.level, 0) < 20 && (
-              <Button size="xs" compact onClick={modalLvUpHandles.open}>
-                Level Up
-              </Button>
+              <Link href={`./${characterId}/level-up`}>
+                <Button size="xs" compact component="div">
+                  Level Up
+                </Button>
+              </Link>
             )}
           </Group>
         </header>
@@ -444,11 +444,6 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
         </main>
 
         <CharacterFooter />
-        <ModalLevelUp
-          characterId={+characterId}
-          isOpen={modalLvUpOpened}
-          onClose={modalLvUpHandles.close}
-        />
       </>
     )
   )

@@ -268,7 +268,7 @@ const backdropStyles: CSSProperties = {
   bottom: 0,
   left: 0,
   background: "rgba(0, 0, 0, 0.6)",
-  zIndex: 3,
+  zIndex: 1001,
 }
 const spellInfoStyles = (
   verticalOffset: number,
@@ -278,7 +278,7 @@ const spellInfoStyles = (
   right: 0,
   bottom: verticalOffset,
   left: 0,
-  zIndex: 4,
+  zIndex: 1002,
   borderTopRightRadius: "var(--do_border_radius_lg)",
   borderTopLeftRadius: "var(--do_border_radius_lg)",
   padding: 16,
