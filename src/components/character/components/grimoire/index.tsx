@@ -1,11 +1,11 @@
 import { useMemo } from "react"
 import { CharacterForm } from "@/components/home/character-builder/interfaces"
-import { Tabs, Stack, Group, Text } from "@mantine/core"
+import { Tabs, Text } from "@mantine/core"
 import spells from "@/assets/dnd/5e/spells.json"
-import type { DnD5eClassName } from "@/assets/dnd/5e/classes"
 import { SpellDetails } from "./spell-details"
 import SpellList from "./spell-list"
 import { DnD5eSpell } from "@/assets/dnd/5e/interfaces"
+import classes from "@/assets/dnd/5e/classes"
 
 export type Spell = (typeof spells)[number]
 
@@ -13,36 +13,75 @@ interface GrimoireProps {
   character: CharacterForm
 }
 export default function Grimoire({ character }: GrimoireProps) {
-  const sortByLevel = (a: Spell, b: Spell) => {
-    const aLevel = a.level === "cantrip" ? 0 : +a.level
-    const bLevel = b.level === "cantrip" ? 0 : +b.level
-    return aLevel - bLevel
+  const sortByLevel = (arr: Spell[][], spell: Spell) => {
+    const index = spell.level === "cantrip" ? 0 : +spell.level
+    if (arr[index]) {
+      arr[index].push(spell)
+    } else {
+      arr[index] = [spell]
+    }
+
+    return arr
+  }
+  const sortByName = (a: Spell, b: Spell) => {
+    return a.name > b.name ? 1 : -1
   }
 
-  const spellList = character
-    ? character.spells?.length
-      ? character.spells
-          .map(
-            (spellName) =>
-              spells.find(
-                (spell) =>
-                  spell.name.toLocaleLowerCase() ===
-                  spellName.toLocaleLowerCase()
-              ) as DnD5eSpell
-          )
-          .sort(sortByLevel)
-      : spells
-          .filter((spell) =>
-            spell.classes.some((classIndex) =>
-              character.classes.find(
-                (c) => c.name === (classIndex as DnD5eClassName)
-              )
-            )
-          )
-          .sort(sortByLevel)
-    : []
+  const knownSpells = useMemo(() => {
+    if (!character) return []
 
-  const allSpellsSorted = useMemo(() => spells.sort(sortByLevel), [])
+    return character.classes.flatMap((c) => {
+      return classes[c.name].spellsKnown === Infinity
+        ? spells
+            .reduce((acc, spell) => {
+              if (!spell.classes.includes(c.name)) return acc
+
+              return sortByLevel(acc, spell)
+            }, [] as Spell[][])
+            .flatMap((spells) => spells.sort(sortByName))
+        : character.spells
+            .reduce((acc, spellName) => {
+              const spell = spells.find((spell) => spell.name === spellName)
+
+              if (!spell) return acc
+
+              return sortByLevel(acc, spell)
+            }, [] as Spell[][])
+            .flatMap((spells) => spells.sort(sortByName))
+    })
+  }, [character])
+
+  const allSpellsSorted = useMemo(
+    () =>
+      spells
+        .reduce((acc, spell) => {
+          return sortByLevel(acc, spell)
+        }, [] as Spell[][])
+        .flatMap((spells) => spells.sort(sortByName)),
+    []
+  )
+
+  const preparedSpells = useMemo(() => {
+    if (!character) return []
+
+    return [
+      ...spells
+        .filter(
+          (spell) =>
+            spell.level === "cantrip" && character.spells.includes(spell.name)
+        )
+        .sort(sortByName),
+      ...character.preparedSpells
+        .reduce((acc, spellName) => {
+          const spell = spells.find((spell) => spell.name === spellName)
+
+          if (!spell) return acc
+
+          return sortByLevel(acc, spell)
+        }, [] as Spell[][])
+        .flatMap((spells) => spells.sort(sortByName)),
+    ]
+  }, [character])
 
   return (
     <>
@@ -53,29 +92,19 @@ export default function Grimoire({ character }: GrimoireProps) {
           <Tabs.Tab value="all">Todas</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="prepared" p="md">
-          <Stack spacing="xs">
-            {character?.spells?.length ? (
-              Array.from(character.spells).map((spell) => {
-                return (
-                  <Group key={spell} position="apart">
-                    <Text>{spell}</Text>
-                  </Group>
-                )
-              })
-            ) : (
-              <Text align="center">Nenhuma magia disponível</Text>
-            )}
-          </Stack>
+          {preparedSpells.length ? (
+            <SpellList spells={preparedSpells} />
+          ) : (
+            <Text align="center">Nenhuma magia disponível</Text>
+          )}
         </Tabs.Panel>
 
         <Tabs.Panel value="know" p="md">
-          <Stack spacing="xs">
-            {spellList.length ? (
-              <SpellList spells={spellList} />
-            ) : (
-              <Text align="center">Nenhuma magia disponível</Text>
-            )}
-          </Stack>
+          {knownSpells.length ? (
+            <SpellList spells={knownSpells} isEdit />
+          ) : (
+            <Text align="center">Nenhuma magia disponível</Text>
+          )}
         </Tabs.Panel>
 
         <Tabs.Panel value="all" p="md">
