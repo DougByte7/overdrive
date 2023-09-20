@@ -26,7 +26,7 @@ export default function Grimoire({ character }: GrimoireProps) {
   }
 
   const knownSpells = useMemo(() => {
-    if (!character) return []
+    if (!character?.spells) return []
 
     return character.classes.flatMap((c) => {
       return classes[c.name].spellsKnown === Infinity
@@ -45,7 +45,7 @@ export default function Grimoire({ character }: GrimoireProps) {
 
               return sortByLevel(acc, spell)
             }, [] as DnD5eSpell[][])
-            .flatMap((spells) => spells.sort(sortByName))
+            .flatMap((spells) => spells.sort(sortByName)) ?? []
     })
   }, [character])
 
@@ -60,7 +60,7 @@ export default function Grimoire({ character }: GrimoireProps) {
   )
 
   const preparedSpells = useMemo(() => {
-    if (!character) return []
+    if (!character?.spells) return []
 
     return [
       ...spells
