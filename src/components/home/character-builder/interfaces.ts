@@ -20,6 +20,7 @@ export interface CharacterForm {
   proficiencies: Skill[]
   items: WithAmount<EquipmentIndex>[]
   spells: string[]
+  preparedSpells: string[]
 }
 
 export interface AttributeScore {

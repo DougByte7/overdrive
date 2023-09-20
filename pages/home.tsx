@@ -48,6 +48,8 @@ export default function Home() {
     const newStore = storedCharacters
       .filter((c) => c.classes)
       .map((s) => {
+        s.preparedSpells ??= []
+
         return typeof s.classes[0] === "string"
           ? {
               ...s,

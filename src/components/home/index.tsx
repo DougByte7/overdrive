@@ -15,6 +15,7 @@ import SideScrollingBox from "./side-scrolling-box"
 import { IconPlus, IconSearch } from "@tabler/icons-react"
 import CharacterBuilder from "./character-builder/character-builder"
 import { ChangeEventHandler, useEffect, useState } from "react"
+import { removeDiacritics } from "@/utils/removeDiacritics"
 
 interface HomeComponentProps {
   campaigns: any[]
@@ -36,9 +37,6 @@ export default function HomeComponent({
   //     color: "red",
   //   })
   // }
-
-  const removeDiacritics = (string: string) =>
-    string.normalize("NFD").replace(/\p{Diacritic}/gu, "")
 
   const handleFilter: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!characters.length) return
