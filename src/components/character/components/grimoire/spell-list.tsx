@@ -268,7 +268,7 @@ function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
                   title="Material"
                   size="xs"
                   variant="dot"
-                  mb={5}
+                  mb={"8px"}
                 >
                   M
                 </Badge>
