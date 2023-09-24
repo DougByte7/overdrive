@@ -13,7 +13,7 @@ import {
 import { signIn } from "next-auth/react"
 import { NextRouter, useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { notifications } from '@mantine/notifications';
+import { notifications } from "@mantine/notifications"
 
 type FormMode = "login" | "register" | "forgot"
 
@@ -120,8 +120,8 @@ function LoginForm({
       <form onSubmit={handleLogin}>
         <Stack>
           <TextInput
-            sx={{
-              ".mantine-InputWrapper-label": {
+            styles={{
+              label: {
                 fontSize: "14px",
                 fontWeight: 700,
               },
@@ -135,8 +135,8 @@ function LoginForm({
           />
 
           <PasswordInput
-            sx={{
-              ".mantine-InputWrapper-label": {
+            styles={{
+              label: {
                 fontSize: "14px",
                 fontWeight: 700,
               },
@@ -149,7 +149,7 @@ function LoginForm({
           />
 
           <Button
-            sx={{
+            style={{
               fontSize: "14px",
               fontWeight: 500,
               width: "min-content",
@@ -162,12 +162,20 @@ function LoginForm({
             <Text color="#1E1E1E">Esqueci a senha</Text>
           </Button>
 
-          <Button sx={{ fontSize: "14px" }} type="submit" size="md">
+          <Button
+            style={{
+              fontSize: "14px",
+            }}
+            type="submit"
+            size="md"
+          >
             Entrar
           </Button>
 
           <Button
-            sx={{ fontSize: "14px" }}
+            style={{
+              fontSize: "14px",
+            }}
             variant="subtle"
             size="md"
             onClick={handleStartRegistration}
@@ -224,7 +232,7 @@ function ForgotForm({
       <Title className="title" order={1} size={24}>
         Digite um e-mail
       </Title>
-      <Text sx={{ alignSelf: "start" }}>
+      <Text style={{ alignSelf: "start" }}>
         Digite o e-mail utilizado na criação da sua conta, enviaremos um link
         para você criar uma nova senha de acesso.
       </Text>
@@ -232,18 +240,18 @@ function ForgotForm({
       <form onSubmit={handleSendConfirmationEmail}>
         <Stack>
           <TextInput
-            sx={{ ".mantine-InputWrapper-label": { fontSize: "14px" } }}
+            styles={{ label: { fontSize: "14px" } }}
             type="email"
             label="E-mail"
             placeholder="seu@email.com"
             size="lg"
             {...form.getInputProps("email")}
           />
-          <Button sx={{ fontSize: "16px" }} type="submit" size="lg">
+          <Button style={{ fontSize: "16px" }} type="submit" size="lg">
             Continuar
           </Button>
           <Button
-            sx={{ fontSize: "16px" }}
+            style={{ fontSize: "16px" }}
             size="lg"
             variant="subtle"
             onClick={handleGoBack}
@@ -312,7 +320,7 @@ function RegisterForm({
       <Title className="title" order={1} size={24}>
         Digite um e-mail e nome de usuário
       </Title>
-      <Text sx={{ alignSelf: "start" }}>
+      <Text style={{ alignSelf: "start" }}>
         Digite o e-mail utilizado na criação da sua conta, enviaremos um link
         para você criar uma nova senha de acesso.
       </Text>
@@ -320,7 +328,7 @@ function RegisterForm({
       <form onSubmit={handleSendConfirmationEmail}>
         <Stack>
           <TextInput
-            sx={{ ".mantine-InputWrapper-label": { fontSize: "14px" } }}
+            styles={{ label: { fontSize: "14px" } }}
             name="username"
             label="Nome de usuário"
             placeholder="Antedeguemon"
@@ -328,7 +336,7 @@ function RegisterForm({
             {...form.getInputProps("name")}
           />
           <TextInput
-            sx={{ ".mantine-InputWrapper-label": { fontSize: "14px" } }}
+            styles={{ label: { fontSize: "14px" } }}
             type="email"
             name="email"
             label="E-mail"
@@ -336,11 +344,11 @@ function RegisterForm({
             size="lg"
             {...form.getInputProps("email")}
           />
-          <Button sx={{ fontSize: "16px" }} type="submit" size="lg">
+          <Button style={{ fontSize: "16px" }} type="submit" size="lg">
             Continuar
           </Button>
           <Button
-            sx={{ fontSize: "16px" }}
+            style={{ fontSize: "16px" }}
             size="lg"
             variant="subtle"
             onClick={handleGoBack}
@@ -414,27 +422,27 @@ function PasswordForm({
       <Title className="title" order={1} size={24}>
         Redefina a sua senha
       </Title>
-      <Text sx={{ alignSelf: "start" }}>
+      <Text style={{ alignSelf: "start" }}>
         Ótimo, agora vamos criar a sua nova senha!
       </Text>
       <Space h="sm" />
       <form onSubmit={handleRegister}>
         <Stack>
           <PasswordInput
-            sx={{ ".mantine-InputWrapper-label": { fontSize: "14px" } }}
+            styles={{ label: { fontSize: "14px" } }}
             label="Nova senha"
             placeholder="*************"
             size="lg"
             {...form.getInputProps("newPassword")}
           />
           <PasswordInput
-            sx={{ ".mantine-InputWrapper-label": { fontSize: "14px" } }}
+            styles={{ label: { fontSize: "14px" } }}
             label="Repita sua nova senha"
             placeholder="*************"
             size="lg"
             {...form.getInputProps("passwordConfirmation")}
           />
-          <Button sx={{ fontSize: "16px" }} type="submit" size="lg">
+          <Button style={{ fontSize: "16px" }} type="submit" size="lg">
             Criar nova senha
           </Button>
         </Stack>

@@ -1,13 +1,4 @@
-import {
-  Stack,
-  Box,
-  Title,
-  Text,
-  Radio,
-  Select,
-  Paper,
-  type SelectItem,
-} from "@mantine/core"
+import { Stack, Box, Title, Text, Radio, Select, Paper } from "@mantine/core"
 import { useAtom } from "jotai"
 import { characterFormAton } from "../../state"
 import classes from "@/assets/dnd/5e/classes"
@@ -57,7 +48,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
 
   const getCategoryRangeDataAndLabel = (
     item: WithAmount<EquipmentCategoryList>
-  ): [string, SelectItem[]] => {
+  ): [string, TypeFixMe[]] => {
     return [
       `Selecione 1 arma ${item.category_range.toLowerCase()}`,
       getItemsByCategoryRange(item.category_range).map((e) =>
@@ -74,7 +65,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
 
   const getToolCategoryDataAndLabel = (
     item: WithAmount<EquipmentToolList>
-  ): [string, SelectItem[]] => {
+  ): [string, TypeFixMe[]] => {
     return [
       "Selecione 1 ferramenta",
       getItemsByToolCategory(item.tool_category).map((e) =>
@@ -89,7 +80,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
 
   const getGearCategoryDataAndLabel = (
     item: WithAmount<EquipmentGearList>
-  ): [string, SelectItem[]] => {
+  ): [string, TypeFixMe[]] => {
     const gears = getItemsByGearCategory(item.gear_category)
 
     return [
@@ -127,12 +118,12 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
   const buildRadioData = (
     key: string,
     item: EquipmentOption
-  ): [string | JSX.Element[], SelectItem[]] => {
+  ): [string | JSX.Element[], TypeFixMe[]] => {
     if ("list" in item) {
       return [
         item.list.flatMap((listItem) => {
           let label = ""
-          let data: SelectItem[] = []
+          let data: TypeFixMe[] = []
 
           if ("index" in listItem) {
             return [
@@ -158,7 +149,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
                 placeholder={label}
                 data={data}
                 searchable
-                nothingFound="Nada encontrado"
+                nothingFoundMessage="Nada encontrado"
                 onChange={handleChangeListGroupValue(key + i)}
               />
             )
@@ -182,7 +173,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
     ]
   }
 
-  const handleSelectItem = (group: number) => (value: string) => {
+  const handleTypeFixMe = (group: number) => (value: string) => {
     selectedItems.current[group] = JSON.parse(
       value
     ) as WithAmount<EquipmentIndex>[]
@@ -197,7 +188,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
   const getRadioValue = (
     key: string,
     equipment: string | JSX.Element[],
-    data: SelectItem[]
+    data: TypeFixMe[]
   ) => {
     if (radioValue[key]) return radioValue[key]
 
@@ -223,18 +214,18 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
   }
 
   return (
-    <Stack style={styles} spacing="md">
+    <Stack style={styles} gap="md">
       <Box>
         <Title size="h4">Escolha seu equipamento</Title>
         <Text size="sm">Escolha seu equipamento</Text>
       </Box>
 
-      <Stack spacing="md" pb={32} mih="calc(100% - 170px)">
+      <Stack gap="md" pb={32} mih="calc(100% - 170px)">
         {classes[form.classes[0].name].proficiencies.equipmentOptions.map(
           (item, i) => {
             return (
               <Paper key={i} withBorder p="xs">
-                <Radio.Group onChange={handleSelectItem(i)}>
+                <Radio.Group onChange={handleTypeFixMe(i)}>
                   {item.map((itemData, j) => {
                     const key = `1${i}${j}`
                     const [equipmentLabel, data] = buildRadioData(key, itemData)
@@ -254,7 +245,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
                             labelWrapper: { width: "100%" },
                           }}
                           value={value}
-                          disabled={(JSON.parse(value) as any[]).some(
+                          disabled={(JSON.parse(value) as TypeFixMe[]).some(
                             (v) => typeof v === "number"
                           )}
                           label={
@@ -274,7 +265,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
                                           placeholder={equipmentLabel as string}
                                           data={data}
                                           searchable
-                                          nothingFound="Nada encontrado"
+                                          nothingFoundMessage="Nada encontrado"
                                           onChange={handleSetRadioValue(
                                             `1${i}${j}${k}`
                                           )}

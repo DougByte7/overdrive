@@ -157,7 +157,7 @@ const ClassSelection = ({
           label="Escolha uma classe para subir de nível"
           value={selectedClass}
           data={classesData}
-          nothingFound="Classe não encontrada"
+          nothingFoundMessage="Classe não encontrada"
           onChange={(value) => setSelectedClassAtom(value as DnD5eClassName)}
         />
       </StackContainer>

@@ -50,11 +50,14 @@ export default function CharacterFooter() {
           />
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item icon={<IconHome />} onClick={() => router.push("/home")}>
+          <Menu.Item
+            leftSection={<IconHome />}
+            onClick={() => router.push("/home")}
+          >
             Início
           </Menu.Item>
           <Menu.Item
-            icon={<IconSkull />}
+            leftSection={<IconSkull />}
             onClick={() => router.push("/monsters")}
           >
             Monstros
@@ -71,13 +74,13 @@ export default function CharacterFooter() {
           <Menu.Divider />
           <Menu.Label>Conta</Menu.Label>
 
-          <Menu.Item icon={<IconUser />} onClick={handleNotImplemented}>
+          <Menu.Item leftSection={<IconUser />} onClick={handleNotImplemented}>
             Perfil
           </Menu.Item>
 
           <Menu.Item
             color="red"
-            icon={<IconLogout />}
+            leftSection={<IconLogout />}
             onClick={handleNotImplemented}
           >
             Sair
@@ -87,7 +90,7 @@ export default function CharacterFooter() {
 
       <Flex justify="space-evenly" align="center" h={56} mt={8}>
         <UnstyledButton onClick={handleSetActiveTab("basic")}>
-          <Stack align="center" spacing={0}>
+          <Stack align="center" gap={0}>
             <i
               aria-hidden={true}
               css={customIconStyles(
@@ -97,14 +100,14 @@ export default function CharacterFooter() {
                 activeTab === "basic"
               )}
             />
-            <Text size={10}>Básico</Text>
+            <Text size={"10px"}>Básico</Text>
           </Stack>
         </UnstyledButton>
 
         <Divider orientation="vertical" />
 
         <UnstyledButton onClick={handleSetActiveTab("inventory")}>
-          <Stack align="center" spacing={0}>
+          <Stack align="center" gap={0}>
             <i
               aria-hidden={true}
               css={customIconStyles(
@@ -114,14 +117,14 @@ export default function CharacterFooter() {
                 activeTab === "inventory"
               )}
             />
-            <Text size={10}>Inventário</Text>
+            <Text size={"10px"}>Inventário</Text>
           </Stack>
         </UnstyledButton>
 
         <Divider orientation="vertical" />
 
         <UnstyledButton onClick={handleSetActiveTab("skills")}>
-          <Stack align="center" spacing={0}>
+          <Stack align="center" gap={0}>
             <i
               aria-hidden={true}
               css={customIconStyles(
@@ -129,14 +132,14 @@ export default function CharacterFooter() {
                 activeTab === "skills"
               )}
             />
-            <Text size={10}>Habilidades</Text>
+            <Text size={"10px"}>Habilidades</Text>
           </Stack>
         </UnstyledButton>
 
         <Divider orientation="vertical" />
 
         <UnstyledButton onClick={handleSetActiveTab("magic")}>
-          <Stack align="center" spacing={0}>
+          <Stack align="center" gap={0}>
             <IconCrystalBall
               fill={
                 activeTab === "magic" ? "var(--do_color_primary_base)" : "none"
@@ -149,7 +152,7 @@ export default function CharacterFooter() {
               size={28}
               stroke={1.5}
             />
-            <Text size={10}>Magias</Text>
+            <Text size={"10px"}>Magias</Text>
           </Stack>
         </UnstyledButton>
       </Flex>

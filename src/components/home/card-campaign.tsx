@@ -44,7 +44,7 @@ export default function CardCampaign({
           <Image src={imgSrc ?? fallbackImg} height={140} width={223} alt="" />
         </Card.Section>
 
-        <Text weight={700} mt="md">
+        <Text fw={700} mt="md">
           {title}
         </Text>
 
@@ -67,7 +67,7 @@ export default function CardCampaign({
               size={32}
             />
           ))}
-          <Text size="sm" weight={600} ml="xs">
+          <Text size="sm" fw={600} ml="xs">
             {slots ? slotsText : "Não há vagas"}
           </Text>
         </Flex>

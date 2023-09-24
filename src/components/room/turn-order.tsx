@@ -5,18 +5,18 @@ export default function TurnOrder() {
   const characters = Array(12).fill(null)
 
   return (
-    <Stack align="center" spacing="sm">
-      <Text color="white" size={12}>
+    <Stack align="center" gap="sm">
+      <Text color="white" size={"12px"}>
         INICIATIVA
       </Text>
       <div css={mask}>
-        <Group css={avatarGroup} noWrap>
+        <Group css={avatarGroup} wrap="nowrap">
           {characters.map((_, i) => {
             return <Avatar key={i} radius="xl" />
           })}
         </Group>
       </div>
-      <Text css={turnOf} size={14} color="var(--do_text_color_300)">
+      <Text css={turnOf} size={"14px"} color="var(--do_text_color_300)">
         <Text component="span" color="var(--do_color_info)">
           Turno
         </Text>{" "}

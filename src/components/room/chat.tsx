@@ -3,13 +3,7 @@ import { KeyboardEventHandler, useEffect, useState } from "react"
 import { socketAton } from "./state"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import {
-  Avatar,
-  Group,
-  Textarea,
-  Text,
-  useMantineColorScheme,
-} from "@mantine/core"
+import { Avatar, Group, Textarea, Text } from "@mantine/core"
 import { css } from "@emotion/react"
 
 interface Message {
@@ -22,7 +16,6 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([])
   const { data: sessionData, status: sessionStatus } = useSession()
   const router = useRouter()
-  const { toggleColorScheme } = useMantineColorScheme()
   const currentTime = new Date().getTime()
 
   const formatTime = (elapsed: number) => {
@@ -60,8 +53,6 @@ export default function Chat() {
 
   useEffect(() => {
     if (sessionStatus === "loading" || !router.query.roomId) return
-
-    toggleColorScheme("dark")
 
     socket.on("user:joined", (user) => {
       setMessages((messages) => [
@@ -105,16 +96,16 @@ export default function Chat() {
       <div>
         {messages.map((message) => (
           <div key={message.from + message.time}>
-            <Group spacing={8}>
+            <Group gap={8}>
               <Avatar size="sm" radius="xl" />
-              <Text color="white" size={14}>
+              <Text color="white" size="14px">
                 {message.from}
               </Text>
-              <Text css={timestamp} size={12}>
+              <Text css={timestamp} size={"12px"}>
                 {formatTime(currentTime - message.time)}
               </Text>
             </Group>
-            <Text css={userMessage} color="white" size={14}>
+            <Text css={userMessage} color="white" size="14px">
               {message.content}
             </Text>
           </div>
@@ -150,10 +141,10 @@ interface SystemMessageProps {
 function SystemMessage({ message, type }: SystemMessageProps) {
   return (
     <div css={systemMessage(type)}>
-      <Text className="title" color="white" size={14}>
+      <Text className="title" color="white" size="14px">
         {message.from}
       </Text>
-      <Text color="white" size={14}>
+      <Text color="white" size="14px">
         {message.content}
       </Text>
     </div>

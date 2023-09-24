@@ -93,13 +93,13 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
   }, [form])
 
   return (
-    <Stack style={styles} spacing="md" mih="calc(100% - 170px)">
+    <Stack style={styles} gap="md" mih="calc(100% - 170px)">
       <Box>
         <Title size="h4">Escolha seus aspectos de classe/raça</Title>
         <Text size="sm">Escolha seus aspectos de classe/raça</Text>
       </Box>
 
-      <Stack spacing="md">
+      <Stack gap="md">
         {raceTraits}
         {classFeatures}
         {proficiencies}

@@ -44,7 +44,7 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
     }
 
   return (
-    <Stack style={styles} spacing="md">
+    <Stack style={styles} gap="md">
       <Box>
         <Title size="h4">Escolha uma raça</Title>
         <Text size="sm">Escolha uma raça</Text>
@@ -95,13 +95,13 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
                   src={`/images/fantasy/races/${raceKey}.png`}
                 />
                 <span>
-                  <Text weight={600}>{race.name}</Text>
+                  <Text fw={600}>{race.name}</Text>
                   <Text size="sm">{race.description}</Text>
                 </span>
               </Group>
             </Accordion.Control>
             <Accordion.Panel>
-              <Stack spacing="md">
+              <Stack gap="md">
                 {race.traits.map((trait) => (
                   <Paper
                     key={race.name + trait.name}
@@ -110,7 +110,7 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
                     radius="md"
                   >
                     <Group>
-                      <Text weight={600}>{trait.name}</Text>
+                      <Text fw={600}>{trait.name}</Text>
                       <Text>{trait.description}</Text>
                     </Group>
                   </Paper>

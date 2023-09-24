@@ -37,7 +37,6 @@ import {
   Fragment,
   MouseEventHandler,
   ReactNode,
-  useMemo,
   useState,
 } from "react"
 import { selectedSpellAton } from "../../state"
@@ -126,8 +125,8 @@ function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
             padding: 8px;
             height: 100px;
           `}
-          spacing={0}
-          position="apart"
+          gap={0}
+          justify="space-between"
         >
           <Text
             css={css`
@@ -139,7 +138,7 @@ function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
             {spell.name}
           </Text>
 
-          <Stack align="stretch" spacing={4}>
+          <Stack align="stretch" gap={4}>
             {spell.casting_time.startsWith("1 reaction") ? (
               <ToggleTip label={spell.casting_time}>
                 <Badge
@@ -233,7 +232,7 @@ function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
             </Badge>
           </Stack>
 
-          <Group spacing={4}>
+          <Group gap={4}>
             {spell.duration.startsWith("Concentration") && (
               <Badge
                 color="gray"
@@ -324,32 +323,28 @@ export default function SpellList({
   const [preFilters, setPreFilter] = useState(filters)
   const [opened, { open, close }] = useDisclosure(false)
 
-  const filteredSpells = useMemo(() => {
-    const isAny = (filter: any) => filter === "any"
-
-    return spells.filter((s) => {
-      return (
-        s.name.toLowerCase().includes(search) &&
-        (isAny(filters.className) || s.classes.includes(filters.className)) &&
-        (isAny(filters.level) || s.level == filters.level) &&
-        (isAny(filters.school) || s.school === filters.school) &&
-        (isAny(filters.castingTime) ||
-          s.casting_time.toLowerCase().includes(filters.castingTime)) &&
-        (isAny(filters.range) ||
-          s.range.toLowerCase().includes(filters.range)) &&
-        (isAny(filters.duration) ||
-          s.duration.toLowerCase().includes(filters.duration)) &&
-        (isAny(filters.ritual) || s.ritual.toString() === filters.ritual) &&
-        (isAny(filters.concentration) ||
-          (filters.concentration === "true"
-            ? s.duration.toLowerCase().includes("concentration")
-            : !s.duration.toLowerCase().includes("concentration"))) &&
-        (isAny(filters.verbal) || s.components.verbal === filters.verbal) &&
-        (isAny(filters.somatic) || s.components.somatic === filters.somatic) &&
-        (isAny(filters.material) || s.components.material === filters.material)
-      )
-    })
-  }, [search, filters])
+  const isAny = (filter: any) => filter === "any"
+  const filteredSpells = spells.filter((s) => {
+    return (
+      s.name.toLowerCase().includes(search) &&
+      (isAny(filters.className) || s.classes.includes(filters.className)) &&
+      (isAny(filters.level) || s.level == filters.level) &&
+      (isAny(filters.school) || s.school === filters.school) &&
+      (isAny(filters.castingTime) ||
+        s.casting_time.toLowerCase().includes(filters.castingTime)) &&
+      (isAny(filters.range) || s.range.toLowerCase().includes(filters.range)) &&
+      (isAny(filters.duration) ||
+        s.duration.toLowerCase().includes(filters.duration)) &&
+      (isAny(filters.ritual) || s.ritual.toString() === filters.ritual) &&
+      (isAny(filters.concentration) ||
+        (filters.concentration === "true"
+          ? s.duration.toLowerCase().includes("concentration")
+          : !s.duration.toLowerCase().includes("concentration"))) &&
+      (isAny(filters.verbal) || s.components.verbal === filters.verbal) &&
+      (isAny(filters.somatic) || s.components.somatic === filters.somatic) &&
+      (isAny(filters.material) || s.components.material === filters.material)
+    )
+  })
 
   const filterValues = {
     classNames: [
@@ -444,13 +439,13 @@ export default function SpellList({
 
   return (
     <>
-      <Stack spacing="xs">
-        <Group position="apart" spacing="sm">
+      <Stack gap="xs">
+        <Group justify="space-between" gap="sm">
           <TextInput
             w="100%"
             type="search"
             placeholder="Que arcano deseja revelar?"
-            icon={<IconSearch />}
+            rightSection={<IconSearch />}
             onChange={handleSearch}
           />
           <Select
@@ -466,12 +461,11 @@ export default function SpellList({
             onChange={handleFilterLevel}
           />
           <Button
-            leftIcon={<IconFilter size={16} />}
+            leftSection={<IconFilter size={16} />}
             size="xs"
             onClick={open}
-            uppercase
           >
-            Filtrar
+            FILTRAR
           </Button>
         </Group>
 
@@ -620,7 +614,7 @@ export default function SpellList({
             </Group>
           </Checkbox.Group>
 
-          <Group position="right" mt="auto">
+          <Group justify="end" mt="auto">
             <Button variant="outline" onClick={handleClearFilters}>
               Limpar
             </Button>

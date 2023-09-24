@@ -1,3 +1,4 @@
+import "@mantine/core/styles.css"
 import { MantineThemeOverride } from "@mantine/core"
 
 const theme: MantineThemeOverride = {
