@@ -214,14 +214,14 @@ export default function AttributeSelection({
   }
 
   return (
-    <Stack style={styles} spacing="md">
+    <Stack style={styles} gap="md">
       <Box>
         <Title size="h4">Escolha os seus atributos!</Title>
         <Text size="sm">
           Agora que rolamos todos os dados, vamos dividir em seus atributos.
         </Text>
         <Space h="xs" />
-        <Group spacing="xs">
+        <Group gap="xs">
           {attrMethod === "pointbuy" ? (
             <Tooltip
               withArrow
@@ -246,7 +246,7 @@ export default function AttributeSelection({
                 </Table>
               }
             >
-              <Group spacing="xs">
+              <Group gap="xs">
                 <IconInfoCircle />
                 <Text size="lg">
                   Pontos disponíveis: <strong>{availablePoints}</strong>
@@ -283,7 +283,7 @@ export default function AttributeSelection({
           label={`Escolha ${races[form.race!].boost!.anyAttr!.amount} atributo${
             races[form.race!].boost!.anyAttr!.amount > 1 ? "s" : ""
           } para aumentar em ${races[form.race!].boost!.anyAttr!.value}`}
-          maxSelectedValues={races[form.race!].boost?.anyAttr?.amount}
+          maxValues={races[form.race!].boost?.anyAttr?.amount}
           onChange={handleSetBonusAttr(
             races[form.race!].boost?.anyAttr?.value ?? 0
           )}
@@ -313,7 +313,7 @@ export default function AttributeSelection({
             pos="relative"
             withBorder
           >
-            <Group spacing="xs">
+            <Group gap="xs">
               {attrMethod === "pointbuy" && (
                 <ActionIcon
                   title={`Diminuir ${ability.name}`}
@@ -365,7 +365,7 @@ export default function AttributeSelection({
                 </ActionIcon>
               )}
 
-              <Text weight={600}>{ability.name} </Text>
+              <Text fw={600}>{ability.name} </Text>
               {!!form[ability.attributeName] && (
                 <Badge ml="auto" variant="outline">
                   {abilityModifier > 0 && "+"}

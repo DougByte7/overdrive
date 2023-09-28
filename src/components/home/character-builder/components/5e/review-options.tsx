@@ -16,6 +16,7 @@ import {
   ActionIcon,
   Accordion,
   Divider,
+  ComboboxItem,
 } from "@mantine/core"
 import { useAtom } from "jotai"
 import { characterFormAton, avatarPreviewUrlAton } from "../../state"
@@ -44,7 +45,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
   const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton)
 
   return (
-    <Stack style={styles} spacing="md">
+    <Stack style={styles} gap="md">
       <Box>
         <Title size="h4">Só mais uma coisinha!</Title>
         <Text size="sm">
@@ -66,7 +67,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
               css={css`
                 flex-grow: 1;
               `}
-              weight={600}
+              fw={600}
             >
               {form.name || "Nome"}
             </Text>
@@ -82,7 +83,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
               css={css`
                 flex-grow: 1;
               `}
-              weight={600}
+              fw={600}
             >
               Atributos
             </Text>
@@ -119,7 +120,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
               css={css`
                 flex-grow: 1;
               `}
-              weight={600}
+              fw={600}
             >
               {races[form.race!].name}
             </Text>
@@ -132,7 +133,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
             {races[form.race!].traits.map((trait) => (
               <Accordion.Item key={trait.name} value={trait.name}>
                 <Accordion.Control>
-                  <Text weight={600}>{trait.name}</Text>
+                  <Text fw={600}>{trait.name}</Text>
                 </Accordion.Control>
                 <Accordion.Panel>{trait.description}</Accordion.Panel>
               </Accordion.Item>
@@ -149,7 +150,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
               css={css`
                 flex-grow: 1;
               `}
-              weight={600}
+              fw={600}
             >
               {form.classes
                 .map((classKey) => classes[classKey.name].name)
@@ -165,7 +166,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
               classes[classKey.name].features.map((feature) => (
                 <Accordion.Item key={feature.name} value={feature.name}>
                   <Accordion.Control>
-                    <Text weight={600}>
+                    <Text fw={600}>
                       {feature.name}
                       <Badge color="gray" size="xs">
                         {Array.isArray(feature.level)
@@ -190,7 +191,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
               css={css`
                 flex-grow: 1;
               `}
-              weight={600}
+              fw={600}
             >
               Aspectos de classe/raça
             </Text>
@@ -205,9 +206,13 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                 <Text key={`${v}${i}`}>
                   {k}:
                   {
-                    races[form.race!].traits
-                      .find((t) => t.name === k)
-                      ?.options?.find((o) => o.value === v)?.label
+                    (
+                      races[form.race!].traits
+                        .find((t) => t.name === k)
+                        ?.options?.find(
+                          (o) => (o as ComboboxItem).value === v
+                        ) as ComboboxItem
+                    )?.label
                   }
                 </Text>
               )
@@ -241,7 +246,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
               css={css`
                 flex-grow: 1;
               `}
-              weight={600}
+              fw={600}
             >
               Itens
             </Text>
@@ -283,7 +288,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                 css={css`
                   flex-grow: 1;
                 `}
-                weight={600}
+                fw={600}
               >
                 Magias
               </Text>

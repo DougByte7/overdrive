@@ -6,7 +6,9 @@ import {
   Radio,
   Select,
   Paper,
-  type SelectItem,
+  ComboboxData,
+  ComboboxItemGroup,
+  ComboboxItem,
 } from "@mantine/core"
 import { useAtom } from "jotai"
 import { characterFormAton } from "../../state"
@@ -49,54 +51,63 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
     return equipmentList.filter((e) => e.gear_category?.index === query)
   }
 
-  const mapSelectData = (label: string, value: string, group?: string) => ({
-    label,
-    value,
-    group,
-  })
-
   const getCategoryRangeDataAndLabel = (
     item: WithAmount<EquipmentCategoryList>
-  ): [string, SelectItem[]] => {
+  ): [string, ComboboxData] => {
     return [
       `Selecione 1 arma ${item.category_range.toLowerCase()}`,
-      getItemsByCategoryRange(item.category_range).map((e) =>
-        mapSelectData(
-          `${e.name} - ${e.damage?.damage_dice ?? ""} ${e.properties
-            .map((p) => p.name)
-            .join(", ")}`,
-          JSON.stringify({ index: e.index, amount: 1 }),
-          e.category_range
-        )
-      ),
+      getItemsByCategoryRange(item.category_range).reduce((acc, e) => {
+        const label = `${e.name} - ${e.damage?.damage_dice ?? ""} ${e.properties
+          .map((p) => p.name)
+          .join(", ")}`
+        const value = JSON.stringify({ index: e.index, amount: 1 })
+        const group = e.category_range!
+        const item: ComboboxItem = { label, value }
+
+        const index = acc.findIndex((d) => d.group === group)
+        if (index > -1) {
+          acc[index].items.push(item)
+        } else {
+          acc.push({ group, items: [item] })
+        }
+        return acc
+      }, [] as ComboboxItemGroup[]),
     ]
   }
 
   const getToolCategoryDataAndLabel = (
     item: WithAmount<EquipmentToolList>
-  ): [string, SelectItem[]] => {
+  ): [string, ComboboxData] => {
     return [
       "Selecione 1 ferramenta",
-      getItemsByToolCategory(item.tool_category).map((e) =>
-        mapSelectData(
-          e.name,
-          JSON.stringify({ index: e.index, amount: 1 }),
-          e.tool_category
-        )
-      ),
+      getItemsByToolCategory(item.tool_category).reduce((acc, e) => {
+        const label = e.name
+        const value = JSON.stringify({ index: e.index, amount: 1 })
+        const group = e.tool_category!
+        const item: ComboboxItem = { label, value }
+
+        const index = acc.findIndex((d) => d.group === group)
+        if (index > -1) {
+          acc[index].items.push(item)
+        } else {
+          acc.push({ group, items: [item] })
+        }
+        return acc
+      }, [] as ComboboxItemGroup[]),
     ]
   }
 
   const getGearCategoryDataAndLabel = (
     item: WithAmount<EquipmentGearList>
-  ): [string, SelectItem[]] => {
+  ): [string, ComboboxData] => {
     const gears = getItemsByGearCategory(item.gear_category)
 
     return [
       `Selecione 1 ${gears[0]?.gear_category?.name}`,
-      gears.map((e) =>
-        mapSelectData(e.name, JSON.stringify({ index: e.index, amount: 1 }))
-      ),
+      gears.map((e) => ({
+        label: e.name,
+        value: JSON.stringify({ index: e.index, amount: 1 }),
+      })),
     ]
   }
 
@@ -127,12 +138,12 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
   const buildRadioData = (
     key: string,
     item: EquipmentOption
-  ): [string | JSX.Element[], SelectItem[]] => {
+  ): [string | JSX.Element[], ComboboxData] => {
     if ("list" in item) {
       return [
         item.list.flatMap((listItem) => {
           let label = ""
-          let data: SelectItem[] = []
+          let data: ComboboxData = []
 
           if ("index" in listItem) {
             return [
@@ -158,13 +169,13 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
                 placeholder={label}
                 data={data}
                 searchable
-                nothingFound="Nada encontrado"
+                nothingFoundMessage="Nada encontrado"
                 onChange={handleChangeListGroupValue(key + i)}
               />
             )
           })
         }),
-        [{ value: buildListValue(key, item.list) }],
+        [{ value: buildListValue(key, item.list), label: "" }],
       ]
     } else if ("category_range" in item) {
       return getCategoryRangeDataAndLabel(item)
@@ -178,11 +189,11 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
       `${item.amount}x ${getItemByIndex(item.index)?.name}${
         "ammo" in item ? `, e ${item.ammo}x munições` : ""
       }`,
-      [{ value: JSON.stringify(item) }],
+      [{ value: JSON.stringify(item), label: "" }],
     ]
   }
 
-  const handleSelectItem = (group: number) => (value: string) => {
+  const handleComboboxData = (group: number) => (value: string) => {
     selectedItems.current[group] = JSON.parse(
       value
     ) as WithAmount<EquipmentIndex>[]
@@ -197,7 +208,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
   const getRadioValue = (
     key: string,
     equipment: string | JSX.Element[],
-    data: SelectItem[]
+    data: ComboboxData
   ) => {
     if (radioValue[key]) return radioValue[key]
 
@@ -211,9 +222,10 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
         .join()
 
     if (typeof equipment === "string" && !equipment.startsWith("Selecione"))
-      return data[0].value
+      return (data[0] as ComboboxItem).value
 
-    if (Array.isArray(equipment)) return data.map((d) => d.value).join()
+    if (Array.isArray(equipment))
+      return data.map((d) => (d as ComboboxItem).value).join()
 
     return key
   }
@@ -223,18 +235,18 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
   }
 
   return (
-    <Stack style={styles} spacing="md">
+    <Stack style={styles} gap="md">
       <Box>
         <Title size="h4">Escolha seu equipamento</Title>
         <Text size="sm">Escolha seu equipamento</Text>
       </Box>
 
-      <Stack spacing="md" pb={32} mih="calc(100% - 170px)">
+      <Stack gap="md" pb={32} mih="calc(100% - 170px)">
         {classes[form.classes[0].name].proficiencies.equipmentOptions.map(
           (item, i) => {
             return (
               <Paper key={i} withBorder p="xs">
-                <Radio.Group onChange={handleSelectItem(i)}>
+                <Radio.Group onChange={handleComboboxData(i)}>
                   {item.map((itemData, j) => {
                     const key = `1${i}${j}`
                     const [equipmentLabel, data] = buildRadioData(key, itemData)
@@ -254,7 +266,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
                             labelWrapper: { width: "100%" },
                           }}
                           value={value}
-                          disabled={(JSON.parse(value) as any[]).some(
+                          disabled={(JSON.parse(value) as ComboboxData).some(
                             (v) => typeof v === "number"
                           )}
                           label={
@@ -274,7 +286,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
                                           placeholder={equipmentLabel as string}
                                           data={data}
                                           searchable
-                                          nothingFound="Nada encontrado"
+                                          nothingFoundMessage="Nada encontrado"
                                           onChange={handleSetRadioValue(
                                             `1${i}${j}${k}`
                                           )}

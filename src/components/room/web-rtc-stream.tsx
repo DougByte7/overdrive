@@ -121,7 +121,6 @@ export default function WebRTCStream() {
                 `}
                 label="Camera"
                 placeholder="Escolha um"
-                dropdownPosition="bottom"
                 value={preferredVideoSource}
                 data={videoDevices.map((device) => {
                   return { value: device.deviceId, label: device.label }
@@ -139,7 +138,6 @@ export default function WebRTCStream() {
                 `}
                 label="Microfone"
                 placeholder="Escolha um"
-                dropdownPosition="bottom"
                 value={preferredAudioSource}
                 data={audioDevices.map((device) => {
                   return { value: device.deviceId, label: device.label }

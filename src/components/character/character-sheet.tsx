@@ -32,8 +32,7 @@ import CharacterFooter from "./components/footer/nav"
 import { useAtom } from "jotai"
 import { activeTabAtom, characterAtom } from "./state"
 import Grimoire from "./components/grimoire"
-import ModalLevelUp from "./components/modal-level-up"
-import { useDisclosure } from "@mantine/hooks"
+import Link from "next/link"
 
 interface CharacterSheetProps {
   characterId: string
@@ -42,14 +41,13 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
   const { characters } = useCharacter()
   const [activeTab] = useAtom(activeTabAtom)
   const [character, setCharacter] = useAtom(characterAtom)
-  const [modalLvUpOpened, modalLvUpHandles] = useDisclosure(false)
 
   const [selectedItem, setSelectedItem] = useState<
     (typeof equipment)[number] | null
   >(null)
 
   useEffect(() => {
-    if (!characters[+characterId]) return
+    if (!characters?.[+characterId]) return
 
     setCharacter(characters[+characterId])
   }, [characters])
@@ -141,7 +139,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
     character && (
       <>
         <header>
-          <Group p="md" position="apart">
+          <Group p="md" justify="space-between">
             <ActionIcon
               size="xl"
               variant="light"
@@ -160,9 +158,11 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
             </Title>
 
             {character.classes.reduce((acc, c) => acc + c.level, 0) < 20 && (
-              <Button size="xs" compact onClick={modalLvUpHandles.open}>
-                Level Up
-              </Button>
+              <Link href={`./${characterId}/level-up`}>
+                <Button size="xs" component="div">
+                  Level Up
+                </Button>
+              </Link>
             )}
           </Group>
         </header>
@@ -179,8 +179,8 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                   )
                   .join(", ")}.`}
               />
-              <Group position="center">
-                <Stack align="center" spacing={0}>
+              <Group justify="center">
+                <Stack align="center" gap={0}>
                   <Box pos="relative" h={64}>
                     <IconShieldFilled
                       css={css`
@@ -207,7 +207,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                   </Text>
                 </Stack>
 
-                <Stack align="center" spacing={0}>
+                <Stack align="center" gap={0}>
                   <Box pos="relative" h={64}>
                     <IconHeartFilled
                       css={css`
@@ -237,16 +237,16 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                   </Text>
                 </Stack>
               </Group>
-              <Stack spacing="xs">
+              <Stack gap="xs">
                 {attributeOptions.map((attr) => {
                   const abilityModifier = getModifier(
                     character[attr.value].total
                   )
 
                   return (
-                    <Group key={attr.value} position="apart">
+                    <Group key={attr.value} justify="space-between">
                       <Text>{attr.label}</Text>
-                      <Group spacing="sm">
+                      <Group gap="sm">
                         <Badge mr="sm" variant="outline">
                           {abilityModifier > 0 && "+"}
                           {abilityModifier}
@@ -260,7 +260,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                 })}
               </Stack>
 
-              <Stack spacing="xs" maw={400}>
+              <Stack gap="xs" maw={400}>
                 <Text size="lg" fw="bold">
                   História do personagem
                 </Text>
@@ -290,7 +290,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                     >
                       <Group>
                         <Avatar />
-                        <Stack spacing={0}>
+                        <Stack gap={0}>
                           <Text fw="bold">{data.name}</Text>
                           <Text title={data.desc.join("")} size="sm">
                             {data.desc.join("").substring(0, 35)}
@@ -326,7 +326,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                       />
                     </ActionIcon>
 
-                    <Stack align="center" spacing="sm">
+                    <Stack align="center" gap="sm">
                       <Avatar size={80} />
                       <Text fw="bold" size="lg">
                         {selectedItem?.name}
@@ -339,12 +339,12 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                         <Text>{selectedItem?.desc}</Text>
                       </Spoiler>
 
-                      <Group position="center">
+                      <Group justify="center">
                         {selectedItem?.damage && (
                           <Stack
                             justify="center"
                             align="center"
-                            spacing={0}
+                            gap={0}
                             bg="var(--do_color_primary_base)"
                             css={css`
                               border-radius: var(--do_border_radius_md);
@@ -366,7 +366,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                           <Stack
                             justify="center"
                             align="center"
-                            spacing={0}
+                            gap={0}
                             bg="var(--do_color_primary_base)"
                             css={css`
                               border-radius: var(--do_border_radius_md);
@@ -386,7 +386,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                           <Stack
                             justify="center"
                             align="center"
-                            spacing={0}
+                            gap={0}
                             bg="var(--do_color_primary_base)"
                             css={css`
                               border-radius: var(--do_border_radius_md);
@@ -420,12 +420,12 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
           )}
 
           {activeTab === "skills" && (
-            <Stack spacing="xs">
+            <Stack gap="xs">
               {skills.map((attr) => {
                 const isTrained = character.proficiencies.includes(attr.value)
 
                 return (
-                  <Group key={attr.value} position="apart">
+                  <Group key={attr.value} justify="space-between">
                     <Checkbox label={attr.label} checked={isTrained} />
 
                     <Text css={attributeNumberStyles}>
@@ -440,15 +440,10 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
             </Stack>
           )}
 
-          {activeTab === "magic" && <Grimoire character={character} />}
+          {activeTab === "magic" && <Grimoire />}
         </main>
 
         <CharacterFooter />
-        <ModalLevelUp
-          characterId={+characterId}
-          isOpen={modalLvUpOpened}
-          onClose={modalLvUpHandles.close}
-        />
       </>
     )
   )

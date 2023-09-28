@@ -58,7 +58,7 @@ export default function AttributeMethod({ styles }: AttributeMethodProps) {
   ]
 
   return (
-    <Stack style={styles} spacing="md">
+    <Stack style={styles} gap="md">
       <Box>
         <Title size="h4">Como você quer selecionar os atributos?</Title>
         <Text size="sm">

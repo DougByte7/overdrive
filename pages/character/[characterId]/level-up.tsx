@@ -1,11 +1,11 @@
 import {
   Box,
   Button,
-  Modal,
   Select,
   Space,
   Stack,
   Text,
+  Title,
   Transition,
 } from "@mantine/core"
 import classes, { type DnD5eClassName } from "@/assets/dnd/5e/classes"
@@ -19,18 +19,19 @@ import {
   useMemo,
 } from "react"
 import { atom, useAtom } from "jotai"
-import { characterAtom } from "../../state"
 import useCharacter from "@/hooks/useCharacter"
-import SpellList from "../grimoire/spell-list"
 import pluralize from "@/utils/pluralize"
-import { SpellDetails } from "../grimoire/spell-details"
-import { DnD5eSpell } from "@/assets/dnd/5e/interfaces"
-import type { AddOrRemoveSpellEvent } from "../grimoire/interfaces"
 import { notifications } from "@mantine/notifications"
 import { attributeOptions } from "@/assets/dnd/5e/abilityScores"
-import { Attribute } from "@/assets/dnd/5e/classes/interfaces"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import { SpellDetails } from "@/components/character/components/grimoire/spell-details"
+import SpellList from "@/components/character/components/grimoire/spell-list"
+import { characterAtom } from "@/components/character/state"
+import type { DnD5eSpell } from "@/assets/dnd/5e/interfaces"
+import type { Attribute } from "@/assets/dnd/5e/classes/interfaces"
+import type { AddOrRemoveSpellEvent } from "@/components/character/components/grimoire/interfaces"
+import { useRouter } from "next/router"
 
 enum Steps {
   CLASS_SELECTION,
@@ -46,12 +47,12 @@ const selectedClassAtom = atom<DnD5eClassName | null>(null)
 
 const StackContainer = ({
   styles,
+
   children,
 }: WithStylesProp & PropsWithChildren) => (
   <Box style={styles}>
     <Stack
       css={css`
-        max-height: calc(100vh - 350px);
         overflow: auto;
         padding-bottom: 32px;
       `}
@@ -156,7 +157,7 @@ const ClassSelection = ({
           label="Escolha uma classe para subir de nível"
           value={selectedClass}
           data={classesData}
-          nothingFound="Classe não encontrada"
+          nothingFoundMessage="Classe não encontrada"
           onChange={(value) => setSelectedClassAtom(value as DnD5eClassName)}
         />
       </StackContainer>
@@ -493,8 +494,6 @@ const NewFeatures = ({
           }
           handleAddOrRemoveSpell={handleAddOrRemoveSpell}
         />
-
-        <SpellDetails backdrop={false} verticalOffset={0} h="95%" />
       </StackContainer>
 
       <Button mt="auto" onClick={onNextStep}>
@@ -504,19 +503,12 @@ const NewFeatures = ({
   )
 }
 
-interface ModalLevelUpProps {
-  characterId: string | number
-  isOpen: boolean
-  onClose: VoidFunction
-}
-export default function ModalLevelUp({
-  characterId,
-  isOpen,
-  onClose,
-}: ModalLevelUpProps) {
+export default function LevelUp() {
   const [currentStep, setCurrentStep] = useState(Steps.CLASS_SELECTION)
   const [character] = useAtom(characterAtom)
   const [selectedClass, setSelectedClass] = useAtom(selectedClassAtom)
+  const router = useRouter()
+  const characterId = +router.query.characterId!
 
   const handleNextStep = () => {
     setCurrentStep((prev) => prev + 1)
@@ -524,7 +516,7 @@ export default function ModalLevelUp({
 
   const handleClose = () => {
     setCurrentStep(Steps.CLASS_SELECTION)
-    onClose()
+    router.push(`/character/${characterId}`)
   }
 
   useEffect(() => {
@@ -537,49 +529,36 @@ export default function ModalLevelUp({
 
   return (
     <>
-      <Modal
-        css={css`
-          .mantine-ScrollArea-root,
-          .mantine-Modal-content {
-            overflow: visible;
-          }
+      <SpellDetails verticalOffset={0} h="95%" />
 
-          .mantine-Modal-header {
-            border-radius: var(--do_border_radius_md);
-          }
-        `}
-        size="lg"
-        title={selectedClass && level ? `Nível ${level + 1}` : "Novo nível"}
-        opened={isOpen}
-        centered
-        onClose={handleClose}
-      >
-        <Stack>
-          <Transition
-            transition="fade"
-            mounted={currentStep === Steps.CLASS_SELECTION}
-          >
-            {(styles) => (
-              <ClassSelection styles={styles} onNextStep={handleNextStep} />
-            )}
-          </Transition>
+      <Stack p="sm">
+        <Title>
+          {selectedClass && level ? `Nível ${level + 1}` : "Novo nível"}
+        </Title>
+        <Transition
+          transition="fade"
+          mounted={currentStep === Steps.CLASS_SELECTION}
+        >
+          {(styles) => (
+            <ClassSelection styles={styles} onNextStep={handleNextStep} />
+          )}
+        </Transition>
 
-          <Transition
-            transition="fade"
-            mounted={currentStep === Steps.NEW_FEATURES}
-          >
-            {(styles) => (
-              <NewFeatures
-                styles={styles}
-                characterId={characterId}
-                currentStep={currentStep}
-                onNextStep={handleNextStep}
-                onClose={handleClose}
-              />
-            )}
-          </Transition>
-        </Stack>
-      </Modal>
+        <Transition
+          transition="fade"
+          mounted={currentStep === Steps.NEW_FEATURES}
+        >
+          {(styles) => (
+            <NewFeatures
+              styles={styles}
+              characterId={characterId}
+              currentStep={currentStep}
+              onNextStep={handleNextStep}
+              onClose={handleClose}
+            />
+          )}
+        </Transition>
+      </Stack>
     </>
   )
 }

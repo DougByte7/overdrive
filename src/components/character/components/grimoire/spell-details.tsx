@@ -71,11 +71,11 @@ export function SpellDetails({
                 color="var(--do_color_primary_base)"
               />
             </ActionIcon>
-            <Stack align="center" spacing="sm">
+            <Stack align="center" gap="sm">
               <Text fw="bold" size="lg">
                 {selectedSpell?.name}
               </Text>
-              <Group spacing="xs">
+              <Group gap="xs">
                 {selectedSpell?.duration.startsWith("Concentration") && (
                   <Badge
                     color="gray"
@@ -155,17 +155,17 @@ export function SpellDetails({
                   }
                 `}
               >
-                <Group spacing={0}>
+                <Group gap={0}>
                   <dt>Duração: </dt>
                   <dd>{selectedSpell?.duration}</dd>
                 </Group>
 
-                <Group spacing={0}>
+                <Group gap={0}>
                   <dt>Nível: </dt>
                   <dd>{selectedSpell?.level}</dd>
                 </Group>
 
-                <Group spacing={0}>
+                <Group gap={0}>
                   <dt>Alcance: </dt>
                   <dd>
                     {selectedSpell?.range
@@ -221,17 +221,17 @@ export function SpellDetails({
                   </dd>
                 </Group>
 
-                <Group spacing={0}>
+                <Group gap={0}>
                   <dt>Escola: </dt>
                   <dd>{selectedSpell?.school}</dd>
                 </Group>
 
-                <Group spacing={0}>
+                <Group gap={0}>
                   <dt>Classes: </dt>
                   <dd>{selectedSpell?.classes.join(", ")}</dd>
                 </Group>
 
-                <Group spacing={0}>
+                <Group gap={0}>
                   <dt>Tempo de conjuração: </dt>
                   <dd>{selectedSpell?.casting_time}</dd>
                 </Group>
@@ -268,7 +268,7 @@ const backdropStyles: CSSProperties = {
   bottom: 0,
   left: 0,
   background: "rgba(0, 0, 0, 0.6)",
-  zIndex: 3,
+  zIndex: 1001,
 }
 const spellInfoStyles = (
   verticalOffset: number,
@@ -278,7 +278,7 @@ const spellInfoStyles = (
   right: 0,
   bottom: verticalOffset,
   left: 0,
-  zIndex: 4,
+  zIndex: 1002,
   borderTopRightRadius: "var(--do_border_radius_lg)",
   borderTopLeftRadius: "var(--do_border_radius_lg)",
   padding: 16,

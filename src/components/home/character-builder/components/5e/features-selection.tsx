@@ -15,6 +15,8 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
     return races[form.race!].traits.reduce((acc, trait) => {
       if (!trait.options) return acc
 
+      console.log("trait.options", trait.options)
+
       return [
         ...acc,
         <Select
@@ -34,8 +36,14 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
 
   const classFeatures = useMemo(() => {
     return classes[form.classes[0].name!].features.reduce((acc, feature) => {
-      if (!feature.options) return acc
+      if (
+        (Array.isArray(feature.level) && !feature.level.includes(1)) ||
+        (typeof feature.level === "number" && feature.level > 1) ||
+        !feature.options
+      )
+        return acc
 
+      console.log("feature.options", feature.options)
       return [
         ...acc,
         <>
@@ -51,17 +59,7 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
             }
           />
           {form.features[feature.name] && (
-            <Code>
-              {(feature.description as string[])
-                .find((desc) =>
-                  desc.startsWith(
-                    feature.options!.find(
-                      (op) => op.value === form.features[feature.name]
-                    )!.label
-                  )
-                )
-                ?.replace(/.+:\s/, "")}
-            </Code>
+            <Code>{feature.misc?.[feature.name]}</Code>
           )}
         </>,
       ]
@@ -98,13 +96,13 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
   }, [form])
 
   return (
-    <Stack style={styles} spacing="md" mih="calc(100% - 170px)">
+    <Stack style={styles} gap="md" mih="calc(100% - 170px)">
       <Box>
         <Title size="h4">Escolha seus aspectos de classe/raça</Title>
         <Text size="sm">Escolha seus aspectos de classe/raça</Text>
       </Box>
 
-      <Stack spacing="md">
+      <Stack gap="md">
         {raceTraits}
         {classFeatures}
         {proficiencies}

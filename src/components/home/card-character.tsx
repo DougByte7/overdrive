@@ -37,7 +37,7 @@ export default function CardCharacter({
             height: 100%;
           `}
         >
-          <Text weight={500} color="var(--do_text_color_300)" size="sm">
+          <Text fw={500} color="var(--do_text_color_300)" size="sm">
             {campaignName}
           </Text>
 

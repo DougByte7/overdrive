@@ -49,7 +49,7 @@ export default function SpellSelection({ styles }: ClassSelectionProps) {
   }, [form.classes])
 
   return (
-    <Stack style={styles} spacing="md">
+    <Stack style={styles} gap="md">
       <Box>
         <Title size="h4">Escolha suas magias</Title>
         <Text size="sm">Escolha suas magias</Text>
@@ -152,10 +152,10 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
               `}
               aria-label="Exibir mais informações"
             >
-              <Group spacing="xs">
+              <Group gap="xs">
                 {spell.name}
 
-                <Group spacing="xs">
+                <Group gap="xs">
                   <Badge size="sm" variant="outline">
                     {spell.school}
                   </Badge>
@@ -167,7 +167,7 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
                   </Badge>
                 </Group>
 
-                <Group spacing="xs">
+                <Group gap="xs">
                   {spell.duration.startsWith("Concentration") && (
                     <Badge title="Concentraçào" size="sm">
                       C

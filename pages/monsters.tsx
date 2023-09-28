@@ -42,7 +42,6 @@ const initialFilterState: {
 
 export default function PageMonsters() {
   const [selectedMonster, setSelectedMonster] = useAtom(selectedMonsterAtom)
-  console.log(selectedMonster)
 
   const [showXp, setShowXp] = useLocalStorage({
     key: "monster:showXp",
@@ -170,12 +169,12 @@ export default function PageMonsters() {
           </Tabs.Panel>
           <Tabs.Panel value="all" p="sm">
             <Stack>
-              <Group position="apart">
+              <Group justify="space-between">
                 <TextInput
                   w="100%"
                   type="search"
                   placeholder="Invocar pelo nome"
-                  icon={<IconSearch />}
+                  rightSection={<IconSearch />}
                   onChange={handleSearch}
                 />
                 <Switch
@@ -187,12 +186,11 @@ export default function PageMonsters() {
                   onChange={() => setShowXp(!showXp)}
                 />
                 <Button
-                  leftIcon={<IconFilter size={16} />}
+                  leftSection={<IconFilter size={16} />}
                   size="xs"
                   onClick={open}
-                  uppercase
                 >
-                  Filtrar
+                  FILTRAR
                 </Button>
               </Group>
               {monsterList}
@@ -251,7 +249,7 @@ export default function PageMonsters() {
               />
             </Box>
 
-            <Group position="right" mt="auto">
+            <Group justify="start" mt="auto">
               <Button variant="outline" onClick={handleClearFilters}>
                 Limpar
               </Button>
@@ -267,7 +265,7 @@ export default function PageMonsters() {
           title={selectedMonster?.name}
         >
           <Stack>
-            <Stack spacing={0}>
+            <Stack gap={0}>
               <Group>
                 {selectedMonster?.armor_class.map((ac, i) => (
                   <Text key={i}>
@@ -291,7 +289,7 @@ export default function PageMonsters() {
 
             <Divider />
 
-            <Group spacing="xs">
+            <Group gap="xs">
               <Text size="sm">FOR {selectedMonster?.strength}</Text>
               <Text size="sm">DES {selectedMonster?.dexterity}</Text>
               <Text size="sm">CON {selectedMonster?.constitution}</Text>
@@ -302,7 +300,7 @@ export default function PageMonsters() {
 
             <Divider />
 
-            <Stack spacing={0}>
+            <Stack gap={0}>
               <Text>Proficiências</Text>
               {selectedMonster?.proficiencies.map((p) => (
                 <Text key={p.proficiency.index}>

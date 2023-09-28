@@ -45,25 +45,25 @@ export default function CharacterDescription({
   }
 
   return (
-    <Stack style={styles} spacing="md" h="100%">
+    <Stack style={styles} gap="md" h="100%">
       <Box>
         <Title size="h4">Como o seu personagem é?</Title>
         <Text size="sm">Escolha um nome e uma foto.</Text>
       </Box>
 
       <Stack
-        sx={{
+        style={{
           maxWidth: "288px",
         }}
-        spacing="xs"
+        gap="xs"
       >
         <FileInput
           name="character-picture"
           label="Foto do personagem"
           placeholder="Selecione uma foto..."
           accept="image/png,image/jpeg,image/avif"
-          sx={{
-            ".mantine-InputWrapper-label": {
+          styles={{
+            label: {
               fontSize: "var(--do_text_size_sm)",
               fontWeight: 700,
             },
@@ -76,8 +76,8 @@ export default function CharacterDescription({
           autoComplete="false"
           withAsterisk
           placeholder="Anóriel Heinhardt"
-          sx={{
-            ".mantine-InputWrapper-label": {
+          styles={{
+            label: {
               fontSize: "var(--do_text_size_sm)",
               fontWeight: 700,
             },
@@ -90,7 +90,7 @@ export default function CharacterDescription({
       <Paper withBorder p="md">
         <Group>
           <Avatar size={40} alt="" src={avatarPreviewUrl} />
-          <Text weight={600}>{form.name || "Nome"}</Text>
+          <Text fw={600}>{form.name || "Nome"}</Text>
         </Group>
       </Paper>
 
@@ -99,8 +99,8 @@ export default function CharacterDescription({
         label="História do personagem"
         placeholder="Órfão em busca de vingança..."
         minRows={4}
-        sx={{
-          ".mantine-Textarea-label": {
+        styles={{
+          label: {
             fontSize: "var(--do_text_size_sm)",
             fontWeight: 700,
           },

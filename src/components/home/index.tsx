@@ -63,22 +63,25 @@ export default function HomeComponent({
         `}
       >
         <TextInput
+          css={css`
+            .mantine-TextInput-input {
+              background: var(--do_color_primary_light_50);
+              border: 0;
+              border-radius: 6;
+            }
+
+            .mantine-textinput-input::placeholder {
+              color: var(--do_text_color_300);
+            }
+          `}
           type="search"
           mr={16}
           ml={16}
-          sx={{
-            ".mantine-TextInput-input": {
-              background: "var(--do_color_primary_light_50)",
-              border: 0,
-              borderRadius: 6,
-            },
-            ".mantine-TextInput-input::placeholder": {
-              color: "var(--do_text_color_300)",
-            },
-          }}
           size="lg"
           placeholder="O que está procurando?"
-          icon={<IconSearch color="var(--do_color_primary_base)" size={24} />}
+          rightSection={
+            <IconSearch color="var(--do_color_primary_base)" size={24} />
+          }
           onChange={handleFilter}
         />
 
@@ -148,7 +151,7 @@ export default function HomeComponent({
                   border: 1px dashed rgba(0, 0, 0, 0.25);
                   border-radius: var(--do_border_radius_md);
                   display: flex;
-                  align-content: center;
+                  align-items: center;
                   justify-content: center;
                   flex-wrap: wrap;
                   gap: 8px;
@@ -156,11 +159,11 @@ export default function HomeComponent({
                 w={223}
                 h={275}
               >
-                <Text weight={600} align="center">
+                <Text fw={600} ta="center">
                   Criar um personagem
                 </Text>
 
-                <Text size="sm" align="center">
+                <Text size="sm" ta="center">
                   Crie um personagem para utilizar onde quiser!
                 </Text>
 
@@ -194,19 +197,17 @@ export default function HomeComponent({
       </main>
 
       <Modal
+        css={css`
+          .mantine-ScrollArea-viewport > div {
+            display: block !important;
+            width: 0;
+          }
+        `}
         size="xs"
         opened={opened}
         onClose={close}
         centered
         withCloseButton={false}
-        styles={{
-          inner: {
-            "& .mantine-ScrollArea-viewport > div": {
-              display: "block !important",
-              width: 0,
-            },
-          },
-        }}
       >
         <CharacterBuilder onCancel={close} />
       </Modal>

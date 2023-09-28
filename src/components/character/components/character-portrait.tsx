@@ -13,7 +13,7 @@ export default function CharacterPortrait({
   label,
 }: CharacterPortraitProps) {
   return (
-    <Stack spacing="xs">
+    <Stack gap="xs">
       <picture css={characterPortraitStyles}>
         <Image
           src={imgSrc}

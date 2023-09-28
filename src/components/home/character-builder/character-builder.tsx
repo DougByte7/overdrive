@@ -156,7 +156,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
   }
 
   return (
-    <Stack spacing="md" h={590}>
+    <Stack gap="md" h={590}>
       <ActionIcon
         variant="light"
         aria-label={step - 1 === 0 ? "Cancelar" : "Voltar etapa"}
@@ -207,7 +207,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
 
       <Transition mounted={step === Steps.FINAL} transition="fade">
         {(styles) => (
-          <Stack style={styles} spacing="md">
+          <Stack style={styles} gap="md">
             <Box>
               <Title size="h4">Seu personagem foi gerado!</Title>
               <Text size="sm">
@@ -233,7 +233,7 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
                     height: 100%;
                   `}
                 >
-                  <Text weight={500} color="var(--do_text_color_300)" size="sm">
+                  <Text fw={500} color="var(--do_text_color_300)" size="sm">
                     {races[form.race!].name},
                     {classes[form.classes[0].name].name}.
                   </Text>

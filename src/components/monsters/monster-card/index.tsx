@@ -43,12 +43,12 @@ export function MonsterCard({ monster }: MonsterCardProps) {
       >
         <Avatar src={`https://www.dnd5eapi.co${monster.image}`} size={64} />
 
-        <Group w="calc(100% - 80px)" spacing={4}>
+        <Group w="calc(100% - 80px)" gap={4}>
           <Text w="100%" fw="bold">
             {monster.name}
           </Text>
 
-          <Group w="100%" position="apart" spacing={0}>
+          <Group w="100%" justify="space-between" gap={0}>
             <Text size="sm">
               {monster.size} {monster.type}
             </Text>

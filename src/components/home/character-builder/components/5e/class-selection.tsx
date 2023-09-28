@@ -29,7 +29,7 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
     }
 
   return (
-    <Stack style={styles} spacing="md">
+    <Stack style={styles} gap="md">
       <Box>
         <Title size="h4">Escolha uma classe</Title>
         <Text size="sm">Escolha uma classe</Text>
@@ -80,20 +80,20 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
               `}
               aria-label="Exibir mais informações"
             >
-              <Group spacing="xs">
+              <Group gap="xs">
                 <Avatar size={40} alt="" src={`/icons/${classKey}.svg`} />
                 <div
                   css={css`
                     width: 78%;
                   `}
                 >
-                  <Text weight={600}>{classData.name}</Text>
+                  <Text fw={600}>{classData.name}</Text>
                   <Text size="11px">{classData.description}</Text>
                 </div>
               </Group>
             </Accordion.Control>
             <Accordion.Panel>
-              <Stack spacing="md">
+              <Stack gap="md">
                 {classData.features.map((trait) => (
                   <Paper
                     key={classData.name + trait.name}
@@ -102,7 +102,7 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
                     radius="md"
                   >
                     <Group>
-                      <Text weight={600}>
+                      <Text fw={600}>
                         {trait.name}{" "}
                         <Badge color="gray" size="xs">
                           {trait.level}º nível
