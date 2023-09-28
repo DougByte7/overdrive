@@ -16,6 +16,7 @@ import {
   ActionIcon,
   Accordion,
   Divider,
+  ComboboxItem,
 } from "@mantine/core"
 import { useAtom } from "jotai"
 import { characterFormAton, avatarPreviewUrlAton } from "../../state"
@@ -205,9 +206,13 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                 <Text key={`${v}${i}`}>
                   {k}:
                   {
-                    races[form.race!].traits
-                      .find((t) => t.name === k)
-                      ?.options?.find((o) => o.value === v)?.label
+                    (
+                      races[form.race!].traits
+                        .find((t) => t.name === k)
+                        ?.options?.find(
+                          (o) => (o as ComboboxItem).value === v
+                        ) as ComboboxItem
+                    )?.label
                   }
                 </Text>
               )
@@ -344,7 +349,7 @@ const attributeButtonStyles = css`
   height: 40px;
   background: var(--do_color_primary_light_50);
   font-size: var(--do_text_size_lg);
-  font-fw: bold;
+  font-weight: bold;
 `
 const EditButton = ({
   step,
