@@ -15,6 +15,8 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
     return races[form.race!].traits.reduce((acc, trait) => {
       if (!trait.options) return acc
 
+      console.log("trait.options", trait.options)
+
       return [
         ...acc,
         <Select
@@ -41,6 +43,7 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
       )
         return acc
 
+      console.log("feature.options", feature.options)
       return [
         ...acc,
         <>

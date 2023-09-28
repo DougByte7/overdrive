@@ -44,54 +44,54 @@ const traits: DnD5eTrait[] = [
     ],
     options: [
       {
-        label: "Preto - Ácido - TR: Des",
-        value: "black",
         group: "Linha 1.5x9m (5x30 ft)",
+        items: [
+          {
+            label: "Preto - Ácido - TR: Des",
+            value: "black",
+          },
+          {
+            label: "Cobre - Ácido - TR: Des",
+            value: "copper",
+          },
+          {
+            label: "Azul - Relâmpago - TR: Des",
+            value: "blue",
+          },
+          {
+            label: "Bronze - Relâmpago - TR: Des",
+            value: "bronze",
+          },
+          {
+            label: "Latão - Fogo - TR: Des",
+            value: "brass",
+          },
+        ],
       },
       {
-        label: "Cobre - Ácido - TR: Des",
-        value: "copper",
-        group: "Linha 1.5x9m (5x30 ft)",
-      },
-      {
-        label: "Azul - Relâmpago - TR: Des",
-        value: "blue",
-        group: "Linha 1.5x9m (5x30 ft)",
-      },
-      {
-        label: "Bronze - Relâmpago - TR: Des",
-        value: "bronze",
-        group: "Linha 1.5x9m (5x30 ft)",
-      },
-      {
-        label: "Latão - Fogo - TR: Des",
-        value: "brass",
-        group: "Linha 1.5x9m (5x30 ft)",
-      },
-      {
-        label: "Ouro - Fogo - TR. Des",
-        value: "gold",
         group: "Cone 4.5m (15ft)",
-      },
-      {
-        label: "Vermelho - Fogo - TR: Des",
-        value: "red",
-        group: "Cone 4.5m (15ft)",
-      },
-      {
-        label: "Verde - Veneno - TR: Con",
-        value: "green",
-        group: "Cone 4.5m (15ft)",
-      },
-      {
-        label: "Prata - Frio - TR: Con",
-        value: "silver",
-        group: "Cone 4.5m (15ft)",
-      },
-      {
-        label: "Branco - Frio - TR: Con",
-        value: "white",
-        group: "Cone 4.5m (15ft)",
+        items: [
+          {
+            label: "Ouro - Fogo - TR. Des",
+            value: "gold",
+          },
+          {
+            label: "Vermelho - Fogo - TR: Des",
+            value: "red",
+          },
+          {
+            label: "Verde - Veneno - TR: Con",
+            value: "green",
+          },
+          {
+            label: "Prata - Frio - TR: Con",
+            value: "silver",
+          },
+          {
+            label: "Branco - Frio - TR: Con",
+            value: "white",
+          },
+        ],
       },
     ],
   },

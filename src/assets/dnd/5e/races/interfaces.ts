@@ -1,3 +1,5 @@
+import { ComboboxData } from "@mantine/core"
+
 interface DnD5eValues {
   hp: number
   speed: number
@@ -17,7 +19,7 @@ interface DnD5eSkills {
 export interface DnD5eTrait {
   name: string
   description: string | string[]
-  options?: Array<LabelValue<string> & { group?: string }>
+  options?: ComboboxData
 }
 
 export interface DnD5eSubrace {

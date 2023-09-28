@@ -151,7 +151,7 @@ export default function HomeComponent({
                   border: 1px dashed rgba(0, 0, 0, 0.25);
                   border-radius: var(--do_border_radius_md);
                   display: flex;
-                  align-content: center;
+                  align-items: center;
                   justify-content: center;
                   flex-wrap: wrap;
                   gap: 8px;
