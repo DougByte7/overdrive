@@ -48,6 +48,7 @@ import type {
 } from "@/assets/dnd/5e/classes/interfaces"
 import type { DnD5eEquipment } from "@/assets/dnd/5e/interfaces"
 import { CharacterForm } from "../home/character-builder/interfaces"
+import getProficiencyBonus from "@/assets/dnd/5e/utils/getProficiencyBonus"
 
 interface CharacterSheetProps {
   characterId: string
@@ -168,6 +169,9 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
         average * (c.level - 1)
       )
     }, 0) ?? 0
+
+  const characterLevel =
+    character?.classes.reduce((acc, c) => acc + c.level, 0) ?? 1
 
   const handleChangeTempHp: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!character) return
@@ -375,6 +379,17 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                       <Text>{attr.label}</Text>
                       <Group gap="sm">
                         <Badge mr="sm" variant="outline">
+                          Save:
+                          {abilityModifier > 0 && "+"}
+                          {abilityModifier +
+                            +character.classes.some((c) =>
+                              classes[
+                                c.name
+                              ].proficiencies.savingThrows.includes(attr.value)
+                            ) *
+                              getProficiencyBonus(characterLevel)}
+                        </Badge>
+                        <Badge mr="sm" variant="outline">
                           {abilityModifier > 0 && "+"}
                           {abilityModifier}
                         </Badge>
@@ -419,7 +434,7 @@ export default function CharacterSheet({ characterId }: CharacterSheetProps) {
                     <Checkbox label={attr.label} checked={isTrained} />
 
                     <Text css={attributeNumberStyles}>
-                      {+isTrained * 3 +
+                      {+isTrained * getProficiencyBonus(characterLevel) +
                         getModifier(
                           character[skillModifierMap[attr.value]].total
                         )}
