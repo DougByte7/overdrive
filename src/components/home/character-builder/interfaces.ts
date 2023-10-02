@@ -4,6 +4,9 @@ import { DnD5eRaceName } from "@/assets/dnd/5e/races"
 
 export interface CharacterForm {
   id?: string
+  currentHp?: number
+  initiative?: number
+  tempHp?: number
   name: string
   picture: File | null | string
   backstory: string

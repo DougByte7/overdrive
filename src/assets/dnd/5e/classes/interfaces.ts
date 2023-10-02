@@ -93,6 +93,7 @@ export type EquipmentOption =
 export interface EquipmentIndex {
   index: string
   ammo?: number
+  equipped?: boolean
 }
 
 export interface EquipmentCategoryList {
