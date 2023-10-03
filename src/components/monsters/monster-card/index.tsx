@@ -1,4 +1,5 @@
 import type { DnD5eMonster } from "@/assets/dnd/5e/interfaces"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { UnstyledButton, Group, Text, Avatar, Badge } from "@mantine/core"
 import { useLocalStorage } from "@mantine/hooks"

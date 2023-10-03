@@ -10,6 +10,7 @@ import {
 } from "@mantine/core"
 import classes, { type DnD5eClassName } from "@/assets/dnd/5e/classes"
 import spells from "@/assets/dnd/5e/spells.json"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import {
   type CSSProperties,

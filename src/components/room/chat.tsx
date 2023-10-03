@@ -4,6 +4,7 @@ import { socketAton } from "./state"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { Avatar, Group, Textarea, Text } from "@mantine/core"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 
 interface Message {

@@ -24,6 +24,7 @@ import {
   useRef,
   MouseEventHandler,
 } from "react"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import type { Attribute } from "@/assets/dnd/5e/classes/interfaces"
 import type { AttributeScore } from "../../interfaces"

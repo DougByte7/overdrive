@@ -1,4 +1,5 @@
 import { DnD5eSpell } from "@/assets/dnd/5e/interfaces"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import {
   Stack,

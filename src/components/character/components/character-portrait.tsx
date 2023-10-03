@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { Stack, Text } from "@mantine/core"
 import Image from "next/image"

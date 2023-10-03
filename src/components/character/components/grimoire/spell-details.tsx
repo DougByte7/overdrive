@@ -20,6 +20,7 @@ import {
 import { CSSProperties, useEffect } from "react"
 import { useAtom } from "jotai"
 import { selectedSpellAton } from "../../state"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 
 interface SpellDetailsProps {

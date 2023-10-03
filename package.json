@@ -12,6 +12,7 @@
     "chromatic": "npx chromatic --project-token=uir5a7azo0f"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
     "@mantine/carousel": "^7.1.2",
     "@mantine/core": "^7.1.2",
     "@mantine/dates": "^7.1.2",

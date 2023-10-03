@@ -1,4 +1,5 @@
 import classes, { DnD5eClassName } from "@/assets/dnd/5e/classes"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import {
   Stack,

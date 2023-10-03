@@ -1,5 +1,6 @@
 import getModifier from "@/assets/dnd/5e/utils/getModifier"
 import useCharacter from "@/hooks/useCharacter"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import {
   ActionIcon,

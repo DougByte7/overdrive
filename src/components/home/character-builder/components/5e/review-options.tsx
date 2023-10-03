@@ -1,6 +1,7 @@
 import classes from "@/assets/dnd/5e/classes"
 import races from "@/assets/dnd/5e/races"
 import getModifier from "@/assets/dnd/5e/utils/getModifier"
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import {
   Stack,

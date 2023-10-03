@@ -9,6 +9,7 @@ import {
 } from "@mantine/core"
 import Link from "next/link"
 
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 
 export default function Login() {

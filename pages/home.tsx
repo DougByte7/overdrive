@@ -1,15 +1,16 @@
 // import useRouteGuard from "@/hooks/routeGuard"
 // import { LoadingOverlay } from "@mantine/core"
-import HomeComponent from "@/components/home"
-import races from "@/assets/dnd/5e/races"
-import classes from "@/assets/dnd/5e/classes"
-import { CharacterForm } from "@/components/home/character-builder/interfaces"
+import HomeComponent from "@/components/home";
+import races from "@/assets/dnd/5e/races";
+import classes from "@/assets/dnd/5e/classes";
+import { useLocalStorage } from "@mantine/hooks";
+import type { CharacterForm } from "@/components/home/character-builder/interfaces";
 
 export default function Home() {
   // const authStatus = useRouteGuard()
   // if (authStatus !== "authenticated") return <LoadingOverlay visible />
 
-  const campaigns: unknown[] = []
+  const campaigns: unknown[] = [];
   // [
   //   {
   //     id: "1",
@@ -40,33 +41,16 @@ export default function Home() {
   //   },
   // ]
 
-  let storedCharacters = JSON.parse(
-    localStorage.getItem("characters") ?? "[]"
-  ) as any[]
-
-  if (localStorage.getItem("characters")) {
-    const newStore = storedCharacters
-      .filter((c) => c.classes)
-      .map((s) => {
-        s.preparedSpells ??= []
-
-        return typeof s.classes[0] === "string"
-          ? {
-              ...s,
-              classes: s.classes.map((c: any) => ({ name: c, level: 1 })),
-            }
-          : s
-      })
-
-    localStorage.setItem("characters", JSON.stringify(newStore))
-    storedCharacters = newStore
-  }
+  const [storedCharacters] = useLocalStorage<CharacterForm[]>({
+    key: "characters",
+    defaultValue: [],
+  });
 
   /**
    * @todo Create a generic interface for every system
    */
-  const characters = storedCharacters.map(
-    (character: CharacterForm, i: number) => {
+  const characters =
+    storedCharacters?.map((character: CharacterForm, i: number) => {
       return {
         id: i,
         campaignName: `${races[character.race!].name}, ${character.classes
@@ -75,9 +59,8 @@ export default function Home() {
         campaignId: "1",
         name: character.name,
         imgSrc: character.picture,
-      }
-    }
-  )
+      };
+    }) ?? [];
 
-  return <HomeComponent campaigns={campaigns} characters={characters} />
+  return <HomeComponent campaigns={campaigns} characters={characters} />;
 }

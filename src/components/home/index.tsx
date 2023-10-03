@@ -1,4 +1,5 @@
-import { css } from "@emotion/react"
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import {
   Card,
   Modal,
@@ -7,28 +8,28 @@ import {
   Text,
   ActionIcon,
   Transition,
-} from "@mantine/core"
-import { useDebouncedState, useDisclosure } from "@mantine/hooks"
+} from "@mantine/core";
+import { useDebouncedState, useDisclosure } from "@mantine/hooks";
 //import CardCampaign from "./card-campaign"
-import CardCharacter from "./card-character"
-import SideScrollingBox from "./side-scrolling-box"
-import { IconPlus, IconSearch } from "@tabler/icons-react"
-import CharacterBuilder from "./character-builder/character-builder"
-import { ChangeEventHandler, useEffect, useState } from "react"
-import { removeDiacritics } from "@/utils/removeDiacritics"
+import CardCharacter from "./card-character";
+import SideScrollingBox from "./side-scrolling-box";
+import { IconPlus, IconSearch } from "@tabler/icons-react";
+import CharacterBuilder from "./character-builder/character-builder";
+import { ChangeEventHandler, useEffect, useState } from "react";
+import { removeDiacritics } from "@/utils/removeDiacritics";
 
 interface HomeComponentProps {
-  campaigns: any[]
-  characters: any[]
+  campaigns: any[];
+  characters: any[];
 }
 
 export default function HomeComponent({
   //  campaigns,
   characters,
 }: HomeComponentProps) {
-  const [opened, { open, close }] = useDisclosure(false)
-  const [search, setSearch] = useDebouncedState("", 200)
-  const [filteredCharacters, setFilteredCharacters] = useState(characters)
+  const [opened, { open, close }] = useDisclosure(false);
+  const [search, setSearch] = useDebouncedState("", 200);
+  const [filteredCharacters, setFilteredCharacters] = useState(characters);
 
   // const handleNewBoard = () => {
   //   notifications.show({
@@ -39,21 +40,21 @@ export default function HomeComponent({
   // }
 
   const handleFilter: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!characters.length) return
-    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()))
-  }
+    if (!characters.length) return;
+    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()));
+  };
 
   useEffect(() => {
-    if (!search) return setFilteredCharacters(characters)
+    if (!search) return setFilteredCharacters(characters);
 
     setFilteredCharacters(
       characters.filter(
         (char) =>
           removeDiacritics(char.name.toLowerCase()).includes(search) ||
-          removeDiacritics(char.campaignName.toLowerCase()).includes(search)
-      )
-    )
-  }, [search])
+          removeDiacritics(char.campaignName.toLowerCase()).includes(search),
+      ),
+    );
+  }, [search, characters]);
 
   return (
     <>
@@ -212,5 +213,5 @@ export default function HomeComponent({
         <CharacterBuilder onCancel={close} />
       </Modal>
     </>
-  )
+  );
 }
