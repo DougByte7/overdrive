@@ -120,6 +120,7 @@ const thief: DnD5eSubClass = {
 }
 
 const rogue: DnD5eClass = {
+  key: "rogue",
   name: "Ladino",
   description: "HP d8, Habilidade Des, TR Des e Int",
   features,

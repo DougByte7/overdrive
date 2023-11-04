@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -115,7 +115,7 @@ const features: DnD5eFeature[] = [
     description:
       "Seu livro de magias é uma compilação única de magias, com seus próprios enfeites decorativos e anotações nas margens. Pode ser um volume de couro simples e funcional que você recebeu como presente do seu mestre, um tomo finamente encadernado com bordas douradas que encontrou em uma biblioteca antiga ou até mesmo uma coleção solta de notas reunidas depois de perder seu livro de magias anterior em um contratempo.",
   },
-]
+];
 
 const evocation: DnD5eSubClass = {
   name: "Escola da Evocação",
@@ -153,9 +153,10 @@ const evocation: DnD5eSubClass = {
         "A partir do 14º nível, você pode aumentar o poder de suas magias mais simples. Quando você lança uma magia de mago de 1º a 5º nível que causa dano, pode causar dano máximo com essa magia. A primeira vez que você faz isso, não sofre nenhum efeito adverso. Se você usar este recurso novamente antes de terminar um descanso longo, sofre 2d12 de dano necrótico para cada nível da magia, imediatamente após lançá-la. Cada vez que você usa este recurso novamente antes de completar um descanso longo, o dano necrótico por nível de magia aumenta em 1d12. Esse dano ignora resistência e imunidade.",
     },
   ],
-}
+};
 
 const wizard: DnD5eClass = {
+  key: "wizard",
   name: "Mago",
   description: "HP d6, Habilidade Int, TR Int e Sab",
   features,
@@ -221,9 +222,9 @@ const wizard: DnD5eClass = {
       [{ index: "spellbook", amount: 1 }],
     ],
   },
-}
+};
 
-export default wizard
+export default wizard;
 
 /*
 Analise o texto a seguir e gere um arquivo json para cada paragrafo traduzido seguindo este schema: {

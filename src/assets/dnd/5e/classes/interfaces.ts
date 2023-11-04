@@ -1,23 +1,25 @@
+import type { DnD5eClassName } from ".";
+
 export interface DnD5eFeature {
-  name: string
-  level: number | number[]
-  description: string | string[]
-  amount?: number[]
-  options?: LabelValue<string>[]
-  misc?: Record<string, string[]>
+  name: string;
+  level: number | number[];
+  description: string | string[];
+  amount?: number[];
+  options?: LabelValue<string>[];
+  misc?: Record<string, string[]>;
 }
 
 export interface DnD5eSubClass {
-  name: string
-  description: string
-  features: DnD5eFeature[]
-  spells?: string[]
-  expandedSpellList?: string[]
+  name: string;
+  description: string;
+  features: DnD5eFeature[];
+  spells?: string[];
+  expandedSpellList?: string[];
 }
 
-export type DiceFaces = 4 | 6 | 8 | 10 | 12 | 20
-export type Dice = `d${DiceFaces}`
-export type Armor = "light" | "medium" | "heavy" | "shield"
+export type DiceFaces = 4 | 6 | 8 | 10 | 12 | 20;
+export type Dice = `d${DiceFaces}`;
+export type Armor = "light" | "medium" | "heavy" | "shield";
 export type Weapon =
   | "simple"
   | "martial"
@@ -28,14 +30,14 @@ export type Weapon =
   | "longSword"
   | "dagger"
   | "dart"
-  | "quarterstaff"
+  | "quarterstaff";
 export type Attribute =
   | "strength"
   | "dexterity"
   | "constitution"
   | "intelligence"
   | "wisdom"
-  | "charisma"
+  | "charisma";
 export type Skill =
   | "arcana"
   | "acrobatics"
@@ -52,33 +54,34 @@ export type Skill =
   | "perception"
   | "persuasion"
   | "religion"
-  | "survival"
+  | "survival";
 
-export type Tool = "musicalInstrument" | "artisansTools"
+export type Tool = "musicalInstrument" | "artisansTools";
 
 export interface DnD5eClass {
-  name: string
-  description: string
-  features: DnD5eFeature[]
-  subclasses: DnD5eSubClass[]
+  key: DnD5eClassName;
+  name: string;
+  description: string;
+  features: DnD5eFeature[];
+  subclasses: DnD5eSubClass[];
   hp: {
-    dice: Dice
-    average: number
-  }
-  cantripKnown?: number[]
-  spellsKnown?: number[] | number
-  spellsSlots?: number[][]
+    dice: Dice;
+    average: number;
+  };
+  cantripKnown?: number[];
+  spellsKnown?: number[] | number;
+  spellsSlots?: number[][];
   proficiencies: {
-    armor?: Armor[]
-    weapon: Weapon[]
-    tools?: Tool[]
-    savingThrows: Attribute[]
+    armor?: Armor[];
+    weapon: Weapon[];
+    tools?: Tool[];
+    savingThrows: Attribute[];
     skills: {
-      amount: number
-      options: LabelValue<Skill>[]
-    }
-    equipmentOptions: EquipmentOption[][]
-  }
+      amount: number;
+      options: LabelValue<Skill>[];
+    };
+    equipmentOptions: EquipmentOption[][];
+  };
 }
 
 export type EquipmentOption =
@@ -88,24 +91,24 @@ export type EquipmentOption =
       | EquipmentToolList
       | EquipmentGearList
     >
-  | EquipmentList
+  | EquipmentList;
 
 export interface EquipmentIndex {
-  index: string
-  ammo?: number
-  equipped?: boolean
+  index: string;
+  ammo?: number;
+  equipped?: boolean;
 }
 
 export interface EquipmentCategoryList {
-  category_range: string
+  category_range: string;
 }
 
 export interface EquipmentToolList {
-  tool_category: string
+  tool_category: string;
 }
 
 export interface EquipmentGearList {
-  gear_category: string
+  gear_category: string;
 }
 
 interface EquipmentList {
@@ -116,9 +119,9 @@ interface EquipmentList {
       | EquipmentToolList
       | EquipmentGearList
     >
-  >
+  >;
 }
 
 export type WithAmount<T> = T & {
-  amount: number
-}
+  amount: number;
+};

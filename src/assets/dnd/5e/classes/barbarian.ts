@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -94,7 +94,7 @@ const features: DnD5eFeature[] = [
     description:
       "Ao atingir o 20º nível, você incorpora o poder da natureza. Seus valores de Força e Constituição aumentam em 4. Seu valor máximo para esses atributos agora é 24.",
   },
-]
+];
 
 const berserker: DnD5eSubClass = {
   name: "Caminho do Berserker",
@@ -126,9 +126,10 @@ const berserker: DnD5eSubClass = {
         "A partir do 14º nível, quando você sofre dano de uma criatura que está a até 1 espaço (1,5m / 5ft) de você, você pode usar sua reação para fazer um ataque corpo a corpo contra essa criatura.",
     },
   ],
-}
+};
 
 const barbarian: DnD5eClass = {
+  key: "barbarian",
   name: "Bárbaro",
   description: "HP d12, Habilidade For, TR For e Con",
   features,
@@ -168,6 +169,6 @@ const barbarian: DnD5eClass = {
       [{ index: "javelin", amount: 4 }],
     ],
   },
-}
+};
 
-export default barbarian
+export default barbarian;

@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -104,7 +104,7 @@ const features: DnD5eFeature[] = [
     description:
       "Alguns druidas veneram as forças da natureza em si, mas a maioria dos druidas é devota a um dos muitos deuses da natureza adorados no multiverso (as listas de deuses no Apêndice do Livro do Jogador incluem muitos desses deuses). A adoração dessas divindades é frequentemente considerada uma tradição mais antiga do que as fé dos clérigos e povos urbanizados.",
   },
-]
+];
 
 const earth: DnD5eSubClass = {
   name: "Círculo da Terra",
@@ -238,9 +238,10 @@ const earth: DnD5eSubClass = {
         "Quando uma criatura besta ou planta ataca você, essa criatura deve fazer um teste de resistência de Sabedoria contra a CD da magia do druida. Se falhar, a criatura deve escolher um alvo diferente ou o ataque erra automaticamente. Se passar, a criatura é imune a este efeito por 24 horas. A criatura está ciente deste efeito antes de fazer o ataque contra você.",
     },
   ],
-}
+};
 
 const druid: DnD5eClass = {
+  key: "druid",
   name: "Druida",
   description: "HP d8, Habilidade Sab, TR Sab e Car",
   features,
@@ -301,9 +302,9 @@ const druid: DnD5eClass = {
       [{ gear_category: "druidic-foci", amount: 1 }],
     ],
   },
-}
+};
 
-export default druid
+export default druid;
 
 /*
 Analise o texto a seguir e gere um arquivo json para cada paragrafo traduzido seguindo este schema: {

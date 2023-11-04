@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -121,7 +121,7 @@ const features: DnD5eFeature[] = [
     description:
       "Um paladino tenta manter os mais altos padrões de conduta, mas mesmo o paladino mais virtuoso é falível. Às vezes, o caminho certo se mostra muito exigente, às vezes uma situação exige o menor dos dois males e, às vezes, o calor da emoção faz com que um paladino transgrida seu juramento. Um paladino que quebrou um juramento normalmente busca a absolvição de um clérigo que compartilha de sua fé ou de outro paladino da mesma ordem. O paladino pode passar uma vigília inteira em oração como sinal de penitência, ou empreender um jejum ou ato semelhante de auto-negação. Após um rito de confissão e perdão, o paladino começa de novo. Se um paladino violar seu juramento voluntariamente e não mostrar nenhum sinal de arrependimento, as consequências podem ser mais sérias. A critério do Mestre, um paladino impenitente pode ser forçado a abandonar esta classe e adotar outra.",
   },
-]
+];
 
 const devotion: DnD5eSubClass = {
   name: "Juramento de Devoção",
@@ -185,9 +185,10 @@ const devotion: DnD5eSubClass = {
     "Commune",
     "Flame Strike",
   ],
-}
+};
 
 const paladin: DnD5eClass = {
+  key: "paladin",
   name: "Paladino",
   description: "HP d10, Habilidade Sab e Car, TR Sab e Car",
   features,
@@ -256,9 +257,9 @@ const paladin: DnD5eClass = {
       [{ gear_category: "holy-symbols", amount: 1 }],
     ],
   },
-}
+};
 
-export default paladin
+export default paladin;
 
 /*
 Analise o texto a seguir e gere um arquivo json para cada paragrafo traduzido seguindo este schema: {

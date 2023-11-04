@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -101,7 +101,7 @@ const features: DnD5eFeature[] = [
     description:
       "No 20º nível, quando você rola iniciativa e não tem mais usos de Inspiração Bárdica restantes, você recupera um uso.",
   },
-]
+];
 
 const lore: DnD5eSubClass = {
   name: "Faculdade de Conhecimento",
@@ -127,9 +127,10 @@ const lore: DnD5eSubClass = {
         "A partir do 14º nível, quando você faz uma jogada de habilidade, você pode gastar um uso de Inspiração Bárdica. Role um dado de Inspiração Bárdica e adicione o número rolado à sua jogada de habilidade. Você pode optar por fazer isso depois de rolar o dado para a jogada de habilidade, mas antes do Mestre dizer se você tem sucesso ou fracassa.",
     },
   ],
-}
+};
 
 const bard: DnD5eClass = {
+  key: "bard",
   name: "Bardo",
   description: "HP d8, Habilidade Car, TR Des e Car",
   features,
@@ -208,9 +209,9 @@ const bard: DnD5eClass = {
       [{ amount: 1, index: "dagger" }],
     ],
   },
-}
+};
 
-export default bard
+export default bard;
 
 /*
 Analise o texto a seguir e gere um arquivo json seguindo este schema: {

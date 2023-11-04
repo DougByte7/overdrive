@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -141,7 +141,7 @@ const features: DnD5eFeature[] = [
     description:
       "No 20º nível, você recupera 4 pontos de feitiçaria gastos sempre que termina um descanso curto.",
   },
-]
+];
 
 const draconicBloodline: DnD5eSubClass = {
   name: "Linhagem Draconiana",
@@ -192,9 +192,10 @@ const draconicBloodline: DnD5eSubClass = {
         "A partir do 18º nível, você pode canalizar a presença ameaçadora do seu ancestral dragão, fazendo com que aqueles ao seu redor fiquem atônitos ou amedrontados. Como uma ação, você pode gastar 5 pontos de feitiçaria para evocar esse poder e exalar uma aura de admiração ou medo (sua escolha) em uma distância de 60 pés. Por 1 minuto ou até você perder sua concentração (como se você estivesse conjurando um feitiço que exige concentração), cada criatura hostil que começar seu turno nesta aura deve ser bem-sucedida em um teste de resistência de Sabedoria ou ficará encantada (se você escolheu admiração) ou amedrontada (se você escolheu medo) até o término da aura. Uma criatura que for bem-sucedida nesse teste de resistência fica imune à sua aura por 24 horas.",
     },
   ],
-}
+};
 
 const sorcerer: DnD5eClass = {
+  key: "sorcerer",
   name: "Feiticeiro",
   description: "HP d6, Habilidade Cha, TR Con e Car",
   features,
@@ -259,9 +260,9 @@ const sorcerer: DnD5eClass = {
       [{ index: "dagger", amount: 2 }],
     ],
   },
-}
+};
 
-export default sorcerer
+export default sorcerer;
 
 /*
 Analise o texto a seguir e gere um arquivo json para cada paragrafo traduzido seguindo este schema: {
