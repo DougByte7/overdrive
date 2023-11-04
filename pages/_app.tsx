@@ -1,21 +1,22 @@
-import { FunctionComponent } from "react"
-import Head from "next/head"
-import theme from "@/theme"
-import { Analytics } from "@vercel/analytics/react"
-import { Notifications } from "@mantine/notifications"
-import { ModalsProvider } from "@mantine/modals"
-import { SessionProvider } from "next-auth/react"
-import { Provider as JotaiProvider } from "jotai"
-import { MantineProvider } from "@mantine/core"
-import "src/styles/global.css"
-import "src/styles/variables.css"
+import { FunctionComponent } from "react";
+import Head from "next/head";
+import theme from "@/theme";
+import { Analytics } from "@vercel/analytics/react";
+import { Notifications } from "@mantine/notifications";
+import { ModalsProvider } from "@mantine/modals";
+import { SessionProvider } from "next-auth/react";
+import { Provider as JotaiProvider } from "jotai";
+import { MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
+import "src/styles/global.css";
+import "src/styles/variables.css";
 
 export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }: {
-  Component: FunctionComponent
-  pageProps: Record<string, any>
+  Component: FunctionComponent;
+  pageProps: Record<string, any>;
 }) {
   return (
     <>
@@ -41,7 +42,7 @@ export default function MyApp({
       </Head>
       <SessionProvider session={session}>
         <JotaiProvider>
-          <MantineProvider theme={{ ...theme }}>
+          <MantineProvider theme={{ ...theme }} >
             <Notifications />
             <ModalsProvider>
               <Component {...pageProps} />
@@ -51,5 +52,5 @@ export default function MyApp({
       </SessionProvider>
       <Analytics />
     </>
-  )
+  );
 }

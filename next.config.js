@@ -11,7 +11,6 @@ const withPWA = require("next-pwa")({
 
 module.exports = withSentryConfig(
   withPWA({
-    experimental: { appDir: true },
     i18n: {
       locales: ["en-US", "pt-BR"],
       defaultLocale: "pt-BR",

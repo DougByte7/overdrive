@@ -1,5 +1,4 @@
-import "@mantine/core/styles.css"
-import { MantineThemeOverride } from "@mantine/core"
+import { MantineThemeOverride } from "@mantine/core";
 
 const theme: MantineThemeOverride = {
   fontFamily: "Manrope, sans-serif",
@@ -19,6 +18,6 @@ const theme: MantineThemeOverride = {
       "#41005f",
     ],
   },
-}
+};
 
-export default theme
+export default theme;
