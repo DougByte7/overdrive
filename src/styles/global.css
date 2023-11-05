@@ -3,3 +3,7 @@
 }
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --mantine-color-body: #17151c !important;
+}

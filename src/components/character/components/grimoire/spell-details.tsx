@@ -288,5 +288,5 @@ const spellInfoStyles = (
   height: h,
   maxHeight: "calc(100vh - 150px)",
   overflow: "auto",
-  background: "var(--do_text_color_600)",
+  background: "var(--mantine-color-body)",
 })

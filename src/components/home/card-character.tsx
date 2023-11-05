@@ -1,62 +1,52 @@
-/** @jsxImportSource @emotion/react */
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
-import { Card, Button, Text, BackgroundImage } from "@mantine/core"
-import { CSSProperties } from "react"
+import { Card, Text, Image, UnstyledButton } from "@mantine/core";
+import { CSSProperties, ReactNode } from "react";
 
 interface CardCharacterProps {
-  style: CSSProperties
-  imgSrc: string
-  name: string
-  campaignName: string
-  campaignId: string
-  id: string
+  style: CSSProperties;
+  id: string;
+  imgSrc: string;
+  name: string;
+  detail: string;
+  extra?: ReactNode;
 }
 
 export default function CardCharacter({
   style,
   imgSrc,
   name,
-  campaignName,
-  //campaignId,
+  detail,
+  extra,
   id,
 }: CardCharacterProps) {
   const fallbackImg =
-    "https://img.freepik.com/vetores-gratis/guerreiro-escandinavo-de-personagem-viking-no-capacete_107791-15005.jpg?w=1380&t=st=1687125692~exp=1687126292~hmac=608bcc92a79a2fd9ae1a6b449b8537c476bdd3165c0c00c9f6ceaffa751d253d"
+    "https://img.freepik.com/vetores-gratis/guerreiro-escandinavo-de-personagem-viking-no-capacete_107791-15005.jpg?w=1380&t=st=1687125692~exp=1687126292~hmac=608bcc92a79a2fd9ae1a6b449b8537c476bdd3165c0c00c9f6ceaffa751d253d";
 
   return (
-    <Card style={style} radius="md" w={223} h={275} p={0}>
-      <BackgroundImage src={imgSrc ?? fallbackImg} radius="md" h="100%">
-        <div
-          css={css`
-            background: linear-gradient(
-              180deg,
-              rgba(0, 0, 0, 0.2) 0%,
-              rgba(0, 0, 0, 0) 100%
-            );
-            padding: 16px;
-            height: 100%;
-          `}
-        >
-          <Text fw={500} color="var(--do_text_color_300)" size="sm">
-            {campaignName}
-          </Text>
+    <Card
+      className="bg-[var(--do\_color\_support\_dark\_50)]"
+      style={style}
+      radius={4}
+      w={240}
+      h={345}
+      p={0}
+    >
+      <UnstyledButton component="a" href={`/character/${id}`}>
+        <Image
+          src={imgSrc ?? fallbackImg}
+          radius="4px 0 0 4px"
+          h={240}
+          w={240}
+          alt=""
+        />
 
-          <Text size="lg" color="var(--do_text_color_600)">
+        <div className="grid h-[105px] px-4 py-3">
+          <Text className="text-white leading-none" fw="bold">
             {name}
           </Text>
-
-          <Button
-            size="md"
-            pos="absolute"
-            bottom={16}
-            component="a"
-            href={`/character/${id}`}
-          >
-            Visualizar
-          </Button>
+          <Text size="sm">{detail}</Text>
+          {extra}
         </div>
-      </BackgroundImage>
+      </UnstyledButton>
     </Card>
-  )
+  );
 }

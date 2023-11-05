@@ -373,7 +373,7 @@ export default function AttributeSelection({
 
               <Text fw={600}>{ability.name} </Text>
               {!!form[ability.attributeName] && (
-                <Badge ml="auto" variant="outline">
+                <Badge ml="auto" variant="outline" color="white">
                   {abilityModifier > 0 && "+"}
                   {abilityModifier}
                 </Badge>
@@ -405,7 +405,7 @@ const attributeButtonStyles = css`
   border-radius: var(--do_border_radius_sm);
   width: 39px;
   height: 40px;
-  background: var(--do_color_primary_light_50);
+  background: var(--do_color_support_dark_30);
   font-size: var(--do_text_size_lg);
   font-weight: bold;
 `;

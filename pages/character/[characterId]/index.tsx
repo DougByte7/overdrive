@@ -392,14 +392,14 @@ export default function CharacterSheetPage({
                         <Badge
                           mr="sm"
                           variant={hasProficiency ? "dot" : "outline"}
-                          color={hasProficiency ? "brand" : "grey"}
+                          color={hasProficiency ? "white" : "grey"}
                         >
                           Save: {abilityModifier > 0 && "+"}
                           {abilityModifier +
                             +hasProficiency *
                               getProficiencyBonus(characterLevel)}
                         </Badge>
-                        <Badge mr="sm" variant="outline">
+                        <Badge mr="sm" variant="outline" color="white">
                           {abilityModifier > 0 && "+"}
                           {abilityModifier}
                         </Badge>
@@ -758,7 +758,7 @@ const attributeNumberStyles = css`
   border-radius: var(--do_border_radius_sm);
   width: 39px;
   height: 40px;
-  background: var(--do_color_primary_light_50);
+  background: var(--do_color_support_dark_30);
   font-size: var(--do_text_size_lg);
   font-weight: bold;
 `;
@@ -783,5 +783,5 @@ const itemInfoStyles: CSSProperties = {
   padding: "16px",
   paddingBottom: "32px",
   minHeight: "535px",
-  background: "var(--do_text_color_600)",
+  background: "var(--mantine-color-body)",
 };

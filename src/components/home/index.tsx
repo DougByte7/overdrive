@@ -59,24 +59,13 @@ export default function HomeComponent({
         `}
       >
         <TextInput
-          css={css`
-            .mantine-TextInput-input {
-              background: var(--do_color_primary_light_50);
-              border: 0;
-              border-radius: 6;
-            }
-
-            .mantine-textinput-input::placeholder {
-              color: var(--do_text_color_300);
-            }
-          `}
           type="search"
           mr={16}
           ml={16}
           size="lg"
           placeholder="O que está procurando?"
           rightSection={
-            <IconSearch color="var(--do_color_primary_base)" size={24} />
+            <IconSearch color="var(--do_color_primary_light_50)" size={24} />
           }
           onChange={handleFilter}
         />
@@ -135,27 +124,22 @@ export default function HomeComponent({
         </div> */}
 
         <div>
-          <Title size="h3" mt="xl" mb="md" mr={16} ml={16}>
-            Meus personagens
-          </Title>
+          <div className="mx-4 mb-4 mt-8">
+            <Title className="text-white" size="h3">
+              Meus personagens
+            </Title>
+            <Text>Os heróis das minhas histórias...</Text>
+          </div>
 
           <SideScrollingBox>
             {!search && (
               <Card
-                css={css`
-                  background-color: var(--do_color_primary_light_50);
-                  border: 1px dashed rgba(0, 0, 0, 0.25);
-                  border-radius: var(--do_border_radius_md);
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  flex-wrap: wrap;
-                  gap: 8px;
-                `}
-                w={223}
-                h={275}
+                className="flex flex-wrap items-center justify-center gap-2 rounded-lg border border-dashed border-[#2a2f37]"
+                bg="transparent"
+                w={240}
+                h={345}
               >
-                <Text fw={600} ta="center">
+                <Text className="text-white" fw={600} ta="center">
                   Criar um personagem
                 </Text>
 
@@ -166,11 +150,10 @@ export default function HomeComponent({
                 <ActionIcon
                   mt="sm"
                   size="xl"
-                  color="brand"
-                  variant="filled"
+                  variant="transparent"
                   onClick={open}
                 >
-                  <IconPlus size="1.5rem" />
+                  <IconPlus color="white" size="1.5rem" />
                 </ActionIcon>
               </Card>
             )}
@@ -182,8 +165,8 @@ export default function HomeComponent({
                       style={styles}
                       imgSrc={character.imgSrc}
                       name={character.name}
-                      campaignName={character.campaignName}
-                      campaignId={character.campaignId}
+                      detail={character.detail}
+                      extra={character.extra}
                       id={character.id ?? i}
                     />
                   )}

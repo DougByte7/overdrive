@@ -52,7 +52,7 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
         styles={{
           item: {
             background: "none",
-            border: "1px solid var(--do_text_color_500)",
+            border: "1px solid var(--do_border_color)",
           },
           chevron: {
             justifySelf: "end",

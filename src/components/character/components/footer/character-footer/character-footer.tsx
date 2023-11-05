@@ -85,16 +85,6 @@ export default function CharacterFooter() {
           >
             Características de classe
           </Menu.Item>
-          <Menu.Item
-            component={Link}
-            href={{
-              pathname: "/character/[characterId]/actions",
-              query: { characterId: router.query.characterId },
-            }}
-            onClick={handleSetAtiveTabToNone}
-          >
-            Ações
-          </Menu.Item>
 
           <Menu.Divider />
           <Menu.Label>Conta</Menu.Label>
@@ -189,7 +179,7 @@ export default function CharacterFooter() {
               }
               color={
                 activeTab === "magic"
-                  ? "white"
+                  ? "var(--mantine-color-body)"
                   : "var(--do_color_support_dark_30)"
               }
               size={28}
@@ -208,8 +198,8 @@ const footerStyles = css`
   bottom: 0;
   width: 100%;
   height: 72px;
-  background: var(--do_text_color_600);
-  border-top: 1px solid var(--do_color_support_light_30);
+  background: var(--mantine-color-body);
+  border-top: 1px solid var(--do_color_support_dark_30);
   z-index: 10;
 `;
 
@@ -233,7 +223,7 @@ const customIconStyles = (path: string, isActive: boolean) => css`
 
 const burgerStyles = css`
   border-radius: 50%;
-  border: 6px solid var(--do_text_color_600);
+  border: 6px solid var(--mantine-color-body);
   padding: 16px;
   background: var(--do_color_primary_base);
   width: calc(1.5rem + 42px);

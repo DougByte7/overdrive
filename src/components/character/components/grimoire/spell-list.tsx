@@ -1,6 +1,6 @@
-import { DnD5eSpell } from "@/assets/dnd/5e/interfaces"
+import { DnD5eSpell } from "@/assets/dnd/5e/interfaces";
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
+import { css } from "@emotion/react";
 import {
   Stack,
   Divider,
@@ -18,8 +18,8 @@ import {
   Drawer,
   Checkbox,
   Radio,
-} from "@mantine/core"
-import { useClickOutside, useDisclosure } from "@mantine/hooks"
+} from "@mantine/core";
+import { useClickOutside, useDisclosure } from "@mantine/hooks";
 import {
   IconCone2,
   IconHemisphere,
@@ -31,31 +31,31 @@ import {
   IconWand,
   IconFilter,
   IconSearch,
-} from "@tabler/icons-react"
-import { useAtom } from "jotai"
+} from "@tabler/icons-react";
+import { useAtom } from "jotai";
 import {
   ChangeEventHandler,
   Fragment,
   MouseEventHandler,
   ReactNode,
   useState,
-} from "react"
-import { selectedSpellAton } from "../../state"
-import type { AddOrRemoveSpellEvent } from "./interfaces"
-import { removeDiacritics } from "@/utils/removeDiacritics"
+} from "react";
+import { selectedSpellAton } from "../../state";
+import type { AddOrRemoveSpellEvent } from "./interfaces";
+import { removeDiacritics } from "@/utils/removeDiacritics";
 
 interface ToggleTipProps {
-  label: string | string[]
-  children: ReactNode
+  label: string | string[];
+  children: ReactNode;
 }
 function ToggleTip({ label, children }: ToggleTipProps) {
-  const [opened, setOpened] = useState(false)
-  const ref = useClickOutside(() => setOpened(false))
+  const [opened, setOpened] = useState(false);
+  const ref = useClickOutside(() => setOpened(false));
 
   const handleToggle: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation()
-    setOpened((o) => !o)
-  }
+    e.stopPropagation();
+    setOpened((o) => !o);
+  };
 
   return (
     <Tooltip
@@ -71,17 +71,17 @@ function ToggleTip({ label, children }: ToggleTipProps) {
         {children}
       </UnstyledButton>
     </Tooltip>
-  )
+  );
 }
 
 interface SpellCardProps {
-  spell: DnD5eSpell
-  isEdit: boolean
-  onAddOrRemoveSpell?: AddOrRemoveSpellEvent
+  spell: DnD5eSpell;
+  isEdit: boolean;
+  onAddOrRemoveSpell?: AddOrRemoveSpellEvent;
 }
 function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
-  const [, setSelectedSpell] = useAtom(selectedSpellAton)
-  const [isMarked, { toggle }] = useDisclosure(spell.marked)
+  const [, setSelectedSpell] = useAtom(selectedSpellAton);
+  const [isMarked, { toggle }] = useDisclosure(spell.marked);
   const schoolColorMap = {
     necromancy: "dark",
     transmutation: "green",
@@ -91,12 +91,12 @@ function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
     enchantment: "yellow",
     evocation: "red",
     divination: "gray",
-  }
+  };
 
   const handleAddRemove = (spellName: string) => () => {
-    if (isEdit) toggle()
-    onAddOrRemoveSpell?.(spellName)
-  }
+    if (isEdit) toggle();
+    onAddOrRemoveSpell?.(spellName);
+  };
 
   return (
     <Box pos="relative">
@@ -281,13 +281,13 @@ function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
         </Group>
       </UnstyledButton>
     </Box>
-  )
+  );
 }
 
 interface SpellListProps {
-  spells: DnD5eSpell[]
-  isEdit?: boolean
-  onAddOrRemoveSpell?: AddOrRemoveSpellEvent
+  spells: DnD5eSpell[];
+  isEdit?: boolean;
+  onAddOrRemoveSpell?: AddOrRemoveSpellEvent;
 }
 export default function SpellList({
   spells,
@@ -295,17 +295,17 @@ export default function SpellList({
   onAddOrRemoveSpell,
 }: SpellListProps) {
   const initialFilter: {
-    className: string
-    level: string
-    school: string
-    concentration: string
-    ritual: string
-    verbal: boolean | "any"
-    somatic: boolean | "any"
-    material: boolean | "any"
-    castingTime: string
-    range: string
-    duration: string
+    className: string;
+    level: string;
+    school: string;
+    concentration: string;
+    ritual: string;
+    verbal: boolean | "any";
+    somatic: boolean | "any";
+    material: boolean | "any";
+    castingTime: string;
+    range: string;
+    duration: string;
   } = {
     className: "any",
     level: "any",
@@ -318,13 +318,13 @@ export default function SpellList({
     castingTime: "any",
     range: "any",
     duration: "any",
-  }
-  const [search, setSearch] = useState("")
-  const [filters, setFilter] = useState(initialFilter)
-  const [preFilters, setPreFilter] = useState(filters)
-  const [opened, { open, close }] = useDisclosure(false)
+  };
+  const [search, setSearch] = useState("");
+  const [filters, setFilter] = useState(initialFilter);
+  const [preFilters, setPreFilter] = useState(filters);
+  const [opened, { open, close }] = useDisclosure(false);
 
-  const isAny = (filter: any) => filter === "any"
+  const isAny = (filter: any) => filter === "any";
   const filteredSpells = spells.filter((s) => {
     return (
       s.name.toLowerCase().includes(search) &&
@@ -344,8 +344,8 @@ export default function SpellList({
       (isAny(filters.verbal) || s.components.verbal === filters.verbal) &&
       (isAny(filters.somatic) || s.components.somatic === filters.somatic) &&
       (isAny(filters.material) || s.components.material === filters.material)
-    )
-  })
+    );
+  });
 
   const filterValues = {
     classNames: [
@@ -412,31 +412,31 @@ export default function SpellList({
       { label: "Dissipada", value: "dispelled" },
       { label: "Acionada", value: "triggered" },
     ],
-  }
+  };
 
   const handleSearch: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()))
-  }
+    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()));
+  };
 
   const handleFilterClass = (className: string) => {
-    setFilter((prev) => ({ ...prev, className }))
-  }
+    setFilter((prev) => ({ ...prev, className }));
+  };
 
   const handleFilterLevel = (level: string) => {
-    setFilter((prev) => ({ ...prev, level }))
-  }
+    setFilter((prev) => ({ ...prev, level }));
+  };
 
   const handleClearFilters = () => {
-    setSearch("")
-    setFilter(initialFilter)
-    setPreFilter(initialFilter)
-    close()
-  }
+    setSearch("");
+    setFilter(initialFilter);
+    setPreFilter(initialFilter);
+    close();
+  };
 
   const handleFilter = () => {
-    setFilter(preFilters)
-    close()
-  }
+    setFilter(preFilters);
+    close();
+  };
 
   return (
     <>
@@ -471,10 +471,10 @@ export default function SpellList({
         </Group>
 
         {filteredSpells.map((spell, i, arr) => {
-          const prev = arr.at(i - 1)
-          const shouldShowLabel = i === 0 || prev?.level !== spell?.level
+          const prev = arr.at(i - 1);
+          const shouldShowLabel = i === 0 || prev?.level !== spell?.level;
           const levelLabel =
-            spell?.level === "cantrip" ? "Truques" : `Nível ${spell?.level}`
+            spell?.level === "cantrip" ? "Truques" : `Nível ${spell?.level}`;
 
           return (
             spell && (
@@ -498,7 +498,7 @@ export default function SpellList({
                 />
               </Fragment>
             )
-          )
+          );
         })}
       </Stack>
       <Drawer opened={opened} onClose={close} title="Filtros">
@@ -569,30 +569,30 @@ export default function SpellList({
               (v) => {
                 switch (v) {
                   case "any":
-                    return preFilters.verbal === "any"
+                    return preFilters.verbal === "any";
                   case "verbal":
-                    return preFilters.verbal !== false
+                    return preFilters.verbal !== false;
                   case "somatic":
-                    return preFilters.somatic !== false
+                    return preFilters.somatic !== false;
                   case "material":
-                    return preFilters.material !== false
+                    return preFilters.material !== false;
                   default:
-                    return true
+                    return true;
                 }
-              }
+              },
             )}
             label="Componentes"
             onChange={(components: string[]) => {
               setPreFilter((prev) => {
-                const hasAny = components.includes("any")
-                const verbal = hasAny ? "any" : components.includes("verbal")
-                const somatic = hasAny ? "any" : components.includes("somatic")
+                const hasAny = components.includes("any");
+                const verbal = hasAny ? "any" : components.includes("verbal");
+                const somatic = hasAny ? "any" : components.includes("somatic");
                 const material = hasAny
                   ? "any"
-                  : components.includes("material")
+                  : components.includes("material");
 
-                return { ...prev, verbal, somatic, material }
-              })
+                return { ...prev, verbal, somatic, material };
+              });
             }}
           >
             <Group>
@@ -624,13 +624,13 @@ export default function SpellList({
         </Stack>
       </Drawer>
     </>
-  )
+  );
 }
 
 const dividerStyles = css`
   position: sticky;
   top: 0;
-  background: var(--do_color_background);
+  background: var(--mantine-color-body);
   line-height: 2.5;
   z-index: 3;
-`
+`;
