@@ -42,7 +42,7 @@ export default function MyApp({
       </Head>
       <SessionProvider session={session}>
         <JotaiProvider>
-          <MantineProvider theme={{ ...theme }} >
+          <MantineProvider theme={{ ...theme }} defaultColorScheme="dark">
             <Notifications />
             <ModalsProvider>
               <Component {...pageProps} />

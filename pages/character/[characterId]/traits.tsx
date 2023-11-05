@@ -49,7 +49,7 @@ export default function Traits() {
             return (
               <Stack
                 key={trait.name}
-                className="rounded border border-brand-500 border-opacity-20 p-2"
+                className="rounded border border-brand-200 border-opacity-20 p-2"
                 gap={0}
               >
                 <Text fw="bold">{trait.name}</Text>

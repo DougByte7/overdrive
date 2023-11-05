@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
+import { css } from "@emotion/react";
 import {
   Stack,
   Box,
@@ -11,43 +11,43 @@ import {
   Badge,
   Group,
   Tooltip,
-} from "@mantine/core"
-import { useAtom } from "jotai"
-import { characterFormAton } from "../../state"
-import { useMemo, type CSSProperties, type MouseEventHandler } from "react"
-import classes from "@/assets/dnd/5e/classes"
-import { useCounter } from "@mantine/hooks"
-import spells from "@/assets/dnd/5e/spells.json"
+} from "@mantine/core";
+import { useAtom } from "jotai";
+import { characterFormAton } from "../../state";
+import { useMemo, type CSSProperties, type MouseEventHandler } from "react";
+import classes from "@/assets/dnd/5e/classes";
+import { useCounter } from "@mantine/hooks";
+import spells from "@/assets/dnd/5e/spells.json";
 
 interface ClassSelectionProps {
-  styles: CSSProperties
+  styles: CSSProperties;
 }
 export default function SpellSelection({ styles }: ClassSelectionProps) {
-  const [form] = useAtom(characterFormAton)
+  const [form] = useAtom(characterFormAton);
 
-  const { spellsKnown, cantripKnown } = classes[form.classes[0].name]
-  const hasCantrips = cantripKnown?.length
-  const hasSpells = !!spellsKnown && spellsKnown !== Infinity
+  const { spellsKnown, cantripKnown } = classes[form.classes[0].name];
+  const hasCantrips = cantripKnown?.length;
+  const hasSpells = !!spellsKnown && spellsKnown !== Infinity;
 
   const cantrips = useMemo(() => {
     return hasCantrips
       ? spells.filter(
           (spell) =>
             spell.tags.includes("cantrip") &&
-            spell.tags.includes(form.classes[0].name)
+            spell.tags.includes(form.classes[0].name),
         )
-      : []
-  }, [form.classes])
+      : [];
+  }, [form.classes]);
 
   const firstLevel = useMemo(() => {
     return hasSpells
       ? spells.filter(
           (spell) =>
             spell.tags.includes("level1") &&
-            spell.tags.includes(form.classes[0].name)
+            spell.tags.includes(form.classes[0].name),
         )
-      : []
-  }, [form.classes])
+      : [];
+  }, [form.classes]);
 
   return (
     <Stack style={styles} gap="md">
@@ -73,32 +73,32 @@ export default function SpellSelection({ styles }: ClassSelectionProps) {
         />
       )}
     </Stack>
-  )
+  );
 }
 
 interface SpellListProps {
-  label: string
-  spells: typeof spells
-  maxSpells: number
+  label: string;
+  spells: typeof spells;
+  maxSpells: number;
 }
 function SpellList({ label, spells, maxSpells }: SpellListProps) {
-  const [form, setForm] = useAtom(characterFormAton)
-  const [count, { increment, decrement }] = useCounter(0)
+  const [form, setForm] = useAtom(characterFormAton);
+  const [count, { increment, decrement }] = useCounter(0);
 
   const handleSelectSpell =
     (spellName: string): MouseEventHandler<HTMLButtonElement> =>
     (_) => {
       setForm((form) => {
         if (form.spells.includes(spellName)) {
-          form.spells = form.spells.filter((s) => s !== spellName)
-          decrement()
+          form.spells = form.spells.filter((s) => s !== spellName);
+          decrement();
         } else if (count < maxSpells) {
-          form.spells.push(spellName)
-          increment()
+          form.spells.push(spellName);
+          increment();
         }
-        return { ...form }
-      })
-    }
+        return { ...form };
+      });
+    };
 
   return (
     <>
@@ -148,7 +148,7 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
                 border-radius: inherit;
                 border: 1px solid
                   ${form.spells.includes(spell.name)
-                    ? "var(--do_color_primary_base)"
+                    ? "var(--do_color_primary_light_50)"
                     : "transparent"};
               `}
               aria-label="Exibir mais informações"
@@ -157,13 +157,13 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
                 {spell.name}
 
                 <Group gap="xs">
-                  <Badge size="sm" variant="outline">
+                  <Badge size="sm" variant="outline" color="white">
                     {spell.school}
                   </Badge>
-                  <Badge size="sm" variant="outline">
+                  <Badge size="sm" variant="outline" color="white">
                     {spell.range}
                   </Badge>
-                  <Badge size="sm" variant="outline">
+                  <Badge size="sm" variant="outline" color="white">
                     {spell.casting_time}
                   </Badge>
                 </Group>
@@ -209,5 +209,5 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
         ))}
       </Accordion>
     </>
-  )
+  );
 }

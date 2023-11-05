@@ -353,7 +353,7 @@ const attributeButtonStyles = css`
   border-radius: var(--do_border_radius_sm);
   width: 39px;
   height: 40px;
-  background: var(--do_color_primary_light_50);
+  background: var(--do_color_support_dark_30);
   font-size: var(--do_text_size_lg);
   font-weight: bold;
 `;
@@ -365,7 +365,7 @@ const EditButton = ({
   setStep: Dispatch<SetStateAction<number>>;
 }) => (
   <ActionIcon
-    color="brand"
+    color="white"
     size="xs"
     variant="outline"
     css={css`

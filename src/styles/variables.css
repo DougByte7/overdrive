@@ -4,7 +4,8 @@
   --do_color_primary_light_50: #f6f0fa;
 
   --do_color_support_light_30: #e3e3e3;
-  --do_color_support_dark_30: #2d2f33;
+  --do_color_support_dark_30: #2a2f37;
+  --do_color_support_dark_50: #1e1e24;
 
   --do_color_info: #41b4f5;
   --do_color_warn: #f5c341;
@@ -19,7 +20,7 @@
   --do_text_size_md: 1rem;
   --do_text_size_lg: 1.5rem;
 
-  --do_border_color: var(--do_text_color_500);
+  --do_border_color: rgba(246, 240, 250, 0.5);
   --do_border_radius_sm: 4px;
   --do_border_radius_md: 8px;
   --do_border_radius_lg: 16px;

@@ -4,6 +4,9 @@ import useCharacter from "@/hooks/useCharacter";
 import { useEffect } from "react";
 import { CharacterSheetSchema } from "@/assets/dnd/5e/utils/schema";
 import { parse } from "valibot";
+import { Group, Text } from "@mantine/core";
+import { IconCrown, IconPuzzle } from "@tabler/icons-react";
+import classes from "@/assets/dnd/5e/classes";
 
 export default function Home() {
   const campaigns: unknown[] = [];
@@ -34,11 +37,28 @@ export default function Home() {
     storedCharacters?.map((character) => {
       return {
         id: character.id,
-        campaignName: `${races[character.race!].name}, ${character.classes
-          ?.map((c) => c.name)
-          .join(" / ")}.`,
-        campaignId: "1",
         name: character.name,
+        detail: races[character.race!].name,
+        extra: (
+          <Group gap="xl">
+            <Group gap="xs">
+              <IconCrown />
+              <Text size={character.classes.length > 1 ? "xs" : "md"}>
+                {character.classes?.map((c) => (
+                  <>
+                    {classes[c.name].name} <br />
+                  </>
+                ))}
+              </Text>
+            </Group>
+            <Group gap="xs">
+              <IconPuzzle />
+              <Text>
+                Nv {character.classes.reduce((acc, c) => acc + c.level, 0)}
+              </Text>
+            </Group>
+          </Group>
+        ),
         imgSrc: character.picture,
       };
     }) ?? [];
