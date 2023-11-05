@@ -256,14 +256,12 @@ const NewSpellsSeletor = ({
 };
 
 interface NewFeaturesProps extends WithStylesProp {
-  characterId: string;
   currentStep: Steps;
   onNextStep: VoidFunction;
   onClose: VoidFunction;
 }
 const NewFeatures = ({
   styles,
-  characterId,
   currentStep,
   onNextStep,
   onClose,
@@ -275,7 +273,7 @@ const NewFeatures = ({
   const { updateCharacter } = useCharacter();
 
   useEffect(() => {
-    if (currentStep !== Steps.CLOSE) return;
+    if (currentStep !== Steps.CLOSE || !sheet) return;
 
     const classToLevelUpIndex = sheetPreview!.classes!.findIndex(
       (c) => c.data.key === selectedClass,
@@ -291,7 +289,7 @@ const NewFeatures = ({
     });
 
     setSheet(sheetPreview);
-    updateCharacter(characterId, sheetPreview!.toProps());
+    updateCharacter(sheet.id, sheetPreview!.toProps());
     onClose();
   }, [currentStep]);
 
@@ -519,7 +517,7 @@ export default function LevelUp() {
   const [sheet] = useAtom(characterAtom);
   const [selectedClass, setSelectedClass] = useAtom(selectedClassAtom);
   const router = useRouter();
-  const characterId = sheet!.id;
+  const characterId = sheet?.id;
 
   const handleNextStep = () => {
     setCurrentStep((prev) => prev + 1);
@@ -562,7 +560,6 @@ export default function LevelUp() {
           {(styles) => (
             <NewFeatures
               styles={styles}
-              characterId={characterId}
               currentStep={currentStep}
               onNextStep={handleNextStep}
               onClose={handleClose}

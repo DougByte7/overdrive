@@ -198,38 +198,38 @@ export class CharacterSheet {
   get strength(): AttributeScore {
     return this.#strength;
   }
-  set strength(value: number) {
-    this.#strength = buildAttributeScore(value);
+  set strength(value: number | AttributeScore) {
+    this.#strength = buildAttributeScore(value as number);
   }
   get dexterity(): AttributeScore {
     return this.#dexterity;
   }
-  set dexterity(value: number) {
-    this.#dexterity = buildAttributeScore(value);
+  set dexterity(value: number | AttributeScore) {
+    this.#dexterity = buildAttributeScore(value as number);
   }
   get constitution(): AttributeScore {
     return this.#constitution;
   }
-  set constitution(value: number) {
-    this.#constitution = buildAttributeScore(value);
+  set constitution(value: number | AttributeScore) {
+    this.#constitution = buildAttributeScore(value as number);
   }
   get intelligence(): AttributeScore {
     return this.#intelligence;
   }
-  set intelligence(value: number) {
-    this.#intelligence = buildAttributeScore(value);
+  set intelligence(value: number | AttributeScore) {
+    this.#intelligence = buildAttributeScore(value as number);
   }
   get wisdom(): AttributeScore {
     return this.#wisdom;
   }
-  set wisdom(value: number) {
-    this.#wisdom = buildAttributeScore(value);
+  set wisdom(value: number | AttributeScore) {
+    this.#wisdom = buildAttributeScore(value as number);
   }
   get charisma(): AttributeScore {
     return this.#charisma;
   }
-  set charisma(value: number) {
-    this.#charisma = buildAttributeScore(value);
+  set charisma(value: number | AttributeScore) {
+    this.#charisma = buildAttributeScore(value as number);
   }
   /////////////////////////////////////////////////
 }

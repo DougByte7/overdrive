@@ -1,8 +1,8 @@
-import classes from "@/assets/dnd/5e/classes"
-import races from "@/assets/dnd/5e/races"
-import getModifier from "@/assets/dnd/5e/utils/getModifier"
+import classes from "@/assets/dnd/5e/classes";
+import races from "@/assets/dnd/5e/races";
+import getModifier from "@/assets/dnd/5e/utils/getModifier";
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
+import { css } from "@emotion/react";
 import {
   Stack,
   Box,
@@ -18,32 +18,32 @@ import {
   Accordion,
   Divider,
   ComboboxItem,
-} from "@mantine/core"
-import { useAtom } from "jotai"
-import { characterFormAton, avatarPreviewUrlAton } from "../../state"
+} from "@mantine/core";
+import { useAtom } from "jotai";
+import { characterFormAton, avatarPreviewUrlAton } from "../../state";
 import {
   Fragment,
   type CSSProperties,
   type Dispatch,
   type SetStateAction,
-} from "react"
-import { IconPencil } from "@tabler/icons-react"
-import abilityScores from "@/assets/dnd/5e/abilityScores"
-import { Steps } from "../../character-builder"
+} from "react";
+import { IconPencil } from "@tabler/icons-react";
+import abilityScores from "@/assets/dnd/5e/abilityScores";
+import { Steps } from "../../character-builder";
 import type {
   WithAmount,
   EquipmentIndex,
-} from "@/assets/dnd/5e/classes/interfaces"
-import equipmentList from "@/assets/dnd/5e/equipment.json"
-import spells from "@/assets/dnd/5e/spells.json"
+} from "@/assets/dnd/5e/classes/interfaces";
+import equipmentList from "@/assets/dnd/5e/equipment.json";
+import spells from "@/assets/dnd/5e/spells.json";
 
 interface ReviewOptionsProps {
-  styles: CSSProperties
-  setStep: Dispatch<SetStateAction<number>>
+  styles: CSSProperties;
+  setStep: Dispatch<SetStateAction<number>>;
 }
 export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
-  const [form] = useAtom(characterFormAton)
-  const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton)
+  const [form] = useAtom(characterFormAton);
+  const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton);
 
   return (
     <Stack style={styles} gap="md">
@@ -92,8 +92,10 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
           </Group>
           <Stack>
             {Object.values(abilityScores).map((ability) => {
-              const attVal = form[ability.attributeName].total
-              const mod = getModifier(attVal)
+              const attVal =
+                form[ability.attributeName].base +
+                form[ability.attributeName].bonus;
+              const mod = getModifier(attVal);
               return (
                 <Grid key={ability.attributeName} align="center">
                   <Grid.Col span={4}>{ability.name.substring(0, 3)}</Grid.Col>
@@ -107,7 +109,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                     </Group>
                   </Grid.Col>
                 </Grid>
-              )
+              );
             })}
           </Stack>
         </Paper>
@@ -179,7 +181,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                   </Accordion.Control>
                   <Accordion.Panel>{feature.description}</Accordion.Panel>
                 </Accordion.Item>
-              ))
+              )),
             )}
           </Accordion>
         </Paper>
@@ -211,12 +213,12 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                       races[form.race!].traits
                         .find((t) => t.name === k)
                         ?.options?.find(
-                          (o) => (o as ComboboxItem).value === v
+                          (o) => (o as ComboboxItem).value === v,
                         ) as ComboboxItem
                     )?.label
                   }
                 </Text>
-              )
+              );
             })}
             {Object.entries(form.features).map(([k, v], i) => {
               return (
@@ -228,7 +230,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                       ?.options?.find((o) => o.value === v)?.label
                   }
                 </Text>
-              )
+              );
             })}
             {/**
              * @todo translate this
@@ -259,13 +261,13 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
           <Stack>
             {form.items
               .reduce((acc, item) => {
-                const prevItem = acc.find((i) => i.index === item.index)
+                const prevItem = acc.find((i) => i.index === item.index);
                 if (prevItem) {
-                  prevItem.amount++
-                  return acc
+                  prevItem.amount++;
+                  return acc;
                 }
 
-                return [...acc, item]
+                return [...acc, item];
               }, [] as WithAmount<EquipmentIndex>[])
               .map((item, i) => {
                 return (
@@ -275,7 +277,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                       "ITEM_NOT_FOUND"}
                     {item.ammo && ` e ${item.ammo}x munições`}
                   </Text>
-                )
+                );
               })}
           </Stack>
         </Paper>
@@ -301,19 +303,22 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
             <Stack>
               {Array.from(form.spells)
                 .sort((a, b) => {
-                  return a < b ? -1 : a > b ? 1 : 0
+                  return a < b ? -1 : a > b ? 1 : 0;
                 })
-                .map((spellName) => {
-                  return spells.find((spell) => spell.name === spellName)
-                }, [] as typeof spells)
+                .map(
+                  (spellName) => {
+                    return spells.find((spell) => spell.name === spellName);
+                  },
+                  [] as typeof spells,
+                )
                 .sort((a, b) => {
-                  const a0 = isNaN(+a!.level!) ? 0 : +a!.level!
-                  const b0 = isNaN(+b!.level!) ? 0 : +b!.level!
-                  return a0 - b0
+                  const a0 = isNaN(+a!.level!) ? 0 : +a!.level!;
+                  const b0 = isNaN(+b!.level!) ? 0 : +b!.level!;
+                  return a0 - b0;
                 })
                 .map((spell, i, arr) => {
                   const showDivider =
-                    i === 0 || spell?.level !== arr[i - 1]?.level
+                    i === 0 || spell?.level !== arr[i - 1]?.level;
 
                   return (
                     <Fragment key={`${spell}${i}`}>
@@ -330,14 +335,14 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                       )}
                       <Text>{spell!.name}</Text>
                     </Fragment>
-                  )
+                  );
                 })}
             </Stack>
           </Paper>
         </Box>
       )}
     </Stack>
-  )
+  );
 }
 
 const attributeButtonStyles = css`
@@ -351,13 +356,13 @@ const attributeButtonStyles = css`
   background: var(--do_color_primary_light_50);
   font-size: var(--do_text_size_lg);
   font-weight: bold;
-`
+`;
 const EditButton = ({
   step,
   setStep,
 }: {
-  step: number
-  setStep: Dispatch<SetStateAction<number>>
+  step: number;
+  setStep: Dispatch<SetStateAction<number>>;
 }) => (
   <ActionIcon
     color="brand"
@@ -370,4 +375,4 @@ const EditButton = ({
   >
     <IconPencil size=".75rem" />
   </ActionIcon>
-)
+);

@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
+import { css } from "@emotion/react";
 import {
   Stack,
   Box,
@@ -10,39 +10,34 @@ import {
   Avatar,
   Paper,
   Text,
-} from "@mantine/core"
-import races, { DnD5eRaceName } from "@/assets/dnd/5e/races"
-import { CSSProperties, MouseEventHandler } from "react"
-import { useAtom } from "jotai"
-import { characterFormAton } from "../../state"
+} from "@mantine/core";
+import races, { DnD5eRaceName } from "@/assets/dnd/5e/races";
+import { CSSProperties, MouseEventHandler } from "react";
+import { useAtom } from "jotai";
+import { characterFormAton } from "../../state";
 
 interface RaceSelectionProps {
-  styles: CSSProperties
+  styles: CSSProperties;
 }
 export default function RaceSelection({ styles }: RaceSelectionProps) {
-  const [form, setForm] = useAtom(characterFormAton)
+  const [form, setForm] = useAtom(characterFormAton);
 
   const handleSelectRace =
     (race: DnD5eRaceName): MouseEventHandler<HTMLButtonElement> =>
     (_) => {
       setForm((form) => {
-        form.race = race
+        form.race = race;
 
-        form.strength.total = form.strength.bonus =
-          races[race].boost?.strength ?? 0
-        form.dexterity.total = form.dexterity.bonus =
-          races[race].boost?.dexterity ?? 0
-        form.constitution.total = form.constitution.bonus =
-          races[race].boost?.constitution ?? 0
-        form.intelligence.total = form.intelligence.bonus =
-          races[race].boost?.intelligence ?? 0
-        form.wisdom.total = form.wisdom.bonus = races[race].boost?.wisdom ?? 0
-        form.charisma.total = form.charisma.bonus =
-          races[race].boost?.charisma ?? 0
+        form.strength.bonus = races[race].boost?.strength ?? 0;
+        form.dexterity.bonus = races[race].boost?.dexterity ?? 0;
+        form.constitution.bonus = races[race].boost?.constitution ?? 0;
+        form.intelligence.bonus = races[race].boost?.intelligence ?? 0;
+        form.wisdom.bonus = races[race].boost?.wisdom ?? 0;
+        form.charisma.bonus = races[race].boost?.charisma ?? 0;
 
-        return { ...form }
-      })
-    }
+        return { ...form };
+      });
+    };
 
   return (
     <Stack style={styles} gap="md">
@@ -122,5 +117,5 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
         ))}
       </Accordion>
     </Stack>
-  )
+  );
 }

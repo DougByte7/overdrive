@@ -1,43 +1,36 @@
-import { Stack, Box, Title, Radio, Space, Text } from "@mantine/core"
-import { useAtom } from "jotai"
-import { attrMethodAtom, characterFormAton } from "../../state"
-import type { CSSProperties } from "react"
-import type { AttrMethod } from "../../interfaces"
+import { Stack, Box, Title, Radio, Space, Text } from "@mantine/core";
+import { useAtom } from "jotai";
+import { attrMethodAtom, characterFormAton } from "../../state";
+import type { CSSProperties } from "react";
+import type { AttrMethod } from "../../interfaces";
 
 interface AttributeMethodProps {
-  styles: CSSProperties
+  styles: CSSProperties;
 }
 export default function AttributeMethod({ styles }: AttributeMethodProps) {
-  const [, setForm] = useAtom(characterFormAton)
-  const [attrMethod, setAttrMethod] = useAtom(attrMethodAtom)
+  const [, setForm] = useAtom(characterFormAton);
+  const [attrMethod, setAttrMethod] = useAtom(attrMethodAtom);
 
   const handleSetAttrMethod = (method: string) => {
-    setAttrMethod(method as AttrMethod)
+    setAttrMethod(method as AttrMethod);
     setForm((form) => {
-      const baseValue = 8 * +(method === "pointbuy")
+      const baseValue = 8 * +(method === "pointbuy");
 
-      form.strength.base = baseValue
-      form.dexterity.base = baseValue
-      form.constitution.base = baseValue
-      form.intelligence.base = baseValue
-      form.wisdom.base = baseValue
-      form.charisma.base = baseValue
+      form.strength.base = baseValue;
+      form.dexterity.base = baseValue;
+      form.constitution.base = baseValue;
+      form.intelligence.base = baseValue;
+      form.wisdom.base = baseValue;
+      form.charisma.base = baseValue;
 
-      form.strength.total = baseValue + form.strength.bonus
-      form.dexterity.total = baseValue + form.dexterity.bonus
-      form.constitution.total = baseValue + form.constitution.bonus
-      form.intelligence.total = baseValue + form.intelligence.bonus
-      form.wisdom.total = baseValue + form.wisdom.bonus
-      form.charisma.total = baseValue + form.charisma.bonus
-
-      return form
-    })
-  }
+      return form;
+    });
+  };
 
   const options: Array<{
-    label: string
-    value: AttrMethod
-    description: string
+    label: string;
+    value: AttrMethod;
+    description: string;
   }> = [
     {
       value: "diceroll",
@@ -55,7 +48,7 @@ export default function AttributeMethod({ styles }: AttributeMethodProps) {
       label: "Vetor padrão",
       description: "Utilize o vetor padrão [15, 14, 13, 12, 10, 8].",
     },
-  ]
+  ];
 
   return (
     <Stack style={styles} gap="md">
@@ -88,5 +81,5 @@ export default function AttributeMethod({ styles }: AttributeMethodProps) {
 
       <Space h="2rem" />
     </Stack>
-  )
+  );
 }

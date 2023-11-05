@@ -8,12 +8,10 @@ import {
   type ComboboxItem,
   type ComboboxItemGroup,
   Badge,
-  Group,
   Stack,
   Text,
   Spoiler,
 } from "@mantine/core";
-
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { useEffect } from "react";

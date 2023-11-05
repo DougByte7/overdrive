@@ -1,5 +1,7 @@
-import abilityScores from "@/assets/dnd/5e/abilityScores"
-import races from "@/assets/dnd/5e/races"
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import abilityScores from "@/assets/dnd/5e/abilityScores";
+import races from "@/assets/dnd/5e/races";
 import {
   Stack,
   Box,
@@ -13,26 +15,24 @@ import {
   ActionIcon,
   Badge,
   Text,
-} from "@mantine/core"
-import { IconInfoCircle, IconMinus, IconPlus } from "@tabler/icons-react"
-import { attrMethodAtom, characterFormAton, pointBuyAtom } from "../../state"
-import { useAtom } from "jotai"
+} from "@mantine/core";
+import { IconInfoCircle, IconMinus, IconPlus } from "@tabler/icons-react";
+import { attrMethodAtom, characterFormAton, pointBuyAtom } from "../../state";
+import { useAtom } from "jotai";
 import {
   useState,
   type CSSProperties,
   useMemo,
   useRef,
   MouseEventHandler,
-} from "react"
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
-import type { Attribute } from "@/assets/dnd/5e/classes/interfaces"
-import type { AttributeScore } from "../../interfaces"
-import getModifier from "@/assets/dnd/5e/utils/getModifier"
-import isNil from "lodash.isnil"
+} from "react";
+import type { Attribute } from "@/assets/dnd/5e/classes/interfaces";
+import type { AttributeScore } from "../../interfaces";
+import getModifier from "@/assets/dnd/5e/utils/getModifier";
+import isNil from "lodash.isnil";
 
 interface AttributeSelectionProps {
-  styles: CSSProperties
+  styles: CSSProperties;
 }
 export default function AttributeSelection({
   styles,
@@ -46,17 +46,17 @@ export default function AttributeSelection({
     13: 5,
     14: 7,
     15: 9,
-  } as const
+  } as const;
 
-  const [form, setForm] = useAtom(characterFormAton)
-  const [attrMethod] = useAtom(attrMethodAtom)
+  const [form, setForm] = useAtom(characterFormAton);
+  const [attrMethod] = useAtom(attrMethodAtom);
   const [selectedRoll, setSelectedRoll] = useState({
     activeIndex: -1,
     value: 0,
-  })
-  const [availablePoints, setAvailablePoints] = useAtom(pointBuyAtom)
-  const attrUsedAt = useRef(new Map<Attribute, number | null>())
-  const indexUsedAt = useRef(new Map<number, Attribute | null>())
+  });
+  const [availablePoints, setAvailablePoints] = useAtom(pointBuyAtom);
+  const attrUsedAt = useRef(new Map<Attribute, number | null>());
+  const indexUsedAt = useRef(new Map<number, Attribute | null>());
 
   const attributeOptions: LabelValue<Attribute>[] = [
     {
@@ -83,9 +83,9 @@ export default function AttributeSelection({
       value: "charisma",
       label: "Carisma",
     },
-  ]
+  ];
 
-  const stdArray = [15, 14, 13, 12, 10, 8]
+  const stdArray = [15, 14, 13, 12, 10, 8];
   const rolls = useMemo(() => {
     const rollAttribute = () => {
       const rolls = [
@@ -93,55 +93,55 @@ export default function AttributeSelection({
         Math.floor(Math.random() * 6) + 1,
         Math.floor(Math.random() * 6) + 1,
         Math.floor(Math.random() * 6) + 1,
-      ]
+      ];
 
-      const lower = Math.min(...rolls)
-      rolls.splice(rolls.indexOf(lower), 1)
+      const lower = Math.min(...rolls);
+      rolls.splice(rolls.indexOf(lower), 1);
 
       return rolls.reduce((acc, roll) => {
-        return acc + roll
-      }, 0)
-    }
+        return acc + roll;
+      }, 0);
+    };
 
-    return Array(6).fill(null).map(rollAttribute)
-  }, [])
-  const attributeValueOptions = attrMethod === "array" ? stdArray : rolls
+    return Array(6).fill(null).map(rollAttribute);
+  }, []);
+  const attributeValueOptions = attrMethod === "array" ? stdArray : rolls;
 
   const handleSelectAttrValue = (activeIndex: number, value: number) => () => {
-    setSelectedRoll({ activeIndex, value })
-  }
+    setSelectedRoll({ activeIndex, value });
+  };
 
   const handleSetBonusAttr = (value: number) => (attrNames: string[]) => {
-    ;(attrNames as Attribute[]).forEach((attr) => {
+    (attrNames as Attribute[]).forEach((attr) => {
       setForm((prev) => ({
         ...prev,
         [attr]: {
           ...prev[attr],
           bonus: value,
         },
-      }))
-    })
-  }
+      }));
+    });
+  };
 
   const handleSetAttrValue =
     (attr: Attribute, index: number): MouseEventHandler<HTMLButtonElement> =>
     (e) => {
-      e.stopPropagation()
-      if (!selectedRoll.value) return
+      e.stopPropagation();
+      if (!selectedRoll.value) return;
 
       if (["diceroll", "array"].includes(attrMethod)) {
-        const usedAtIndex = attrUsedAt.current.get(attr)
+        const usedAtIndex = attrUsedAt.current.get(attr);
         if (!isNil(usedAtIndex)) {
-          indexUsedAt.current.set(usedAtIndex, null)
+          indexUsedAt.current.set(usedAtIndex, null);
         }
 
-        const usedAtAttr = indexUsedAt.current.get(index)
+        const usedAtAttr = indexUsedAt.current.get(index);
         if (!isNil(usedAtAttr)) {
-          attrUsedAt.current.set(usedAtAttr, null)
+          attrUsedAt.current.set(usedAtAttr, null);
         }
 
-        attrUsedAt.current.set(attr, index)
-        indexUsedAt.current.set(index, attr)
+        attrUsedAt.current.set(attr, index);
+        indexUsedAt.current.set(index, attr);
       }
 
       const newAttrValues = (
@@ -153,38 +153,42 @@ export default function AttributeSelection({
           "wisdom",
           "charisma",
         ] as Attribute[]
-      ).reduce((acc, attribute) => {
-        const i = attrUsedAt.current.get(attribute)
-        const base = !isNil(i) ? attributeValueOptions[i] : 0
-        const bonus = form.race ? races[form.race].boost?.[attribute] ?? 0 : 0
-        const total = base + bonus
+      ).reduce(
+        (acc, attribute) => {
+          const i = attrUsedAt.current.get(attribute);
+          const base = !isNil(i) ? attributeValueOptions[i] : 0;
+          const bonus = form.race
+            ? races[form.race].boost?.[attribute] ?? 0
+            : 0;
+          const total = base + bonus;
 
-        return {
-          ...acc,
-          [attribute]: {
-            base,
-            bonus,
-            total,
-          },
-        }
-      }, {} as Record<Attribute, AttributeScore>)
+          return {
+            ...acc,
+            [attribute]: {
+              base,
+              bonus,
+              total,
+            },
+          };
+        },
+        {} as Record<Attribute, AttributeScore>,
+      );
       setForm((form) => {
-        return { ...form, ...newAttrValues }
-      })
+        return { ...form, ...newAttrValues };
+      });
 
       setSelectedRoll({
         activeIndex: -1,
         value: 0,
-      })
-    }
+      });
+    };
 
   const handleIncreaseAttrValue = (attr: Attribute) => () => {
     setForm((form) => {
-      const newForm = structuredClone(form)
-      newForm[attr].base++
-      newForm[attr].total++
-      return newForm
-    })
+      const newForm = structuredClone(form);
+      newForm[attr].base++;
+      return newForm;
+    });
 
     setAvailablePoints(
       (points) =>
@@ -192,17 +196,16 @@ export default function AttributeSelection({
         pointBuyValueCost[form[attr].base as keyof typeof pointBuyValueCost] -
         pointBuyValueCost[
           (form[attr].base + 1) as keyof typeof pointBuyValueCost
-        ]
-    )
-  }
+        ],
+    );
+  };
 
   const handleDecreaseAttrValue = (attr: Attribute) => () => {
     setForm((form) => {
-      const newForm = structuredClone(form)
-      newForm[attr].base--
-      newForm[attr].total--
-      return newForm
-    })
+      const newForm = structuredClone(form);
+      newForm[attr].base--;
+      return newForm;
+    });
 
     setAvailablePoints(
       (points) =>
@@ -210,9 +213,9 @@ export default function AttributeSelection({
         pointBuyValueCost[form[attr].base as keyof typeof pointBuyValueCost] -
         pointBuyValueCost[
           (form[attr].base - 1) as keyof typeof pointBuyValueCost
-        ]
-    )
-  }
+        ],
+    );
+  };
 
   return (
     <Stack style={styles} gap="md">
@@ -272,7 +275,7 @@ export default function AttributeSelection({
                 >
                   {attrValue}
                 </button>
-              )
+              );
             })
           )}
         </Group>
@@ -286,25 +289,27 @@ export default function AttributeSelection({
           } para aumentar em ${races[form.race!].boost!.anyAttr!.value}`}
           maxValues={races[form.race!].boost?.anyAttr?.amount}
           onChange={handleSetBonusAttr(
-            races[form.race!].boost?.anyAttr?.value ?? 0
+            races[form.race!].boost?.anyAttr?.value ?? 0,
           )}
         />
       )}
 
       {Object.values(abilityScores).map((ability) => {
-        const abilityModifier = getModifier(form[ability.attributeName].total)
+        const abilityTotal =
+          form[ability.attributeName].base + form[ability.attributeName].bonus;
+        const abilityModifier = getModifier(abilityTotal);
 
         const AttributeButton = (
           <button
             css={attributeButtonStyles}
             onClick={handleSetAttrValue(
               ability.attributeName,
-              selectedRoll.activeIndex
+              selectedRoll.activeIndex,
             )}
           >
-            {form[ability.attributeName].total ?? ""}
+            {abilityTotal ?? ""}
           </button>
-        )
+        );
 
         return (
           <Paper
@@ -375,21 +380,21 @@ export default function AttributeSelection({
               )}
             </Group>
           </Paper>
-        )
+        );
       })}
     </Stack>
-  )
+  );
 }
 
 const attributeButtonActiveStyles = css`
   outline: 1px solid var(--do_color_primary_base);
   outline-offset: 2px;
-`
+`;
 
 const attributeButtonUsedStyles = css`
   opacity: 0.5;
   text-decoration: line-through;
-`
+`;
 
 const attributeButtonStyles = css`
   cursor: pointer;
@@ -403,4 +408,4 @@ const attributeButtonStyles = css`
   background: var(--do_color_primary_light_50);
   font-size: var(--do_text_size_lg);
   font-weight: bold;
-`
+`;
