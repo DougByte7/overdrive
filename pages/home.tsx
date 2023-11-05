@@ -40,7 +40,7 @@ export default function Home() {
         name: character.name,
         detail: races[character.race!].name,
         extra: (
-          <Group gap="xl">
+          <Group gap={0} justify="space-between">
             <Group gap="xs">
               <IconCrown />
               <Text size={character.classes.length > 1 ? "xs" : "md"}>
