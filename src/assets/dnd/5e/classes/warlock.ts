@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -413,7 +413,7 @@ const features: DnD5eFeature[] = [
     description:
       "Cada opção de Dádiva do Pacto produz uma criatura especial ou um objeto que reflete a natureza do seu patrono. Pacto da Corrente: Seu familiar é mais astuto do que um familiar típico. Sua forma padrão pode ser um reflexo do seu patrono, com diabretes e quasits ligados ao Diabo. Pacto da Lâmina: Se você serve ao Diabo, sua arma pode ser um machado feito de metal negro e adornado com chamas decorativas. Pacto do Tomo: Seu Livro das Sombras pode ser um pesado tomo encadernado em pele de demônio cravejado de ferro, contendo feitiços de conjuração e uma riqueza de conhecimento proibido sobre as sinistras regiões do cosmos, um presente do Diabo.",
   },
-]
+];
 
 const fiend: DnD5eSubClass = {
   name: "O Diabo",
@@ -462,9 +462,10 @@ const fiend: DnD5eSubClass = {
     "Flame Strike",
     "Hallow",
   ],
-}
+};
 
 const warlock: DnD5eClass = {
+  key: "warlock",
   name: "Bruxo",
   description: "HP d8, Habilidade Cha, TR Sab e Car",
   features,
@@ -538,6 +539,6 @@ const warlock: DnD5eClass = {
       ],
     ],
   },
-}
+};
 
-export default warlock
+export default warlock;

@@ -1,50 +1,46 @@
-import { CharacterForm } from "@/components/home/character-builder/interfaces"
-import { useLocalStorage } from "@mantine/hooks"
+"use-client";
+import type { CharacterSheetProps } from "@/assets/dnd/5e/utils/CharacterSheet";
+
+import { useLocalStorage } from "@mantine/hooks";
 
 export default function useCharacter() {
-  const [characters, setCharacters] = useLocalStorage<CharacterForm[]>({
+  const [characters, setCharacters, clearCharacters] = useLocalStorage<
+    CharacterSheetProps<"name">[]
+  >({
     key: "characters",
     defaultValue: [],
-  })
+  });
 
-  const addCharacter = (newCharacter: CharacterForm) => {
-    setCharacters((prev) => [...prev, newCharacter])
-  }
+  const addCharacter = (newCharacter: CharacterSheetProps<"name">) => {
+    setCharacters((prev) => [...prev, newCharacter]);
+  };
 
   const getCharacter = (id: string) => {
-    return characters!.find((char) => char.id === id)
-  }
+    return characters!.find((char) => char.id === id);
+  };
 
   const removeCharacter = (id: string) => {
-    const index = characters!.findIndex((char) => char.id === id)
+    const index = characters!.findIndex((char) => char.id === id);
     if (index > -1) {
       setCharacters((prev) => {
-        prev.splice(index, 1)
-        return prev
-      })
+        prev.splice(index, 1);
+        return prev;
+      });
     }
-  }
+  };
 
   const updateCharacter = (
-    id: string | number,
-    newCharacter: CharacterForm
+    id: string,
+    newCharacter: CharacterSheetProps<"name">,
   ) => {
-    const index = characters!.findIndex((char) => char.id === id)
+    const index = characters!.findIndex((char) => char.id === id);
     if (index > -1) {
       setCharacters((prev) => {
-        prev[index] = newCharacter
-        return prev
-      })
-    } else {
-      /**
-       * @todo remove this else when the id is properly defined
-       */
-      setCharacters((prev) => {
-        prev[id as number] = newCharacter
-        return prev
-      })
+        prev[index] = newCharacter;
+        return prev;
+      });
     }
-  }
+  };
 
   return {
     characters,
@@ -52,5 +48,6 @@ export default function useCharacter() {
     addCharacter,
     removeCharacter,
     updateCharacter,
-  }
+    clearCharacters,
+  };
 }

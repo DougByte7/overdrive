@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -133,7 +133,7 @@ const features: DnD5eFeature[] = [
     description:
       "No 20º nível, quando você rolar para iniciativa e não tiver nenhum ponto de ki restante, você recupera 4 pontos de ki.",
   },
-]
+];
 
 const openHand: DnD5eSubClass = {
   name: "Caminho da Mão Aberta",
@@ -169,9 +169,10 @@ const openHand: DnD5eSubClass = {
         "No 17º nível, você ganha a habilidade de estabelecer vibrações letais no corpo de alguém. Quando você atinge uma criatura com um golpe desarmado, pode gastar 3 pontos de ki para iniciar essas vibrações imperceptíveis, que duram um número de dias igual ao seu nível de monge. As vibrações são inofensivas a menos que você use sua ação para acabar com elas. Para fazer isso, você e o alvo devem estar no mesmo plano de existência. Quando você usa essa ação, a criatura deve fazer um teste de resistência de Constituição. Se falhar, ela é reduzida a 0 pontos de vida. Se tiver sucesso, ela sofre 10d10 de dano necrótico. Você só pode ter uma criatura sob o efeito desta habilidade de cada vez. Você pode escolher encerrar as vibrações de forma inofensiva sem usar uma ação.",
     },
   ],
-}
+};
 
 const monk: DnD5eClass = {
+  key: "monk",
   name: "Monge",
   description: "HP d8, Habilidade Des e Sab, TR For e Des",
   features,
@@ -207,9 +208,9 @@ const monk: DnD5eClass = {
       [{ index: "dart", amount: 10 }],
     ],
   },
-}
+};
 
-export default monk
+export default monk;
 
 /*
 Analise o texto a seguir e gere um arquivo json para cada paragrafo traduzido seguindo este schema: {

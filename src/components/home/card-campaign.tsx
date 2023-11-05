@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { Card, Image, Button, Text, Avatar, Flex } from "@mantine/core"
 

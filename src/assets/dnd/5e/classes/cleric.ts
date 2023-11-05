@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -73,7 +73,7 @@ const features: DnD5eFeature[] = [
     description:
       "A partir do 10º nível, você pode chamar a intervenção do seu deus em seu favor quando sua necessidade é grande. Pedir a ajuda do seu deus exige que você use sua ação. Descreva a assistência que você procura e role os dados percentuais. Se você rolar um número igual ou menor que o seu nível de clérigo, seu deus intervém. O Mestre escolhe a natureza da intervenção; o efeito de qualquer magia de clérigo ou de magia de domínio de clérigo seria apropriado. Se seu deus intervir, você não pode usar essa habilidade novamente por 7 dias. Caso contrário, você pode usá-la novamente depois de terminar um descanso longo. No 20º nível, seu chamado para a intervenção é bem-sucedido automaticamente, sem necessidade de rolagem.",
   },
-]
+];
 
 const life: DnD5eSubClass = {
   name: "Domínio da Vida",
@@ -135,9 +135,10 @@ const life: DnD5eSubClass = {
     "Mass Cure Wounds",
     "Raise Dead",
   ],
-}
+};
 
 const cleric: DnD5eClass = {
+  key: "cleric",
   name: "Clérigo",
   description: "HP d8, Habilidade Sab, TR Sab e Car",
   features,
@@ -206,9 +207,9 @@ const cleric: DnD5eClass = {
       [{ gear_category: "holy-symbols", amount: 1 }],
     ],
   },
-}
+};
 
-export default cleric
+export default cleric;
 
 /*
 Analise o texto a seguir e gere um arquivo json traduzido seguindo este schema: {

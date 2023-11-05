@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -83,7 +83,7 @@ const features: DnD5eFeature[] = [
     description:
       "A partir do 9º nível, você pode rolar novamente uma jogada de salvamento que falhe. Se fizer isso, deve usar a nova jogada e não pode usar esse recurso novamente até terminar um descanso longo. Você pode usar esse recurso duas vezes entre descansos longos a partir do 13º nível e três vezes entre descansos longos a partir do 17º nível.",
   },
-]
+];
 
 const champion: DnD5eSubClass = {
   name: "Campeão",
@@ -121,9 +121,10 @@ const champion: DnD5eSubClass = {
         "No 18º nível, você atinge o auge da resistência em batalha. No início de cada um de seus turnos, você recupera pontos de vida iguais a 5 + seu modificador de Constituição, se tiver menos da metade de seus pontos de vida restantes. Você não ganha esse benefício se tiver 0 pontos de vida.",
     },
   ],
-}
+};
 
 const fighter: DnD5eClass = {
+  key: "fighter",
   name: "Guerreiro",
   description: "HP d10, Habilidade For ou Des, TR For e Con",
   features,
@@ -181,9 +182,9 @@ const fighter: DnD5eClass = {
       ],
     ],
   },
-}
+};
 
-export default fighter
+export default fighter;
 
 /*
 Analise o texto a seguir e gere um arquivo json para cada paragrafo traduzido seguindo este schema: {

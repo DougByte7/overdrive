@@ -1,83 +1,53 @@
-// import useRouteGuard from "@/hooks/routeGuard"
-// import { LoadingOverlay } from "@mantine/core"
-import HomeComponent from "@/components/home"
-import races from "@/assets/dnd/5e/races"
-import classes from "@/assets/dnd/5e/classes"
-import { CharacterForm } from "@/components/home/character-builder/interfaces"
+import HomeComponent from "@/components/home";
+import races from "@/assets/dnd/5e/races";
+import useCharacter from "@/hooks/useCharacter";
+import { useEffect } from "react";
+import { CharacterSheetSchema } from "@/assets/dnd/5e/utils/schema";
+import { parse } from "valibot";
 
 export default function Home() {
-  // const authStatus = useRouteGuard()
-  // if (authStatus !== "authenticated") return <LoadingOverlay visible />
+  const campaigns: unknown[] = [];
 
-  const campaigns: unknown[] = []
-  // [
-  //   {
-  //     id: "1",
-  //     limit: 4,
-  //     imgSrc:
-  //       "https://images.ctfassets.net/swt2dsco9mfe/5ufckdRJoL1Nh1XJv6clTt/1e8faa90bb0cfef53e3e5dbefc54b661/cos-rp.jpg",
-  //     title: "Maldição de Strahd",
-  //     description: "Estamos utilizando o D&D 5e, venha participar!",
-  //     players: [
-  //       { imgSrc: "", name: "test1" },
-  //       { imgSrc: "", name: "test2" },
-  //       { imgSrc: "", name: "test3" },
-  //     ],
-  //   },
-  //   {
-  //     id: "2",
-  //     limit: 4,
-  //     imgSrc:
-  //       "https://images.ctfassets.net/swt2dsco9mfe/2vBTubJNP0ZXwhKVZBHG9g/31300a00a34dd561c2e9e67da6a69476/1920x1342-ebberon.jpg?q=70",
-  //     title: "Rising from the Last War",
-  //     description:
-  //       "Explore Sharn, uma cidade de arranha-céus, aeronaves e intrigas noir",
-  //     players: [
-  //       { imgSrc: "", name: "test4" },
-  //       { imgSrc: "", name: "test5" },
-  //       { imgSrc: "", name: "test6" },
-  //     ],
-  //   },
-  // ]
+  const {
+    characters: storedCharacters,
+    addCharacter,
+    clearCharacters,
+  } = useCharacter();
 
-  let storedCharacters = JSON.parse(
-    localStorage.getItem("characters") ?? "[]"
-  ) as any[]
+  useEffect(() => {
+    if (!storedCharacters?.length) return;
 
-  if (localStorage.getItem("characters")) {
-    const newStore = storedCharacters
-      .filter((c) => c.classes)
-      .map((s) => {
-        s.preparedSpells ??= []
-
-        return typeof s.classes[0] === "string"
-          ? {
-              ...s,
-              classes: s.classes.map((c: any) => ({ name: c, level: 1 })),
-            }
-          : s
-      })
-
-    localStorage.setItem("characters", JSON.stringify(newStore))
-    storedCharacters = newStore
-  }
+    try {
+      storedCharacters.forEach((data) => {
+        parse(CharacterSheetSchema, data);
+      });
+    } catch (e) {
+      console.error(e);
+      clearCharacters();
+    }
+  }, [storedCharacters]);
 
   /**
    * @todo Create a generic interface for every system
    */
-  const characters = storedCharacters.map(
-    (character: CharacterForm, i: number) => {
+  const characters =
+    storedCharacters?.map((character) => {
       return {
-        id: i,
+        id: character.id,
         campaignName: `${races[character.race!].name}, ${character.classes
-          ?.map((c) => classes[c?.name].name)
+          ?.map((c) => c.name)
           .join(" / ")}.`,
         campaignId: "1",
         name: character.name,
         imgSrc: character.picture,
-      }
-    }
-  )
+      };
+    }) ?? [];
 
-  return <HomeComponent campaigns={campaigns} characters={characters} />
+  return (
+    <HomeComponent
+      campaigns={campaigns}
+      characters={characters}
+      setCharacters={addCharacter}
+    />
+  );
 }

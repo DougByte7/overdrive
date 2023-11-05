@@ -1,21 +1,19 @@
-import races from "@/assets/dnd/5e/races"
-import { Stack, Box, Title, Text, Select, Code } from "@mantine/core"
-import { useAtom } from "jotai"
-import { type CSSProperties, type ReactNode, useMemo } from "react"
-import { characterFormAton } from "../../state"
-import classes, { type Skill } from "@/assets/dnd/5e/classes"
+import races from "@/assets/dnd/5e/races";
+import { Stack, Box, Title, Text, Select, Code } from "@mantine/core";
+import { useAtom } from "jotai";
+import { type CSSProperties, type ReactNode, useMemo } from "react";
+import { characterFormAton } from "../../state";
+import classes, { type Skill } from "@/assets/dnd/5e/classes";
 
 interface FeaturesSelectionProps {
-  styles: CSSProperties
+  styles: CSSProperties;
 }
 export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
-  const [form, setForm] = useAtom(characterFormAton)
+  const [form, setForm] = useAtom(characterFormAton);
 
   const raceTraits = useMemo(() => {
     return races[form.race!].traits.reduce((acc, trait) => {
-      if (!trait.options) return acc
-
-      console.log("trait.options", trait.options)
+      if (!trait.options) return acc;
 
       return [
         ...acc,
@@ -25,14 +23,14 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
           data={trait.options}
           onChange={(val) =>
             setForm((f) => {
-              f.traits[trait.name] = val!
-              return { ...f }
+              f.traits[trait.name] = val!;
+              return { ...f };
             })
           }
         />,
-      ]
-    }, [] as ReactNode[])
-  }, [form])
+      ];
+    }, [] as ReactNode[]);
+  }, [form]);
 
   const classFeatures = useMemo(() => {
     return classes[form.classes[0].name!].features.reduce((acc, feature) => {
@@ -41,9 +39,8 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
         (typeof feature.level === "number" && feature.level > 1) ||
         !feature.options
       )
-        return acc
+        return acc;
 
-      console.log("feature.options", feature.options)
       return [
         ...acc,
         <>
@@ -53,8 +50,8 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
             data={feature.options}
             onChange={(val) =>
               setForm((f) => {
-                f.features[feature.name] = val!
-                return { ...f }
+                f.features[feature.name] = val!;
+                return { ...f };
               })
             }
           />
@@ -62,16 +59,16 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
             <Code>{feature.misc?.[feature.name]}</Code>
           )}
         </>,
-      ]
-    }, [] as ReactNode[])
-  }, [form])
+      ];
+    }, [] as ReactNode[]);
+  }, [form]);
 
   /**
    * @todo filter proficiencies from background
    */
   const proficiencies = useMemo(() => {
-    const { skills } = classes[form.classes[0].name].proficiencies
-    const options = []
+    const { skills } = classes[form.classes[0].name].proficiencies;
+    const options = [];
     for (let i = 0; i < skills.amount; i++) {
       options.push(
         <Select
@@ -81,19 +78,19 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
           data={skills.options.filter(
             (op) =>
               form.proficiencies[i] === op.value ||
-              !form.proficiencies.includes(op.value)
+              !form.proficiencies.includes(op.value),
           )}
           onChange={(val) =>
             setForm((f) => {
-              f.proficiencies[i] = val as Skill
-              return { ...f }
+              f.proficiencies[i] = val as Skill;
+              return { ...f };
             })
           }
-        />
-      )
+        />,
+      );
     }
-    return options
-  }, [form])
+    return options;
+  }, [form]);
 
   return (
     <Stack style={styles} gap="md" mih="calc(100% - 170px)">
@@ -108,5 +105,5 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
         {proficiencies}
       </Stack>
     </Stack>
-  )
+  );
 }

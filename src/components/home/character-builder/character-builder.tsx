@@ -1,4 +1,5 @@
-import { css } from "@emotion/react"
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import {
   ActionIcon,
   Title,
@@ -10,32 +11,36 @@ import {
   Transition,
   BackgroundImage,
   Card,
-} from "@mantine/core"
-import { IconChevronLeft } from "@tabler/icons-react"
-import { useState } from "react"
-import races from "@/assets/dnd/5e/races"
-import classes from "@/assets/dnd/5e/classes"
-import { useAtom } from "jotai"
+} from "@mantine/core";
+import { IconChevronLeft } from "@tabler/icons-react";
+import { useState } from "react";
+import races from "@/assets/dnd/5e/races";
+import classes from "@/assets/dnd/5e/classes";
+import { useAtom } from "jotai";
 import {
   attrMethodAtom,
   avatarPreviewUrlAton,
   characterFormAton,
   pointBuyAtom,
-} from "./state"
-import CharacterDescription from "./components/5e/character-description"
-import RaceSelection from "./components/5e/race-selection"
-import ClassSelection from "./components/5e/class-selection"
-import AttributeMethod from "./components/5e/attribute-method"
-import AttributeSelection from "./components/5e/attribute-selection"
-import ReviewOptions from "./components/5e/review-options"
-import FeaturesSelection from "./components/5e/features-selection"
-import ItemsSelection from "./components/5e/item-selection"
-import SpellSelection from "./components/5e/spell-selection"
-import { notifications } from "@mantine/notifications"
-import { captureException } from "@sentry/nextjs"
+} from "./state";
+import CharacterDescription from "./components/5e/character-description";
+import RaceSelection from "./components/5e/race-selection";
+import ClassSelection from "./components/5e/class-selection";
+import AttributeMethod from "./components/5e/attribute-method";
+import AttributeSelection from "./components/5e/attribute-selection";
+import ReviewOptions from "./components/5e/review-options";
+import FeaturesSelection from "./components/5e/features-selection";
+import ItemsSelection from "./components/5e/item-selection";
+import SpellSelection from "./components/5e/spell-selection";
+import { notifications } from "@mantine/notifications";
+import { captureException } from "@sentry/nextjs";
+import getModifier from "@/assets/dnd/5e/utils/getModifier";
+import type { CharacterSheetProps } from "@/assets/dnd/5e/utils/CharacterSheet";
+import { nanoid } from "lib/nanoid";
 
 interface CharacterBuilderProps {
-  onCancel: VoidFunction
+  onCancel: VoidFunction;
+  setCharacters: (newCharacter: CharacterSheetProps<"name">) => void;
 }
 
 export enum Steps {
@@ -53,55 +58,71 @@ export enum Steps {
   CLOSE,
 }
 
-export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
-  const [form, setForm] = useAtom(characterFormAton)
-  const [attrMethod] = useAtom(attrMethodAtom)
-  const [availablePoints] = useAtom(pointBuyAtom)
-  const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton)
+export default function CharacterBuilder({
+  onCancel,
+  setCharacters,
+}: CharacterBuilderProps) {
+  const [form, setForm] = useAtom(characterFormAton);
+  const [attrMethod] = useAtom(attrMethodAtom);
+  const [availablePoints] = useAtom(pointBuyAtom);
+  const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton);
 
-  const [step, setStep] = useState(Steps.DESCRIPTION)
+  const [step, setStep] = useState(Steps.DESCRIPTION);
 
-  const { spellsKnown, cantripKnown } = classes[form.classes[0]?.name] ?? {}
-  const hasCantrips = cantripKnown?.length
+  const { spellsKnown, cantripKnown } = classes[form.classes[0]?.name] ?? {};
+  const hasCantrips = cantripKnown?.length;
   const hasSpells =
     !!spellsKnown &&
     ((typeof spellsKnown === "number" && spellsKnown !== Infinity) ||
-      (Array.isArray(spellsKnown) && !!spellsKnown[0]))
-  const shouldSkipSpellStep = !(hasCantrips || hasSpells)
+      (Array.isArray(spellsKnown) && !!spellsKnown[0]));
+  const shouldSkipSpellStep = !(hasCantrips || hasSpells);
 
-  const resetForm = () => setForm(characterFormAton.init)
+  const resetForm = () => setForm(characterFormAton.init);
 
   const handledPrev = () => {
-    const prevStep = step - 1
+    const prevStep = step - 1;
     if (prevStep === Steps.UNSET) {
-      resetForm()
-      onCancel()
+      resetForm();
+      onCancel();
     }
 
     if (step === Steps.REVIEW && shouldSkipSpellStep) {
-      setStep((step) => step - 2)
+      setStep((step) => step - 2);
     } else {
-      setStep(prevStep)
+      setStep(prevStep);
     }
-  }
+  };
   const handleNext = () => {
     if (step + 1 === Steps.FINAL) {
       try {
-        const characters = JSON.parse(
-          localStorage.getItem("characters") ?? "[]"
-        )
-        form.picture ??= `/images/fantasy/races/${form.race}.png`
+        const initialHp =
+          classes[form.classes[0].name].hp.average +
+          getModifier(form.constitution.base + form.constitution.bonus);
 
-        localStorage.setItem(
-          "characters",
-          JSON.stringify([...characters, form])
-        )
+        const newCharacter: CharacterSheetProps<"name"> = {
+          ...form,
+          id: nanoid(),
+          hp: initialHp,
+          currentHp: initialHp,
+          tempHp: 0,
+          initiative: getModifier(form.dexterity.base + form.dexterity.bonus),
+          picture: avatarPreviewUrl || `/images/fantasy/races/${form.race}.png`,
+          race: form.race!,
+          classes: form.classes,
+          strength: form.strength.base + form.strength.bonus,
+          dexterity: form.dexterity.base + form.dexterity.bonus,
+          constitution: form.constitution.base + form.constitution.bonus,
+          intelligence: form.intelligence.base + form.intelligence.bonus,
+          wisdom: form.wisdom.base + form.wisdom.bonus,
+          charisma: form.charisma.base + form.charisma.bonus,
+        };
+        setCharacters(newCharacter);
       } catch (e) {
-        captureException(e)
+        captureException(e);
         notifications.show({
           title: "Erro",
           message: "Não foi possível salvar seu personagem! Tente novamente.",
-        })
+        });
       }
     }
 
@@ -109,31 +130,31 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
       /**
        * @todo Go to character sheet on linked adventure or empty board
        */
-      resetForm()
-      onCancel()
-      location.reload()
+      resetForm();
+      onCancel();
+      location.reload();
     }
 
     if (step === Steps.ITEMS && shouldSkipSpellStep) {
-      setStep((step) => step + 2)
+      setStep((step) => step + 2);
     } else {
-      setStep((step) => step + 1)
+      setStep((step) => step + 1);
     }
-  }
+  };
 
   const isInvalidFormStep = () => {
     switch (step) {
       case Steps.DESCRIPTION: {
-        return !form.name
+        return !form.name;
       }
       case Steps.RACE: {
-        return !form.race
+        return !form.race;
       }
       case Steps.CLASS: {
-        return !form.classes.length
+        return !form.classes.length;
       }
       case Steps.ATTRIBUTE_METHOD: {
-        return !attrMethod
+        return !attrMethod;
       }
       case Steps.ATTRIBUTE: {
         return (
@@ -147,13 +168,13 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
               form.charisma.base
             )) ||
           (attrMethod === "pointbuy" && availablePoints > 0)
-        )
+        );
       }
       default: {
-        return false
+        return false;
       }
     }
-  }
+  };
 
   return (
     <Stack gap="md" h={590}>
@@ -268,5 +289,5 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
         </Button>
       </Box>
     </Stack>
-  )
+  );
 }

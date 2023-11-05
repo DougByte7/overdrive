@@ -1,4 +1,5 @@
-import { css } from "@emotion/react"
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import {
   Card,
   Modal,
@@ -7,53 +8,48 @@ import {
   Text,
   ActionIcon,
   Transition,
-} from "@mantine/core"
-import { useDebouncedState, useDisclosure } from "@mantine/hooks"
+} from "@mantine/core";
+import { useDebouncedState, useDisclosure } from "@mantine/hooks";
 //import CardCampaign from "./card-campaign"
-import CardCharacter from "./card-character"
-import SideScrollingBox from "./side-scrolling-box"
-import { IconPlus, IconSearch } from "@tabler/icons-react"
-import CharacterBuilder from "./character-builder/character-builder"
-import { ChangeEventHandler, useEffect, useState } from "react"
-import { removeDiacritics } from "@/utils/removeDiacritics"
+import CardCharacter from "./card-character";
+import SideScrollingBox from "./side-scrolling-box";
+import { IconPlus, IconSearch } from "@tabler/icons-react";
+import CharacterBuilder from "./character-builder/character-builder";
+import { type ChangeEventHandler, useEffect, useState } from "react";
+import { removeDiacritics } from "@/utils/removeDiacritics";
+import type { CharacterSheetProps } from "@/assets/dnd/5e/utils/CharacterSheet";
 
 interface HomeComponentProps {
-  campaigns: any[]
-  characters: any[]
+  campaigns: any[];
+  characters: any[];
+  setCharacters: (newCharacter: CharacterSheetProps<"name">) => void;
 }
 
 export default function HomeComponent({
   //  campaigns,
   characters,
+  setCharacters,
 }: HomeComponentProps) {
-  const [opened, { open, close }] = useDisclosure(false)
-  const [search, setSearch] = useDebouncedState("", 200)
-  const [filteredCharacters, setFilteredCharacters] = useState(characters)
-
-  // const handleNewBoard = () => {
-  //   notifications.show({
-  //     title: "Vish :/",
-  //     message: "Desculpe, mas essa função ainda está em desenvolvimento.",
-  //     color: "red",
-  //   })
-  // }
+  const [opened, { open, close }] = useDisclosure(false);
+  const [search, setSearch] = useDebouncedState("", 200);
+  const [filteredCharacters, setFilteredCharacters] = useState(characters);
 
   const handleFilter: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!characters.length) return
-    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()))
-  }
+    if (!characters.length) return;
+    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()));
+  };
 
   useEffect(() => {
-    if (!search) return setFilteredCharacters(characters)
+    if (!search) return setFilteredCharacters(characters);
 
     setFilteredCharacters(
       characters.filter(
         (char) =>
           removeDiacritics(char.name.toLowerCase()).includes(search) ||
-          removeDiacritics(char.campaignName.toLowerCase()).includes(search)
-      )
-    )
-  }, [search])
+          removeDiacritics(char.campaignName.toLowerCase()).includes(search),
+      ),
+    );
+  }, [search, characters]);
 
   return (
     <>
@@ -178,20 +174,22 @@ export default function HomeComponent({
                 </ActionIcon>
               </Card>
             )}
-            {filteredCharacters.map((character, i) => (
-              <Transition key={i} mounted={true} transition="fade">
-                {(styles) => (
-                  <CardCharacter
-                    style={styles}
-                    imgSrc={character.imgSrc}
-                    name={character.name}
-                    campaignName={character.campaignName}
-                    campaignId={character.campaignId}
-                    id={character.id ?? i}
-                  />
-                )}
-              </Transition>
-            ))}
+            {filteredCharacters.map((character, i) => {
+              return (
+                <Transition key={i} mounted={true} transition="fade">
+                  {(styles) => (
+                    <CardCharacter
+                      style={styles}
+                      imgSrc={character.imgSrc}
+                      name={character.name}
+                      campaignName={character.campaignName}
+                      campaignId={character.campaignId}
+                      id={character.id ?? i}
+                    />
+                  )}
+                </Transition>
+              );
+            })}
           </SideScrollingBox>
         </div>
       </main>
@@ -209,8 +207,8 @@ export default function HomeComponent({
         centered
         withCloseButton={false}
       >
-        <CharacterBuilder onCancel={close} />
+        <CharacterBuilder onCancel={close} setCharacters={setCharacters} />
       </Modal>
     </>
-  )
+  );
 }

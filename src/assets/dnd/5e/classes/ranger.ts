@@ -1,4 +1,4 @@
-import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces"
+import type { DnD5eFeature, DnD5eClass, DnD5eSubClass } from "./interfaces";
 
 const features: DnD5eFeature[] = [
   {
@@ -130,7 +130,7 @@ const features: DnD5eFeature[] = [
     description:
       "Ao atingir o 20º nível, você se torna um caçador incomparável de seus inimigos. Uma vez em cada um de seus turnos, você pode adicionar seu modificador de Sabedoria ao rolagem de ataque ou dano de um ataque que você faz contra um de seus inimigos favoritos. Você pode escolher usar esta característica antes ou depois da rolagem, mas antes de quaisquer efeitos da rolagem serem aplicados.",
   },
-]
+];
 
 const hunter: DnD5eSubClass = {
   name: "Caçador",
@@ -233,9 +233,10 @@ const hunter: DnD5eSubClass = {
       },
     },
   ],
-}
+};
 
 const ranger: DnD5eClass = {
+  key: "ranger",
   name: "Patrulheiro",
   description: "HP d10, Habilidade Des e Sab, TR For e Des",
   features,
@@ -303,9 +304,9 @@ const ranger: DnD5eClass = {
       [{ index: "quiver", amount: 1 }],
     ],
   },
-}
+};
 
-export default ranger
+export default ranger;
 
 /*
 Analise o texto a seguir e gere um arquivo json para cada paragrafo traduzido seguindo este schema: {
