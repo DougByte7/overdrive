@@ -1,4 +1,4 @@
-import type { DnD5eRace, DnD5eTrait } from "./interfaces"
+import type { DnD5eRace, DnD5eTrait } from "./interfaces";
 
 const traits: DnD5eTrait[] = [
   {
@@ -31,6 +31,7 @@ const traits: DnD5eTrait[] = [
     description: [
       "Você tem ancestralidade dracônica. Escolha um tipo de dragão da tabela de Ancestrais Dracônicos. Sua Arma de Sopro e resistência a danos são determinados pelo tipo de dragão, conforme mostrado na tabela.",
       "| Dragão   | Tipo de dano | Arma de Sopro                                        |",
+      "|----------|--------------|------------------------------------------------------|",
       "| Preto    | Ácido        | Linha de 1.5 por 9 metros (5 x 30 ft) (TR. Destreza) |",
       "| Azul     | Relâmpago    | Linha de 1.5 por 9 metros (5 x 30 ft) (TR. Destreza) |",
       "| Latão    | Fogo         | Linha de 1.5 por 9 metros (5 x 30 ft) (TR. Destreza) |",
@@ -110,7 +111,7 @@ const traits: DnD5eTrait[] = [
     description:
       "Você pode falar, ler e escrever Comum e Dracônico. Dracônico é considerado uma das línguas mais antigas e é frequentemente usado no estudo da magia. A linguagem soa dura para a maioria das outras criaturas e inclui numerosas consoantes duras e sibilantes.",
   },
-]
+];
 
 const dragonborn: DnD5eRace = {
   name: "Draconato",
@@ -122,6 +123,6 @@ const dragonborn: DnD5eRace = {
     charisma: 1,
     speed: 6,
   },
-}
+};
 
-export default dragonborn
+export default dragonborn;

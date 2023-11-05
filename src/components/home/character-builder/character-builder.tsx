@@ -34,11 +34,13 @@ import ItemsSelection from "./components/5e/item-selection";
 import SpellSelection from "./components/5e/spell-selection";
 import { notifications } from "@mantine/notifications";
 import { captureException } from "@sentry/nextjs";
-import { useLocalStorage } from "@mantine/hooks";
-import type { CharacterForm } from "./interfaces";
+import getModifier from "@/assets/dnd/5e/utils/getModifier";
+import type { CharacterSheetProps } from "@/assets/dnd/5e/utils/CharacterSheet";
+import { nanoid } from "lib/nanoid";
 
 interface CharacterBuilderProps {
   onCancel: VoidFunction;
+  setCharacters: (newCharacter: CharacterSheetProps<"name">) => void;
 }
 
 export enum Steps {
@@ -56,15 +58,14 @@ export enum Steps {
   CLOSE,
 }
 
-export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
+export default function CharacterBuilder({
+  onCancel,
+  setCharacters,
+}: CharacterBuilderProps) {
   const [form, setForm] = useAtom(characterFormAton);
   const [attrMethod] = useAtom(attrMethodAtom);
   const [availablePoints] = useAtom(pointBuyAtom);
   const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton);
-  const [_, setCharacters] = useLocalStorage<CharacterForm[]>({
-    key: "characters",
-    defaultValue: [],
-  });
 
   const [step, setStep] = useState(Steps.DESCRIPTION);
 
@@ -94,10 +95,28 @@ export default function CharacterBuilder({ onCancel }: CharacterBuilderProps) {
   const handleNext = () => {
     if (step + 1 === Steps.FINAL) {
       try {
-        setCharacters((prev) => {
-          form.picture ??= `/images/fantasy/races/${form.race}.png`;
-          return [...prev, form];
-        });
+        const initialHp =
+          classes[form.classes[0].name].hp.average +
+          getModifier(form.constitution.base + form.constitution.bonus);
+
+        const newCharacter: CharacterSheetProps<"name"> = {
+          ...form,
+          id: nanoid(),
+          hp: initialHp,
+          currentHp: initialHp,
+          tempHp: 0,
+          initiative: getModifier(form.dexterity.base + form.dexterity.bonus),
+          picture: avatarPreviewUrl || `/images/fantasy/races/${form.race}.png`,
+          race: form.race!,
+          classes: form.classes,
+          strength: form.strength.base + form.strength.bonus,
+          dexterity: form.dexterity.base + form.dexterity.bonus,
+          constitution: form.constitution.base + form.constitution.bonus,
+          intelligence: form.intelligence.base + form.intelligence.bonus,
+          wisdom: form.wisdom.base + form.wisdom.bonus,
+          charisma: form.charisma.base + form.charisma.bonus,
+        };
+        setCharacters(newCharacter);
       } catch (e) {
         captureException(e);
         notifications.show({

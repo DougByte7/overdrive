@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("PLANETSCALE_URL")
+  relationMode = "prisma"
+}
+
+enum Role {
+  BASIC
+  AVERAGE_DICE_ENJOYER
+  GIGA_CHAD_OVERDRIVE
+  ADMIN
+}
+
+enum Theme {
+  DARK
+  LIGHT
+}
+
+enum GameSystem {
+  SRD5
+}
+
+model User {
+  id          String          @id @default(cuid())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  name        String
+  tag         Int
+  email       String          @unique
+  role        Role            @default(BASIC)
+  preferences UserPreference?
+  characters  Character[]
+
+  @@unique([name, tag])
+  @@index([email])
+}
+
+model UserPreference {
+  user        User    @relation(fields: [userId], references: [id])
+  userId      String  @id @unique
+  emailUpdate Boolean
+  theme       Theme   @default(DARK)
+}
+
+model Character {
+  id       String     @id @default(cuid())
+  player   User       @relation(fields: [playerId], references: [id])
+  playerId String
+  system   GameSystem
+  data     Json
+
+  @@index([playerId])
+  @@index([system])
+}

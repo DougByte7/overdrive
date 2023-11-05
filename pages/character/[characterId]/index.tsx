@@ -46,29 +46,77 @@ import type {
 } from "@/assets/dnd/5e/classes/interfaces";
 import getProficiencyBonus from "@/assets/dnd/5e/utils/getProficiencyBonus";
 import CharacterPortrait from "@/components/character/components/character-portrait";
-import CharacterFooter from "@/components/character/components/footer/nav";
+import CharacterFooter from "@/components/character/components/footer/character-footer";
 import Grimoire from "@/components/character/components/grimoire";
 import { activeTabAtom, characterAtom } from "@/components/character/state";
 import type { DnD5eEquipment } from "@/assets/dnd/5e/interfaces";
-import type { CharacterForm } from "@/components/home/character-builder/interfaces";
+import { CharacterSheet } from "@/assets/dnd/5e/utils/CharacterSheet";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export default function CharacterSheet() {
-  const { characters, updateCharacter } = useCharacter();
-  const [activeTab] = useAtom(activeTabAtom);
-  const [character, setCharacter] = useAtom(characterAtom);
+export const getServerSideProps = (async ({ query }) => {
+  if (!query.characterId) {
+    return {
+      props: { notFound: true, characterId: "" },
+    };
+  }
+
+  return {
+    props: { notFound: false, characterId: query.characterId as string },
+  };
+}) satisfies GetServerSideProps<{
+  notFound: boolean;
+  characterId: string;
+}>;
+
+export default function CharacterSheetPage({
+  notFound,
+  characterId,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { getCharacter, updateCharacter } = useCharacter();
+  const [activeTab, setActiveTab] = useAtom(activeTabAtom);
+  const [sheet, setSheet] = useAtom(characterAtom);
   const router = useRouter();
 
-  const characterId = router.query.characterId ?? 0;
+  useEffect(() => {
+    if (activeTab !== "none") return;
+
+    setActiveTab("basic");
+  }, []);
 
   useEffect(() => {
-    if (!characters?.[+characterId]) return;
+    const char = getCharacter(characterId);
 
-    setCharacter(characters[+characterId]);
-  }, [characters]);
+    if (!char || sheet?.id === char.id) return;
 
-  const handleUpdateCharacter = (newCharacter: CharacterForm) => {
-    updateCharacter(+characterId, newCharacter);
-    setCharacter(newCharacter);
+    setSheet(
+      new CharacterSheet({
+        ...char,
+        classes: char.classes.map((c) => ({
+          data: classes[c.name],
+          level: c.level,
+        })),
+      }),
+    );
+  });
+
+  useEffect(() => {
+    if (!notFound) return;
+
+    router.push("/home");
+  }, [notFound]);
+
+  const handleUpdateCharacter = (newCharacter: CharacterSheet) => {
+    const char = newCharacter.toProps();
+    updateCharacter(characterId, char);
+    setSheet(
+      new CharacterSheet({
+        ...char,
+        classes: char.classes.map((c) => ({
+          data: classes[c.name],
+          level: c.level,
+        })),
+      }),
+    );
   };
 
   const attributeOptions: LabelValue<Attribute>[] = [
@@ -136,71 +184,39 @@ export default function CharacterSheet() {
     survival: "wisdom",
   };
 
-  const armor =
-    character &&
-    equipment.find(
-      (e) =>
-        e.equipment_category.index === "armor" &&
-        e.armor_category !== "Shield" &&
-        character.items
-          .filter((i) => i.equipped)
-          .map((i) => i.index)
-          .includes(e.index),
-    );
-  const shield =
-    character &&
-    equipment.find(
-      (e) =>
-        e.equipment_category.index === "armor" &&
-        e.armor_category === "Shield" &&
-        character.items
-          .filter((i) => i.equipped)
-          .map((i) => i.index)
-          .includes(e.index),
-    );
+  const items = sheet?.items ?? [];
 
-  const items = character?.items ?? [];
-
-  const hp =
-    character?.classes.reduce((acc, c) => {
-      const { average } = classes[c.name].hp;
-      return (
-        acc +
-        (average - 1) * 2 +
-        getModifier(character.constitution.total) * c.level +
-        average * (c.level - 1)
-      );
-    }, 0) ?? 0;
+  const hp = sheet?.hp ?? 0;
 
   const characterLevel =
-    character?.classes.reduce((acc, c) => acc + c.level, 0) ?? 1;
+    sheet?.classes.reduce((acc, c) => acc + c.level, 0) ?? 1;
 
   const handleChangeTempHp: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!character) return;
+    if (!sheet) return;
 
     const { value } = e.currentTarget;
-    character.tempHp = +value;
-    handleUpdateCharacter({ ...character });
+    sheet.tempHp = +value;
+    handleUpdateCharacter(sheet);
   };
 
   const handleChangeCurrentHp: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!character) return;
+    if (!sheet) return;
 
     const { value } = e.currentTarget;
-    character.currentHp = +value;
-    handleUpdateCharacter({ ...character });
+    sheet.currentHp = +value;
+    handleUpdateCharacter(sheet);
   };
 
   const handleChangeInitiative: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!character) return;
+    if (!sheet) return;
 
     const { value } = e.currentTarget;
-    character.initiative = +value;
-    handleUpdateCharacter({ ...character });
+    sheet.initiative = +value;
+    handleUpdateCharacter(sheet);
   };
 
   return (
-    character && (
+    sheet && (
       <>
         <header>
           <Group p="md" justify="space-between">
@@ -221,7 +237,7 @@ export default function CharacterSheet() {
               Personagem
             </Title>
 
-            {character.classes.reduce((acc, c) => acc + c.level, 0) < 20 && (
+            {sheet.classes.reduce((acc, c) => acc + c.level, 0) < 20 && (
               <Link href={`./${characterId}/level-up`}>
                 <Button size="xs" component="div">
                   Level Up
@@ -234,12 +250,12 @@ export default function CharacterSheet() {
           {activeTab === "basic" && (
             <>
               <CharacterPortrait
-                imgSrc={character.picture as string}
-                name={character.name}
-                label={`${races[character.race!].name}, ${character.classes
+                imgSrc={sheet.picture as string}
+                name={sheet.name}
+                label={`${races[sheet.race!].name}, ${sheet.classes
                   .map(
                     (classIndex) =>
-                      `${classes[classIndex.name].name} lv${classIndex.level}`,
+                      `${classIndex.data.name} lv${classIndex.level}`,
                   )
                   .join(", ")}.`}
               />
@@ -258,10 +274,7 @@ export default function CharacterSheet() {
                     variant="unstyled"
                     type="number"
                     min={-100}
-                    value={
-                      character.initiative ??
-                      getModifier(character.dexterity.total)
-                    }
+                    value={sheet.initiative ?? sheet.dexterity.mod}
                     max={100}
                     size="lg"
                     onChange={handleChangeInitiative}
@@ -286,13 +299,7 @@ export default function CharacterSheet() {
                       fw="bold"
                       c="var(--do_text_color_600)"
                     >
-                      {(armor?.armor_class?.base ?? 8) +
-                        Math.min(
-                          +(armor?.armor_class?.dex_bonus ?? 1) *
-                            getModifier(character.dexterity.total),
-                          armor?.armor_class?.max_bonus ?? Infinity,
-                        ) +
-                        (shield?.armor_class?.base ?? 0)}
+                      {sheet.armorClass}
                     </Text>
                   </Box>
                   <Text size="sm" fw="bold" c="var(--do_text_color_300)">
@@ -324,7 +331,7 @@ export default function CharacterSheet() {
                       variant="unstyled"
                       type="number"
                       min={-hp}
-                      value={character.currentHp ?? hp}
+                      value={sheet.currentHp ?? hp}
                       max={hp}
                       size="lg"
                       onChange={handleChangeCurrentHp}
@@ -359,7 +366,7 @@ export default function CharacterSheet() {
                       variant="unstyled"
                       type="number"
                       min={-hp}
-                      value={character.tempHp ?? 0}
+                      value={sheet.tempHp ?? 0}
                       max={hp}
                       size="lg"
                       onChange={handleChangeTempHp}
@@ -372,22 +379,24 @@ export default function CharacterSheet() {
               </Group>
               <Stack gap="xs">
                 {attributeOptions.map((attr) => {
-                  const abilityModifier = getModifier(
-                    character[attr.value].total,
+                  const abilityModifier = getModifier(sheet[attr.value].total);
+
+                  const hasProficiency = sheet.classes.some((c) =>
+                    c.data.proficiencies.savingThrows.includes(attr.value),
                   );
 
                   return (
                     <Group key={attr.value} justify="space-between">
                       <Text>{attr.label}</Text>
                       <Group gap="sm">
-                        <Badge mr="sm" variant="outline">
+                        <Badge
+                          mr="sm"
+                          variant={hasProficiency ? "dot" : "outline"}
+                          color={hasProficiency ? "brand" : "grey"}
+                        >
                           Save: {abilityModifier > 0 && "+"}
                           {abilityModifier +
-                            +character.classes.some((c) =>
-                              classes[
-                                c.name
-                              ].proficiencies.savingThrows.includes(attr.value),
-                            ) *
+                            +hasProficiency *
                               getProficiencyBonus(characterLevel)}
                         </Badge>
                         <Badge mr="sm" variant="outline">
@@ -395,7 +404,7 @@ export default function CharacterSheet() {
                           {abilityModifier}
                         </Badge>
                         <Text css={attributeNumberStyles}>
-                          {character[attr.value].total}
+                          {sheet[attr.value].total}
                         </Text>
                       </Group>
                     </Group>
@@ -412,7 +421,7 @@ export default function CharacterSheet() {
                     hyphens: auto;
                   `}
                 >
-                  {character.backstory}
+                  {sheet.backstory}
                 </Text>
               </Stack>
             </>
@@ -428,7 +437,7 @@ export default function CharacterSheet() {
           {activeTab === "skills" && (
             <Stack gap="xs">
               {skills.map((attr) => {
-                const isTrained = character.proficiencies.includes(attr.value);
+                const isTrained = sheet.proficiencies.includes(attr.value);
 
                 return (
                   <Group key={attr.value} justify="space-between">
@@ -436,9 +445,7 @@ export default function CharacterSheet() {
 
                     <Text css={attributeNumberStyles}>
                       {+isTrained * getProficiencyBonus(characterLevel) +
-                        getModifier(
-                          character[skillModifierMap[attr.value]].total,
-                        )}
+                        getModifier(sheet[skillModifierMap[attr.value]].total)}
                     </Text>
                   </Group>
                 );
@@ -457,7 +464,7 @@ export default function CharacterSheet() {
 
 interface InventoryProps {
   items: WithAmount<EquipmentIndex>[];
-  onUpdateCharacter: (newCharacter: CharacterForm) => void;
+  onUpdateCharacter: (newCharacter: CharacterSheet) => void;
 }
 function Inventory({ items, onUpdateCharacter }: InventoryProps) {
   const [character] = useAtom(characterAtom);
@@ -467,8 +474,6 @@ function Inventory({ items, onUpdateCharacter }: InventoryProps) {
   };
 
   const accordionData = useMemo(() => {
-    console.log("accordion process");
-
     const getGroupName = (category: string) => {
       switch (category) {
         case "tools":
@@ -513,9 +518,9 @@ function Inventory({ items, onUpdateCharacter }: InventoryProps) {
 
     const { items } = character;
     const index = items?.findIndex((i) => i.index === itemIndex);
-    items[index].equipped = !items[index].equipped;
+    character.items[index].equipped = !items[index].equipped;
 
-    onUpdateCharacter({ ...character, items });
+    onUpdateCharacter(character);
   };
 
   return (

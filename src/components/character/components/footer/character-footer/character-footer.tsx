@@ -1,6 +1,6 @@
-import { activeTabAtom } from "@/components/character/state"
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
+import { css } from "@emotion/react";
+import { activeTabAtom } from "@/components/character/state";
 import {
   Menu,
   Burger,
@@ -9,35 +9,36 @@ import {
   Stack,
   Divider,
   Text,
-} from "@mantine/core"
-import { useDisclosure } from "@mantine/hooks"
-import { notifications } from "@mantine/notifications"
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconUser,
   IconLogout,
   IconCrystalBall,
   IconHome,
   IconSkull,
-} from "@tabler/icons-react"
-import { useAtom } from "jotai"
-import { useRouter } from "next/router"
+  IconLogin,
+} from "@tabler/icons-react";
+import { useAtom } from "jotai";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 export default function CharacterFooter() {
-  const [activeTab, setActiveTab] = useAtom(activeTabAtom)
-  const router = useRouter()
-  const [opened, { toggle }] = useDisclosure(false)
-  const menuLabel = opened ? "Fechar menu" : "Abrir menu"
+  const [activeTab, setActiveTab] = useAtom(activeTabAtom);
+  const router = useRouter();
+  const [opened, { toggle }] = useDisclosure(false);
+  const menuLabel = opened ? "Fechar menu" : "Abrir menu";
+  const { status } = useSession();
 
   const handleSetActiveTab = (tab: typeof activeTab) => () => {
-    setActiveTab(tab)
-  }
+    setActiveTab(tab);
+    if (router.pathname.match(/(\]\/.+)/)) {
+      router.push(`/character/${router.query.characterId}`);
+    }
+  };
 
-  const handleNotImplemented = () =>
-    notifications.show({
-      title: "Falha crítica!",
-      message: "Função não implementada",
-      color: "red",
-    })
+  const handleSetAtiveTabToNone = () => setActiveTab("none");
 
   return (
     <footer css={footerStyles}>
@@ -51,41 +52,82 @@ export default function CharacterFooter() {
           />
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item
-            leftSection={<IconHome />}
-            onClick={() => router.push("/home")}
-          >
+          <Menu.Item leftSection={<IconHome />} component={Link} href="/home">
             Início
           </Menu.Item>
           <Menu.Item
             leftSection={<IconSkull />}
-            onClick={() => router.push("/monsters")}
+            component={Link}
+            href="/monsters"
           >
             Monstros
           </Menu.Item>
 
           <Menu.Divider />
-          <Menu.Label>Ações extras da página</Menu.Label>
-          <Menu.Item onClick={handleNotImplemented}>Traços raciais</Menu.Item>
-          <Menu.Item onClick={handleNotImplemented}>
+          <Menu.Label>Personagem</Menu.Label>
+          <Menu.Item
+            component={Link}
+            href={{
+              pathname: "/character/[characterId]/traits",
+              query: { characterId: router.query.characterId },
+            }}
+            onClick={handleSetAtiveTabToNone}
+          >
+            Traços raciais
+          </Menu.Item>
+          <Menu.Item
+            component={Link}
+            href={{
+              pathname: "/character/[characterId]/features",
+              query: { characterId: router.query.characterId },
+            }}
+            onClick={handleSetAtiveTabToNone}
+          >
             Características de classe
           </Menu.Item>
-          <Menu.Item onClick={handleNotImplemented}>Ações</Menu.Item>
+          <Menu.Item
+            component={Link}
+            href={{
+              pathname: "/character/[characterId]/actions",
+              query: { characterId: router.query.characterId },
+            }}
+            onClick={handleSetAtiveTabToNone}
+          >
+            Ações
+          </Menu.Item>
 
           <Menu.Divider />
           <Menu.Label>Conta</Menu.Label>
 
-          <Menu.Item leftSection={<IconUser />} onClick={handleNotImplemented}>
-            Perfil
-          </Menu.Item>
+          {status === "authenticated" ? (
+            <>
+              <Menu.Item
+                leftSection={<IconUser />}
+                component={Link}
+                href="/profile"
+              >
+                Perfil
+              </Menu.Item>
 
-          <Menu.Item
-            color="red"
-            leftSection={<IconLogout />}
-            onClick={handleNotImplemented}
-          >
-            Sair
-          </Menu.Item>
+              <Menu.Item
+                color="red"
+                leftSection={<IconLogout />}
+                component={Link}
+                href="/logout"
+              >
+                Sair
+              </Menu.Item>
+            </>
+          ) : (
+            <Menu.Item
+              color="brand"
+              leftSection={<IconLogin />}
+              component={Link}
+              href="/login"
+            >
+              Entrar
+            </Menu.Item>
+          )}
         </Menu.Dropdown>
       </Menu>
 
@@ -98,7 +140,7 @@ export default function CharacterFooter() {
                 `/icons/${
                   activeTab === "basic" ? "bold" : "linear"
                 }/user-octagon.svg`,
-                activeTab === "basic"
+                activeTab === "basic",
               )}
             />
             <Text size={"10px"}>Básico</Text>
@@ -115,7 +157,7 @@ export default function CharacterFooter() {
                 `/icons/${
                   activeTab === "inventory" ? "bold" : "linear"
                 }/archive.svg`,
-                activeTab === "inventory"
+                activeTab === "inventory",
               )}
             />
             <Text size={"10px"}>Inventário</Text>
@@ -130,7 +172,7 @@ export default function CharacterFooter() {
               aria-hidden={true}
               css={customIconStyles(
                 `/icons/${activeTab === "skills" ? "bold" : "linear"}/book.svg`,
-                activeTab === "skills"
+                activeTab === "skills",
               )}
             />
             <Text size={"10px"}>Habilidades</Text>
@@ -158,7 +200,7 @@ export default function CharacterFooter() {
         </UnstyledButton>
       </Flex>
     </footer>
-  )
+  );
 }
 
 const footerStyles = css`
@@ -169,14 +211,14 @@ const footerStyles = css`
   background: var(--do_text_color_600);
   border-top: 1px solid var(--do_color_support_light_30);
   z-index: 10;
-`
+`;
 
 const menuStyles = css`
   position: absolute;
   bottom: 32px;
   right: 50%;
   translate: calc(50% - 6px);
-`
+`;
 
 const customIconStyles = (path: string, isActive: boolean) => css`
   display: flex;
@@ -187,7 +229,7 @@ const customIconStyles = (path: string, isActive: boolean) => css`
     : "var(--do_color_support_dark_30)"};
   mask: url(${path}) no-repeat center;
   mask-size: 28px;
-`
+`;
 
 const burgerStyles = css`
   border-radius: 50%;
@@ -196,4 +238,4 @@ const burgerStyles = css`
   background: var(--do_color_primary_base);
   width: calc(1.5rem + 42px);
   height: calc(1.5rem + 42px);
-`
+`;
