@@ -1,111 +1,122 @@
-import Image from "next/image"
+import { SignUp } from "@clerk/nextjs";
+import { Stack, Title, Text, Button, Badge } from "@mantine/core";
+import { useViewportSize } from "@mantine/hooks";
+import { IconExternalLink } from "@tabler/icons-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useMemo } from "react";
 
 export default function Home() {
+  const { width } = useViewportSize();
+
   return (
-    <main className="container">
-      <div className="logo-text">
+    <main className="flex w-screen justify-center">
+      <Stack className="h-screen max-w-[550px] p-4 md:p-20" align="center">
         <Image
-          src="/images/LOGO-TEXT.svg"
-          alt="Dice Overdrive. Charge your rolls"
-          width={414}
-          height={129}
+          src="/images/icon-logo.svg"
+          alt="d10 Logo: Dice Overdrive. Charge your rolls"
+          width={100}
+          height={100}
         />
-
-        <Image
-          aria-hidden={true}
-          alt="Dice Overdrive logo"
-          src="/d10-electric.svg"
-          width={194}
-          height={222}
+        <div className="-mb-6">
+          <Title className="leading-normal" ta="center">
+            Dice Overdrive
+          </Title>
+          <Text ta="center">
+            Sua primeira vez aqui? Crie uma conta ou faça login com uma
+            existente.
+          </Text>
+        </div>
+        <SignUp
+          appearance={{
+            elements: {
+              rootBox: {
+                marginBottom: "64px",
+                width: "calc(100% - 32px)",
+              },
+              card: {
+                boxShadow: "none",
+                border: "none",
+                padding: 0,
+                width: "100%",
+                backgroundColor: "transparent",
+              },
+              header: { display: "none" },
+              socialButtonsIconButton: {
+                marginTop: "3.7rem",
+                height: "58px",
+                backgroundColor: "var(--do_color_primary_base)",
+                "&:hover": {
+                  backgroundColor: "var(--do_color_primary_dark_10)",
+                },
+              },
+              footer: { display: "none" },
+            },
+          }}
         />
-      </div>
-
-      <div className="logo">
+        <Stack className="mt-14" gap="xs">
+          <Button
+            className="w-full"
+            variant="outline"
+            component={Link}
+            href="/home"
+            onClick={() => localStorage.setItem("user:name", "guest")}
+          >
+            Entrar sem usuário
+          </Button>
+          <Text size="xs" c="var(--do_text_color_300)">
+            Seus dados serão armazenados em cache apenas neste dispositivo.
+          </Text>
+        </Stack>
         <Image
+          className="mt-auto opacity-10"
           src="/images/FULL-LOGO.svg"
           alt="d10 Logo: Dice Overdrive. Charge your rolls"
-          width={731}
-          height={301}
-          layout="fixed"
+          width={146}
+          height={60}
         />
-      </div>
-
-      <div className="banner">
-        <p className="warning">
-          Website&nbsp;Under
-          <br />
-          Construction
-        </p>
-      </div>
-
-      <style jsx>{`
-        .container {
-          background: #8100be;
-          height: 100vh;
-          width: 100%;
-          display: grid;
-          grid-template-rows: 60% 1fr;
-          grid-template-columns: 100%;
-          justify-items: center;
-          align-items: center;
-        }
-
-        .logo-text {
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-          gap: 32px;
-        }
-
-        .logo {
-          display: none;
-        }
-
-        .banner {
-          align-self: start;
-          display: flex;
-          align-items: center;
-          height: 207px;
-          width: 100%;
-          background: repeating-linear-gradient(
-            -49deg,
-            white,
-            white 20px,
-            #8100be 20px,
-            #8100be 40px
-          );
-        }
-
-        .warning {
-          color: #8100be;
-          width: 100%;
-          background: white;
-          padding: 24px 0;
-          text-align: center;
-          text-transform: uppercase;
-          font-size: 2.5rem;
-          font-family: Inter, sans-serif;
-          margin: 0;
-        }
-
-        @media screen and (min-width: 750px) {
-          .container {
-            grid-template-rows: 50% 1fr;
-          }
-
-          .logo-text {
-            display: none;
-          }
-
-          .logo {
-            display: initial;
-          }
-
-          .warning {
-            font-size: 3rem;
-          }
-        }
-      `}</style>
+      </Stack>
+      {width >= 768 && <Cover />}
     </main>
-  )
+  );
+}
+
+function Cover() {
+  const sources = [
+    {
+      imgUrl:
+        "https://cdnb.artstation.com/p/assets/images/images/039/578/335/4k/roman-kuteynikov-magia-lunare-particular.jpg?1626301007",
+      artist: "Roman Kuteynikov",
+      portfolio: "https://www.artstation.com/rroland",
+    },
+    {
+      imgUrl:
+        "https://cdnb.artstation.com/p/assets/images/images/024/991/071/4k/graey-erb-dm-screen-sprex.jpg?1584212551",
+      artist: "Graey Erb",
+      portfolio: "https://www.artstation.com/graeyerb",
+    },
+  ];
+
+  const src = useMemo(
+    () => sources[Math.floor(Math.random() * sources.length)],
+    [],
+  );
+
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        style={{ backgroundImage: `url(${src.imgUrl})` }}
+        className="h-screen w-full bg-cover bg-center"
+      />
+      <a
+        className="fixed bottom-8 right-8 flex items-center gap-3 rounded-s border border-[#202123] bg-[#17151C] px-3 py-2 text-sm text-[#f2f2f2]"
+        href={src.portfolio}
+        target="_blank"
+      >
+        <IconExternalLink color="#13AFF0" size={20} />
+        {src.artist}
+      </a>
+    </>
+  );
 }

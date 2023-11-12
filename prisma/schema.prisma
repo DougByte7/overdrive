@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider     = "mysql"
-  url          = env("PLANETSCALE_URL")
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -32,13 +32,14 @@ model User {
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   name        String
-  tag         Int
+  nameTag     Int
   email       String          @unique
+  imageUrl    String
   role        Role            @default(BASIC)
   preferences UserPreference?
   characters  Character[]
 
-  @@unique([name, tag])
+  @@unique([name, nameTag])
   @@index([email])
 }
 
