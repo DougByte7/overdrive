@@ -1,5 +1,5 @@
-import { SignUp } from "@clerk/nextjs";
-import { Stack, Title, Text, Button, Badge } from "@mantine/core";
+import {  SignUp } from "@clerk/nextjs";
+import { Stack, Title, Text, Button,  } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { IconExternalLink } from "@tabler/icons-react";
 import Image from "next/image";
@@ -11,28 +11,28 @@ export default function Home() {
 
   return (
     <main className="flex w-screen justify-center">
-      <Stack className="h-screen max-w-[550px] p-4 md:p-20" align="center">
+      <Stack className="h-screen max-w-[550px] px-6 py-12 md:p-20" align="center">
         <Image
           src="/images/icon-logo.svg"
           alt="d10 Logo: Dice Overdrive. Charge your rolls"
           width={100}
           height={100}
         />
-        <div className="-mb-6">
-          <Title className="leading-normal" ta="center">
+        <div className="mb-12">
+          <Title className="leading-normal" ta="center" c="#F2F2F2" size="24px">
             Dice Overdrive
           </Title>
-          <Text ta="center">
+          <Text  className="leading-normal" ta="center">
             Sua primeira vez aqui? Crie uma conta ou faça login com uma
             existente.
           </Text>
+          
         </div>
         <SignUp
           appearance={{
             elements: {
               rootBox: {
-                marginBottom: "64px",
-                width: "calc(100% - 32px)",
+                width: "100%",
               },
               card: {
                 boxShadow: "none",
@@ -42,32 +42,35 @@ export default function Home() {
                 backgroundColor: "transparent",
               },
               header: { display: "none" },
-              socialButtonsIconButton: {
-                marginTop: "3.7rem",
-                height: "58px",
-                backgroundColor: "var(--do_color_primary_base)",
+              socialButtons:{
+                display:"flex", justifyContent:"space-between", gap: "12px"
+              },
+              socialButtonsIconButton: {                
+                borderRadius:4,
+                height: "56px",
+                width: "100%",
+                backgroundColor: "white",
+
                 "&:hover": {
-                  backgroundColor: "var(--do_color_primary_dark_10)",
+                  backgroundColor: "white",
+                  opacity: .80,
                 },
               },
               footer: { display: "none" },
             },
           }}
         />
-        <Stack className="mt-14" gap="xs">
+        
           <Button
-            className="w-full"
-            variant="outline"
+            className="mt-3 w-full h-12 text-[#c8c8c8] bg-[#2A2F37] font-normal text-base"            
             component={Link}
             href="/home"
             onClick={() => localStorage.setItem("user:name", "guest")}
           >
             Entrar sem usuário
           </Button>
-          <Text size="xs" c="var(--do_text_color_300)">
-            Seus dados serão armazenados em cache apenas neste dispositivo.
-          </Text>
-        </Stack>
+          
+        
         <Image
           className="mt-auto opacity-10"
           src="/images/FULL-LOGO.svg"
