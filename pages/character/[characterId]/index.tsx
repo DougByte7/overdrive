@@ -241,13 +241,23 @@ export default function CharacterSheetPage({
               Personagem
             </Title>
 
-            {sheet.classes.reduce((acc, c) => acc + c.level, 0) < 20 && (
-              <Link href={`./${characterId}/level-up`}>
-                <Button size="xs" component="div">
-                  Level Up
-                </Button>
-              </Link>
-            )}
+            <Group gap="xs">
+              {!isMobile && (
+                <>
+                  <Link href={`./${characterId}/traits`}>Traços raciais</Link>
+                  <Link href={`./${characterId}/features`}>
+                    Características de classe
+                  </Link>
+                </>
+              )}
+              {sheet.classes.reduce((acc, c) => acc + c.level, 0) < 20 && (
+                <Link href={`./${characterId}/level-up`}>
+                  <Button size="xs" component="div">
+                    Level Up
+                  </Button>
+                </Link>
+              )}
+            </Group>
           </Group>
         </header>
         <main className="flex w-full justify-center gap-4">
@@ -432,7 +442,7 @@ export default function CharacterSheetPage({
           )}
 
           {(activeTab === "skills" || !isMobile) && (
-            <Stack gap="xs">
+            <Stack className="min-w-[330px]" gap="xs">
               {skills.map((attr) => {
                 const isTrained = sheet.proficiencies.includes(attr.value);
 

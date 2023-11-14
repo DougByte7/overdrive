@@ -13,7 +13,17 @@ module.exports = withSentryConfig(
   withPWA({
     i18n: {
       locales: ["en-US", "pt-BR"],
-      defaultLocale: "pt-BR",
+      defaultLocale: "en-US",
+      domains: [
+        {
+          domain: "en.diceoverdrive.com",
+          defaultLocale: "en-US",
+        },
+        {
+          domain: "br.diceoverdrive.com",
+          defaultLocale: "pt-BR",
+        },
+      ],
     },
     reactStrictMode: true,
   }),

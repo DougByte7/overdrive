@@ -49,7 +49,6 @@ const selectedClassAtom = atom<DnD5eClassName | null>(null);
 
 const StackContainer = ({
   styles,
-
   children,
 }: WithStylesProp & PropsWithChildren) => (
   <Box style={styles}>
@@ -540,7 +539,7 @@ export default function LevelUp() {
     <>
       <SpellDetails verticalOffset={0} h="95%" />
 
-      <Stack p="sm">
+      <Stack className="mx-auto max-w-[550px]" p="sm">
         <Title>
           {selectedClass && level ? `Nível ${level + 1}` : "Novo nível"}
         </Title>

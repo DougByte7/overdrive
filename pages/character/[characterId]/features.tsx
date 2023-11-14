@@ -3,7 +3,9 @@ import { CharacterSheet } from "@/assets/dnd/5e/utils/CharacterSheet";
 import CharacterFooter from "@/components/character/components/footer/character-footer";
 import { characterAtom } from "@/components/character/state";
 import useCharacter from "@/hooks/useCharacter";
+import breakpoints from "@/utils/breakpoints";
 import { Stack, Text, Spoiler, Space } from "@mantine/core";
+import { useViewportSize } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { Fragment, useEffect } from "react";
@@ -14,6 +16,8 @@ export default function Features() {
   const [sheet, setSheet] = useAtom(characterAtom);
   const router = useRouter();
   const { getCharacter } = useCharacter();
+  const { width } = useViewportSize();
+  const isMobile = width < breakpoints.md;
 
   const { characterId } = router.query;
 
@@ -36,7 +40,7 @@ export default function Features() {
   return (
     sheet && (
       <>
-        <Stack p="md" pb={120}>
+        <Stack className="mx-auto max-w-[550px]" p="md" pb={120}>
           {sheet.classes.map(({ data, level }) => {
             return (
               <Stack key={data.key}>
@@ -99,7 +103,7 @@ export default function Features() {
             );
           })}
         </Stack>
-        <CharacterFooter />
+        {isMobile && <CharacterFooter />}
       </>
     )
   );
