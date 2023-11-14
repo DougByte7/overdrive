@@ -14,16 +14,7 @@ module.exports = withSentryConfig(
     i18n: {
       locales: ["en-US", "pt-BR"],
       defaultLocale: "en-US",
-      domains: [
-        {
-          domain: "en.diceoverdrive.com",
-          defaultLocale: "en-US",
-        },
-        {
-          domain: "br.diceoverdrive.com",
-          defaultLocale: "pt-BR",
-        },
-      ],
+      localeDetection: false,
     },
     reactStrictMode: true,
   }),
