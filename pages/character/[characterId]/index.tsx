@@ -52,6 +52,8 @@ import { activeTabAtom, characterAtom } from "@/components/character/state";
 import type { DnD5eEquipment } from "@/assets/dnd/5e/interfaces";
 import { CharacterSheet } from "@/assets/dnd/5e/utils/CharacterSheet";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useViewportSize } from "@mantine/hooks";
+import breakpoints from "@/utils/breakpoints";
 
 export const getServerSideProps = (async ({ query }) => {
   if (!query.characterId) {
@@ -76,6 +78,8 @@ export default function CharacterSheetPage({
   const [activeTab, setActiveTab] = useAtom(activeTabAtom);
   const [sheet, setSheet] = useAtom(characterAtom);
   const router = useRouter();
+  const { width } = useViewportSize();
+  const isMobile = width < breakpoints.md;
 
   useEffect(() => {
     if (activeTab !== "none") return;
@@ -246,9 +250,9 @@ export default function CharacterSheetPage({
             )}
           </Group>
         </header>
-        <main css={mainStyles}>
+        <main className="flex w-full justify-center gap-4">
           {activeTab === "basic" && (
-            <>
+            <Stack className="min-w-[350px] max-w-[450px] p-4">
               <CharacterPortrait
                 imgSrc={sheet.picture as string}
                 name={sheet.name}
@@ -424,17 +428,10 @@ export default function CharacterSheetPage({
                   {sheet.backstory}
                 </Text>
               </Stack>
-            </>
+            </Stack>
           )}
 
-          {activeTab === "inventory" && (
-            <Inventory
-              items={items}
-              onUpdateCharacter={handleUpdateCharacter}
-            />
-          )}
-
-          {activeTab === "skills" && (
+          {(activeTab === "skills" || !isMobile) && (
             <Stack gap="xs">
               {skills.map((attr) => {
                 const isTrained = sheet.proficiencies.includes(attr.value);
@@ -453,10 +450,17 @@ export default function CharacterSheetPage({
             </Stack>
           )}
 
-          {activeTab === "magic" && <Grimoire />}
+          {(activeTab === "inventory" || !isMobile) && (
+            <Inventory
+              items={items}
+              onUpdateCharacter={handleUpdateCharacter}
+            />
+          )}
+
+          {(activeTab === "magic" || !isMobile) && <Grimoire />}
         </main>
 
-        <CharacterFooter />
+        {isMobile && <CharacterFooter />}
       </>
     )
   );
@@ -526,7 +530,7 @@ function Inventory({ items, onUpdateCharacter }: InventoryProps) {
   return (
     <>
       <Accordion
-        w="100vw"
+        className="w-full max-w-[450px]"
         defaultValue={accordionData.map((data) => data.group)}
         multiple
       >
@@ -725,22 +729,6 @@ const pageTitleStyles = css`
   position: absolute;
   left: 50%;
   translate: -50%;
-`;
-
-const mainStyles = css`
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding-inline: 16px;
-  padding-bottom: 102px;
-
-  @media screen and (min-width: 720px) {
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-    grid-auto-flow: column;
-    justify-content: start;
-  }
 `;
 
 const iconTextStyles = css`

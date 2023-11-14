@@ -22,14 +22,16 @@ import {
 import { useAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { useClerk, useUser } from "@clerk/nextjs";
 
 export default function CharacterFooter() {
   const [activeTab, setActiveTab] = useAtom(activeTabAtom);
   const router = useRouter();
   const [opened, { toggle }] = useDisclosure(false);
   const menuLabel = opened ? "Fechar menu" : "Abrir menu";
-  const { status } = useSession();
+  const { isSignedIn } = useUser()
+  const { signOut } = useClerk();
+
 
   const handleSetActiveTab = (tab: typeof activeTab) => () => {
     setActiveTab(tab);
@@ -89,7 +91,7 @@ export default function CharacterFooter() {
           <Menu.Divider />
           <Menu.Label>Conta</Menu.Label>
 
-          {status === "authenticated" ? (
+          {isSignedIn ? (
             <>
               <Menu.Item
                 leftSection={<IconUser />}
@@ -102,10 +104,10 @@ export default function CharacterFooter() {
               <Menu.Item
                 color="red"
                 leftSection={<IconLogout />}
-                component={Link}
-                href="/logout"
               >
-                Sair
+                <UnstyledButton onClick={() => signOut(() => router.push("/"))}>
+                  Sair
+                </UnstyledButton>
               </Menu.Item>
             </>
           ) : (
@@ -113,7 +115,7 @@ export default function CharacterFooter() {
               color="brand"
               leftSection={<IconLogin />}
               component={Link}
-              href="/login"
+              href="/"
             >
               Entrar
             </Menu.Item>
@@ -127,8 +129,7 @@ export default function CharacterFooter() {
             <i
               aria-hidden={true}
               css={customIconStyles(
-                `/icons/${
-                  activeTab === "basic" ? "bold" : "linear"
+                `/icons/${activeTab === "basic" ? "bold" : "linear"
                 }/user-octagon.svg`,
                 activeTab === "basic",
               )}
@@ -144,8 +145,7 @@ export default function CharacterFooter() {
             <i
               aria-hidden={true}
               css={customIconStyles(
-                `/icons/${
-                  activeTab === "inventory" ? "bold" : "linear"
+                `/icons/${activeTab === "inventory" ? "bold" : "linear"
                 }/archive.svg`,
                 activeTab === "inventory",
               )}

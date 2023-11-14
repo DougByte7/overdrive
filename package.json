@@ -7,9 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
-    "build-storybook": "build-storybook",
-    "chromatic": "npx chromatic --project-token=uir5a7azo0f"
+    "test": "jest"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.27.0",

@@ -11,9 +11,10 @@ import {
   Transition,
   BackgroundImage,
   Card,
+  Paper,
 } from "@mantine/core";
 import { IconChevronLeft } from "@tabler/icons-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import races from "@/assets/dnd/5e/races";
 import classes from "@/assets/dnd/5e/classes";
 import { useAtom } from "jotai";
@@ -37,11 +38,8 @@ import { captureException } from "@sentry/nextjs";
 import getModifier from "@/assets/dnd/5e/utils/getModifier";
 import type { CharacterSheetProps } from "@/assets/dnd/5e/utils/CharacterSheet";
 import { nanoid } from "lib/nanoid";
-
-interface CharacterBuilderProps {
-  onCancel: VoidFunction;
-  setCharacters: (newCharacter: CharacterSheetProps<"name">) => void;
-}
+import { useRouter } from "next/navigation";
+import useCharacter from "@/hooks/useCharacter";
 
 export enum Steps {
   UNSET,
@@ -58,16 +56,16 @@ export enum Steps {
   CLOSE,
 }
 
-export default function CharacterBuilder({
-  onCancel,
-  setCharacters,
-}: CharacterBuilderProps) {
+export default function CharacterBuilder() {
   const [form, setForm] = useAtom(characterFormAton);
   const [attrMethod] = useAtom(attrMethodAtom);
   const [availablePoints] = useAtom(pointBuyAtom);
   const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton);
+  const router = useRouter();
+  const { addCharacter } = useCharacter();
 
   const [step, setStep] = useState(Steps.DESCRIPTION);
+  const id = useMemo(nanoid, []);
 
   const { spellsKnown, cantripKnown } = classes[form.classes[0]?.name] ?? {};
   const hasCantrips = cantripKnown?.length;
@@ -83,7 +81,6 @@ export default function CharacterBuilder({
     const prevStep = step - 1;
     if (prevStep === Steps.UNSET) {
       resetForm();
-      onCancel();
     }
 
     if (step === Steps.REVIEW && shouldSkipSpellStep) {
@@ -101,7 +98,7 @@ export default function CharacterBuilder({
 
         const newCharacter: CharacterSheetProps<"name"> = {
           ...form,
-          id: nanoid(),
+          id,
           hp: initialHp,
           currentHp: initialHp,
           tempHp: 0,
@@ -116,7 +113,7 @@ export default function CharacterBuilder({
           wisdom: form.wisdom.base + form.wisdom.bonus,
           charisma: form.charisma.base + form.charisma.bonus,
         };
-        setCharacters(newCharacter);
+        addCharacter(newCharacter);
       } catch (e) {
         captureException(e);
         notifications.show({
@@ -131,8 +128,8 @@ export default function CharacterBuilder({
        * @todo Go to character sheet on linked adventure or empty board
        */
       resetForm();
-      onCancel();
-      location.reload();
+
+      router.push(`/character/${id}`);
     }
 
     if (step === Steps.ITEMS && shouldSkipSpellStep) {
@@ -177,117 +174,113 @@ export default function CharacterBuilder({
   };
 
   return (
-    <Stack gap="md" h={590}>
-      <ActionIcon
-        variant="light"
-        aria-label={step - 1 === 0 ? "Cancelar" : "Voltar etapa"}
-        onClick={handledPrev}
-      >
-        <IconChevronLeft size="1rem" color="var(--do_color_primary_base)" />
-      </ActionIcon>
+    <Paper className="m-6 mx-auto max-w-[550px] md:p-4" shadow="xs">
+      <Stack className="w-full p-4" gap="md">
+        <Transition mounted={step === Steps.DESCRIPTION} transition="fade">
+          {(styles) => <CharacterDescription styles={styles} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.DESCRIPTION} transition="fade">
-        {(styles) => <CharacterDescription styles={styles} />}
-      </Transition>
+        <Transition mounted={step === Steps.RACE} transition="fade">
+          {(styles) => <RaceSelection styles={styles} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.RACE} transition="fade">
-        {(styles) => <RaceSelection styles={styles} />}
-      </Transition>
+        <Transition mounted={step === Steps.CLASS} transition="fade">
+          {(styles) => <ClassSelection styles={styles} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.CLASS} transition="fade">
-        {(styles) => <ClassSelection styles={styles} />}
-      </Transition>
+        {/**
+         * @todo Background selection
+         */}
 
-      {/**
-       * @todo Background selection
-       */}
+        <Transition mounted={step === Steps.ATTRIBUTE_METHOD} transition="fade">
+          {(styles) => <AttributeMethod styles={styles} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.ATTRIBUTE_METHOD} transition="fade">
-        {(styles) => <AttributeMethod styles={styles} />}
-      </Transition>
+        <Transition mounted={step === Steps.ATTRIBUTE} transition="fade">
+          {(styles) => <AttributeSelection styles={styles} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.ATTRIBUTE} transition="fade">
-        {(styles) => <AttributeSelection styles={styles} />}
-      </Transition>
+        <Transition mounted={step === Steps.FEATURES} transition="fade">
+          {(styles) => <FeaturesSelection styles={styles} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.FEATURES} transition="fade">
-        {(styles) => <FeaturesSelection styles={styles} />}
-      </Transition>
+        <Transition mounted={step === Steps.ITEMS} transition="fade">
+          {(styles) => <ItemsSelection styles={styles} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.ITEMS} transition="fade">
-        {(styles) => <ItemsSelection styles={styles} />}
-      </Transition>
+        <Transition mounted={step === Steps.SPELLS} transition="fade">
+          {(styles) => <SpellSelection styles={styles} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.SPELLS} transition="fade">
-        {(styles) => <SpellSelection styles={styles} />}
-      </Transition>
+        <Transition mounted={step === Steps.REVIEW} transition="fade">
+          {(styles) => <ReviewOptions styles={styles} setStep={setStep} />}
+        </Transition>
 
-      <Transition mounted={step === Steps.REVIEW} transition="fade">
-        {(styles) => <ReviewOptions styles={styles} setStep={setStep} />}
-      </Transition>
-
-      <Transition mounted={step === Steps.FINAL} transition="fade">
-        {(styles) => (
-          <Stack style={styles} gap="md">
-            <Box>
-              <Title size="h4">Seu personagem foi gerado!</Title>
-              <Text size="sm">
-                O que está esperando, grandes aventuras esperam por você.
-              </Text>
-            </Box>
-            <Card radius="md" w={280} h={275} p={0}>
-              <BackgroundImage
-                src={
-                  avatarPreviewUrl || `/images/fantasy/races/${form.race}.png`
-                }
-                radius="md"
-                h="100%"
-              >
-                <div
-                  css={css`
-                    background: linear-gradient(
-                      180deg,
-                      rgba(0, 0, 0, 0.2) 0%,
-                      rgba(0, 0, 0, 0) 100%
-                    );
-                    padding: 16px;
-                    height: 100%;
-                  `}
+        <Transition mounted={step === Steps.FINAL} transition="fade">
+          {(styles) => (
+            <Stack style={styles} gap="md">
+              <Box>
+                <Title size="h4">Seu personagem foi gerado!</Title>
+                <Text size="sm">
+                  O que está esperando, grandes aventuras esperam por você.
+                </Text>
+              </Box>
+              <Card radius="md" w={280} h={275} p={0}>
+                <BackgroundImage
+                  src={
+                    avatarPreviewUrl || `/images/fantasy/races/${form.race}.png`
+                  }
+                  radius="md"
+                  h="100%"
                 >
-                  <Text fw={500} color="var(--do_text_color_300)" size="sm">
-                    {races[form.race!].name},
-                    {classes[form.classes[0].name].name}.
-                  </Text>
+                  <div
+                    css={css`
+                      background: linear-gradient(
+                        180deg,
+                        rgba(0, 0, 0, 0.2) 0%,
+                        rgba(0, 0, 0, 0) 100%
+                      );
+                      padding: 16px;
+                      height: 100%;
+                    `}
+                  >
+                    <Text fw={500} c="var(--do_text_color_300)" size="sm">
+                      {races[form.race!]?.name},
+                      {classes[form.classes[0]?.name]?.name}.
+                    </Text>
 
-                  <Text size="lg" color="var(--do_text_color_600)">
-                    {form.name}
-                  </Text>
-                </div>
-              </BackgroundImage>
-            </Card>
-            <Space h="2rem" />
-          </Stack>
-        )}
-      </Transition>
+                    <Text size="lg" color="var(--do_text_color_600)">
+                      {form.name}
+                    </Text>
+                  </div>
+                </BackgroundImage>
+              </Card>
+              <Space h="2rem" />
+            </Stack>
+          )}
+        </Transition>
 
-      <Box>
-        <Button
-          fullWidth
-          size="lg"
-          disabled={isInvalidFormStep()}
-          onClick={handleNext}
-        >
-          {step === Steps.REVIEW
-            ? "Criar personagem"
-            : step === Steps.FINAL
-            ? "Iniciar aventura"
-            : "Próximo"}
-        </Button>
-        <Space h="md" />
-        <Button variant="subtle" size="md" fullWidth onClick={onCancel}>
-          Cancelar
-        </Button>
-      </Box>
-    </Stack>
+        <Stack gap="xs">
+          <Button
+            fullWidth
+            size="lg"
+            disabled={isInvalidFormStep()}
+            onClick={handleNext}
+          >
+            {step === Steps.REVIEW
+              ? "Criar personagem"
+              : step === Steps.FINAL
+              ? "Iniciar aventura"
+              : "Próximo"}
+          </Button>
+
+          {step > Steps.DESCRIPTION && (
+            <Button variant="outline" fullWidth size="lg" onClick={handledPrev}>
+              Voltar
+            </Button>
+          )}
+        </Stack>
+      </Stack>
+    </Paper>
   );
 }
