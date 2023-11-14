@@ -4,6 +4,7 @@ import { CharacterSheet } from "@/assets/dnd/5e/utils/CharacterSheet";
 import CharacterFooter from "@/components/character/components/footer/character-footer";
 import { characterAtom } from "@/components/character/state";
 import useCharacter from "@/hooks/useCharacter";
+import breakpoints from "@/utils/breakpoints";
 import {
   type ComboboxItem,
   type ComboboxItemGroup,
@@ -12,6 +13,7 @@ import {
   Text,
   Spoiler,
 } from "@mantine/core";
+import { useViewportSize } from "@mantine/hooks";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -22,6 +24,8 @@ export default function Traits() {
   const [sheet, setSheet] = useAtom(characterAtom);
   const router = useRouter();
   const { getCharacter } = useCharacter();
+  const { width } = useViewportSize();
+  const isMobile = width < breakpoints.md;
 
   const { characterId } = router.query;
 
@@ -44,7 +48,7 @@ export default function Traits() {
   return (
     sheet && (
       <>
-        <Stack p="md" pb={120}>
+        <Stack className="mx-auto max-w-[550px]" p="md" pb={120}>
           {races[sheet.race].traits.map((trait) => {
             return (
               <Stack
@@ -89,7 +93,7 @@ export default function Traits() {
             );
           })}
         </Stack>
-        <CharacterFooter />
+        {isMobile && <CharacterFooter />}
       </>
     )
   );
