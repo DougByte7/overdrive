@@ -453,13 +453,13 @@ export default function SpellList({
             w="30%"
             value={filters.className}
             data={filterValues.classNames}
-            onChange={handleFilterClass}
+            onChange={handleFilterClass as any}
           />
           <Select
             w="30%"
             value={filters.level}
             data={filterValues.levels}
-            onChange={handleFilterLevel}
+            onChange={handleFilterLevel as any}
           />
           <Button
             leftSection={<IconFilter size={16} />}
@@ -507,32 +507,36 @@ export default function SpellList({
             label="Escola"
             value={preFilters.school}
             data={filterValues.schools}
-            onChange={(school: string) =>
-              setPreFilter((prev) => ({ ...prev, school }))
+            onChange={
+              ((school: string) =>
+                setPreFilter((prev) => ({ ...prev, school }))) as any
             }
           />
           <Select
             label="Tempo de conjuração"
             value={preFilters.castingTime}
             data={filterValues.castingTime}
-            onChange={(castingTime: string) =>
-              setPreFilter((prev) => ({ ...prev, castingTime }))
+            onChange={
+              ((castingTime: string) =>
+                setPreFilter((prev) => ({ ...prev, castingTime }))) as any
             }
           />
           <Select
             label="Alcance"
             value={preFilters.range}
             data={filterValues.range}
-            onChange={(range: string) =>
-              setPreFilter((prev) => ({ ...prev, range }))
+            onChange={
+              ((range: string) =>
+                setPreFilter((prev) => ({ ...prev, range }))) as any
             }
           />
           <Select
             label="Duração"
             value={preFilters.duration}
             data={filterValues.duration}
-            onChange={(duration: string) =>
-              setPreFilter((prev) => ({ ...prev, duration }))
+            onChange={
+              ((duration: string) =>
+                setPreFilter((prev) => ({ ...prev, duration }))) as any
             }
           />
 

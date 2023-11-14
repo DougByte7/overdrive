@@ -300,9 +300,9 @@ const NewFeatures = ({
       0) + 1;
 
   const handleSetFeature =
-    (featureName: string, index: number) => (featureValue: string) => {
+    (featureName: string, index: number) => (featureValue: string | null) => {
       const newVal = (sheetPreview!.features[featureName] as string[]) ?? [];
-      newVal[index] = featureValue;
+      newVal[index] = featureValue as string;
       sheetPreview!.features[featureName] = newVal;
       setSheetPreview(
         new CharacterSheet({
@@ -337,10 +337,10 @@ const NewFeatures = ({
     });
   };
 
-  const handleIncreaseAttr = (index: number) => (attr: Attribute) => {
+  const handleIncreaseAttr = (index: number) => (attr: string | null) => {
     setAttrToImprove((prev) => {
       const newSet = [...prev];
-      newSet[index] = attr;
+      newSet[index] = attr as Attribute;
       return newSet;
     });
   };

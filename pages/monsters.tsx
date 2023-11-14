@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
+import { css } from "@emotion/react";
 import {
   Group,
   ActionIcon,
@@ -15,118 +15,118 @@ import {
   Text,
   Box,
   Divider,
-} from "@mantine/core"
-import { IconChevronLeft, IconFilter, IconSearch } from "@tabler/icons-react"
-import monsters from "@/assets/dnd/5e/monsters.json"
-import { ChangeEventHandler, useEffect, useMemo, useState } from "react"
-import { MonsterCard } from "@/components/monsters/monster-card"
+} from "@mantine/core";
+import { IconChevronLeft, IconFilter, IconSearch } from "@tabler/icons-react";
+import monsters from "@/assets/dnd/5e/monsters.json";
+import { ChangeEventHandler, useEffect, useMemo, useState } from "react";
+import { MonsterCard } from "@/components/monsters/monster-card";
 import {
   useDebouncedState,
   useDisclosure,
   useLocalStorage,
-} from "@mantine/hooks"
-import type { DnD5eMonster } from "@/assets/dnd/5e/interfaces"
-import { useAtom } from "jotai"
-import { selectedMonsterAtom } from "@/components/monsters/state"
+} from "@mantine/hooks";
+import type { DnD5eMonster } from "@/assets/dnd/5e/interfaces";
+import { useAtom } from "jotai";
+import { selectedMonsterAtom } from "@/components/monsters/state";
 
 const initialFilterState: {
-  type: string
-  alignment: string
-  size: [number, number]
-  cr: [number, number]
+  type: string;
+  alignment: string;
+  size: [number, number];
+  cr: [number, number];
 } = {
   type: "any",
   alignment: "any",
   size: [0, 5],
   cr: [0, 27],
-}
+};
 
 export default function PageMonsters() {
-  const [selectedMonster, setSelectedMonster] = useAtom(selectedMonsterAtom)
+  const [selectedMonster, setSelectedMonster] = useAtom(selectedMonsterAtom);
 
   const [showXp, setShowXp] = useLocalStorage({
     key: "monster:showXp",
     defaultValue: false,
-  })
-  const [opened, { open, close }] = useDisclosure(false)
+  });
+  const [opened, { open, close }] = useDisclosure(false);
 
-  const [search, setSearch] = useDebouncedState("", 200)
-  const [preFilters, setPreFilters] = useState(initialFilterState)
-  const [filters, setFilters] = useState(initialFilterState)
-  const [filteredMonsters, setFilteredMonsters] = useState(monsters)
+  const [search, setSearch] = useDebouncedState("", 200);
+  const [preFilters, setPreFilters] = useState(initialFilterState);
+  const [filters, setFilters] = useState(initialFilterState);
+  const [filteredMonsters, setFilteredMonsters] = useState(monsters);
 
   const removeDiacritics = (string: string) =>
-    string.normalize("NFD").replace(/\p{Diacritic}/gu, "")
+    string.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
   const handleSearch: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()))
-  }
+    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()));
+  };
 
   const monsterList = useMemo(() => {
     return filteredMonsters.map((monster) => {
-      return <MonsterCard key={monster.index} monster={monster} />
-    })
-  }, [filteredMonsters])
+      return <MonsterCard key={monster.index} monster={monster} />;
+    });
+  }, [filteredMonsters]);
 
   const getUniqueValuesOf = (
     key: keyof DnD5eMonster,
-    sortFn?: (a: any, b: any) => number
-  ): any[] => Array.from(new Set(monsters.map((m) => m[key]).sort(sortFn)))
+    sortFn?: (a: any, b: any) => number,
+  ): any[] => Array.from(new Set(monsters.map((m) => m[key]).sort(sortFn)));
 
   const getLabelValue = (value: any, label?: any) => ({
     label: label ?? value,
     value,
-  })
+  });
 
   const monsterTypes = useMemo(
     () => [
       { label: "Qualquer", value: "any" },
       ...getUniqueValuesOf("type").map((m) => getLabelValue(m)),
     ],
-    []
-  )
+    [],
+  );
   const monsterAlign = useMemo(
     () => [
       { label: "Qualquer", value: "any" },
       ...getUniqueValuesOf("alignment").map((m) => getLabelValue(m)),
     ],
-    []
-  )
+    [],
+  );
 
   const handleClearFilters = () => {
-    setPreFilters(initialFilterState)
-    setFilters(initialFilterState)
-    close()
-  }
+    setPreFilters(initialFilterState);
+    setFilters(initialFilterState);
+    close();
+  };
 
   const handleFilter = () => {
-    setFilters(preFilters)
-    close()
-  }
+    setFilters(preFilters);
+    close();
+  };
 
   useEffect(() => {
     const filterByType = (monster: DnD5eMonster) => {
-      return filters.type === "any" || monster.type === filters.type
-    }
+      return filters.type === "any" || monster.type === filters.type;
+    };
 
     const filterByAlignment = (monster: DnD5eMonster) => {
       return (
         filters.alignment === "any" || monster.alignment === filters.alignment
-      )
-    }
+      );
+    };
 
     const filterBySize = (monster: DnD5eMonster) => {
       const sizeValue =
-        monsterSizes.find((s) => s.label === monster.size)?.value ?? 0
+        monsterSizes.find((s) => s.label === monster.size)?.value ?? 0;
 
-      return sizeValue >= filters.size[0] && sizeValue <= filters.size[1]
-    }
+      return sizeValue >= filters.size[0] && sizeValue <= filters.size[1];
+    };
 
     const filterByCr = (monster: DnD5eMonster) => {
       const crValue =
-        monsterCr.find((s) => s.label === monster.challenge_rating)?.value ?? 0
-      return crValue >= filters.cr[0] && crValue <= filters.cr[1]
-    }
+        monsterCr.find((s) => s.label === monster.challenge_rating)?.value ?? 0;
+      return crValue >= filters.cr[0] && crValue <= filters.cr[1];
+    };
 
     setFilteredMonsters(
       monsters.filter(
@@ -135,10 +135,10 @@ export default function PageMonsters() {
           filterByType(monster) &&
           filterByAlignment(monster) &&
           filterBySize(monster) &&
-          filterByCr(monster)
-      )
-    )
-  }, [search, filters])
+          filterByCr(monster),
+      ),
+    );
+  }, [search, filters]);
 
   return (
     <>
@@ -205,16 +205,19 @@ export default function PageMonsters() {
               label="Tipo"
               value={preFilters.type}
               data={monsterTypes}
-              onChange={(type: string) =>
-                setPreFilters((prev) => ({ ...prev, type }))
+              onChange={(type: string | null) =>
+                setPreFilters((prev) => ({ ...prev, type: type as string }))
               }
             />
             <Select
               label="Alinhamento"
               value={preFilters.alignment}
               data={monsterAlign}
-              onChange={(alignment: string) =>
-                setPreFilters((prev) => ({ ...prev, alignment }))
+              onChange={(alignment: string | null) =>
+                setPreFilters((prev) => ({
+                  ...prev,
+                  alignment: alignment as string,
+                }))
               }
             />
             <Box px="sm">
@@ -283,7 +286,7 @@ export default function PageMonsters() {
               <Text>
                 Velocidade:{" "}
                 {Object.entries(selectedMonster?.speed ?? {}).map(
-                  ([k, v]) => `${k}: ${v} `
+                  ([k, v]) => `${k}: ${v} `,
                 )}
               </Text>
             </Stack>
@@ -391,14 +394,14 @@ export default function PageMonsters() {
         </Drawer>
       </main>
     </>
-  )
+  );
 }
 
 const pageTitleStyles = css`
   position: absolute;
   left: 50%;
   translate: -50%;
-`
+`;
 
 const monsterSizes = [
   {
@@ -425,7 +428,7 @@ const monsterSizes = [
     label: "Gargantuan",
     value: 5,
   },
-]
+];
 const monsterCr = [
   {
     label: 0,
@@ -539,4 +542,4 @@ const monsterCr = [
     label: 30,
     value: 27,
   },
-]
+];

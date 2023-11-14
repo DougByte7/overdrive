@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import {
-  ActionIcon,
   Title,
   Text,
   Box,
@@ -13,7 +12,6 @@ import {
   Card,
   Paper,
 } from "@mantine/core";
-import { IconChevronLeft } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import races from "@/assets/dnd/5e/races";
 import classes from "@/assets/dnd/5e/classes";

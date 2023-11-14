@@ -1,68 +1,73 @@
 /** @jsxImportSource @emotion/react */
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
-import { useEffect, useRef, useState } from "react"
-import Peer from "simple-peer"
-import { useRouter } from "next/router"
-import { useSession } from "next-auth/react"
-import { useLocalStorage } from "@mantine/hooks"
-import { modals } from "@mantine/modals"
-import { Select, Stack } from "@mantine/core"
-import { useAtom } from "jotai"
-import { socketAton } from "./state"
+import { css } from "@emotion/react";
+import { useEffect, useRef, useState } from "react";
+import Peer from "simple-peer";
+import { useRouter } from "next/router";
+import { useLocalStorage } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
+import { Select, Stack } from "@mantine/core";
+import { useAtom } from "jotai";
+import { socketAton } from "./state";
 
 export default function WebRTCStream() {
-  const [socket] = useAtom(socketAton)
-  const [localStream, setLocalStream] = useState<MediaStream>()
-  const [remoteStreams, setRemoteStreams] = useState<MediaStream[]>([])
-  const { data: sessionData, status: sessionStatus } = useSession()
-  const router = useRouter()
-  const peer = useRef<Peer.Instance>()
+  const [socket] = useAtom(socketAton);
+  const [localStream, setLocalStream] = useState<MediaStream>();
+  const [remoteStreams, setRemoteStreams] = useState<MediaStream[]>([]);
+  // Use clerk
+  const { data: sessionData, status: sessionStatus } = {
+    status: {},
+    data: { user: { name: "" } },
+  };
+  const router = useRouter();
+  const peer = useRef<Peer.Instance>();
   const [preferredVideoSource, setPreferredVideoSource] = useLocalStorage<
     string | null
   >({
     key: "preferredVideoSource",
-  })
+  });
   const [preferredAudioSource, setPreferredAudioSource] = useLocalStorage<
     string | null
   >({
     key: "preferredAudioSource",
-  })
+  });
 
   useEffect(() => {
-    if (sessionStatus === "loading" || !router.query.roomId) return
+    if (sessionStatus === "loading" || !router.query.roomId) return;
 
     const tryConnectRTC = async () => {
-      const devices = await navigator.mediaDevices?.enumerateDevices()
-      if (!devices?.length) return
+      const devices = await navigator.mediaDevices?.enumerateDevices();
+      if (!devices?.length) return;
 
       const [videoDevices, audioDevices]: [
         MediaDeviceInfo[],
-        MediaDeviceInfo[]
+        MediaDeviceInfo[],
       ] = devices.reduce(
         (acc, device) => {
-          if (device.kind === "videoinput") return [[...acc[0], device], acc[1]]
-          if (device.kind === "audioinput") return [acc[0], [...acc[1], device]]
+          if (device.kind === "videoinput")
+            return [[...acc[0], device], acc[1]];
+          if (device.kind === "audioinput")
+            return [acc[0], [...acc[1], device]];
 
-          return acc
+          return acc;
         },
-        [[], []] as any
-      )
+        [[], []] as any,
+      );
 
-      if (!(videoDevices.length || audioDevices.length)) return
+      if (!(videoDevices.length || audioDevices.length)) return;
 
-      let videoSourceId = preferredVideoSource ?? ""
-      let audioSourceId = preferredAudioSource ?? ""
+      let videoSourceId = preferredVideoSource ?? "";
+      let audioSourceId = preferredAudioSource ?? "";
 
       const onConfirm = async () => {
-        modals.closeAll()
+        modals.closeAll();
 
         const stream = await navigator.mediaDevices?.getUserMedia({
           video: { deviceId: videoSourceId },
           audio: { deviceId: audioSourceId },
-        })
+        });
 
-        setLocalStream(stream)
+        setLocalStream(stream);
         peer.current = new Peer({
           initiator: true,
           stream,
@@ -80,27 +85,27 @@ export default function WebRTCStream() {
               },
             ],
           },
-        })
+        });
 
         peer.current?.on("signal", (signal) => {
-          console.log("signal")
+          console.log("signal");
 
           socket.emit(
             "user:join-video",
             signal,
-            sessionData?.user?.name ?? "guest"
-          )
+            sessionData?.user?.name ?? "guest",
+          );
 
           socket.on("user:joined-video", (signal, from) => {
-            console.log("signal from: " + from)
-            peer.current?.signal(signal)
-          })
-        })
+            console.log("signal from: " + from);
+            peer.current?.signal(signal);
+          });
+        });
 
         peer.current?.on("stream", (stream) => {
-          setRemoteStreams((streams) => [...streams, stream])
-        })
-      }
+          setRemoteStreams((streams) => [...streams, stream]);
+        });
+      };
 
       modals.openConfirmModal({
         size: "lg",
@@ -124,11 +129,11 @@ export default function WebRTCStream() {
                 placeholder="Escolha um"
                 value={preferredVideoSource}
                 data={videoDevices.map((device) => {
-                  return { value: device.deviceId, label: device.label }
+                  return { value: device.deviceId, label: device.label };
                 })}
                 onChange={(value) => {
-                  setPreferredVideoSource(value)
-                  videoSourceId = value as string
+                  setPreferredVideoSource(value);
+                  videoSourceId = value as string;
                 }}
               />
             )}
@@ -141,45 +146,45 @@ export default function WebRTCStream() {
                 placeholder="Escolha um"
                 value={preferredAudioSource}
                 data={audioDevices.map((device) => {
-                  return { value: device.deviceId, label: device.label }
+                  return { value: device.deviceId, label: device.label };
                 })}
                 onChange={(value) => {
-                  setPreferredAudioSource(value)
-                  audioSourceId = value as string
+                  setPreferredAudioSource(value);
+                  audioSourceId = value as string;
                 }}
               />
             )}
           </Stack>
         ),
-      })
-    }
+      });
+    };
 
-    tryConnectRTC()
+    tryConnectRTC();
 
     return () => {
-      peer.current?.destroy()
-      modals.closeAll()
-    }
-  }, [sessionStatus, router.query.roomId])
+      peer.current?.destroy();
+      modals.closeAll();
+    };
+  }, [sessionStatus, router.query.roomId]);
 
   return (
     <main>
       {localStream && <Video stream={localStream} />}{" "}
       {remoteStreams.map((stream, i) => {
-        return <Video key={i} stream={stream} />
+        return <Video key={i} stream={stream} />;
       })}
     </main>
-  )
+  );
 }
 
 function Video({ stream }: { stream: MediaStream }) {
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (!videoRef.current) return
+    if (!videoRef.current) return;
 
-    videoRef.current.srcObject = stream
-  }, [videoRef.current])
+    videoRef.current.srcObject = stream;
+  }, [videoRef.current]);
 
   return (
     <video
@@ -193,5 +198,5 @@ function Video({ stream }: { stream: MediaStream }) {
       playsInline
       autoPlay
     ></video>
-  )
+  );
 }

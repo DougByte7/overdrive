@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
-import { Box, Flex } from "@mantine/core"
-import { ReactNode } from "react"
+import { css } from "@emotion/react";
+import { Box, Flex } from "@mantine/core";
+import { ReactNode } from "react";
 
 interface SideScrollingBoxProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export default function SideScrollingBox({ children }: SideScrollingBoxProps) {
@@ -21,6 +20,7 @@ export default function SideScrollingBox({ children }: SideScrollingBoxProps) {
       `}
     >
       <Flex
+        // @ts-ignore
         gap="sm"
         css={css`
           width: max-content;
@@ -34,5 +34,5 @@ export default function SideScrollingBox({ children }: SideScrollingBoxProps) {
         {children}
       </Flex>
     </Box>
-  )
+  );
 }
