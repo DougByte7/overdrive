@@ -13,7 +13,6 @@ export default function Home() {
 
   const {
     characters: storedCharacters,
-    addCharacter,
     clearCharacters,
   } = useCharacter();
 
@@ -63,11 +62,5 @@ export default function Home() {
       };
     }) ?? [];
 
-  return (
-    <HomeComponent
-      campaigns={campaigns}
-      characters={characters}
-      setCharacters={addCharacter}
-    />
-  );
+  return <HomeComponent campaigns={campaigns} characters={characters} />;
 }

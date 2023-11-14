@@ -9,40 +9,40 @@ import {
   Avatar,
   Textarea,
   Text,
-} from "@mantine/core"
-import { useAtom } from "jotai"
-import { avatarPreviewUrlAton, characterFormAton } from "../../state"
-import type { CSSProperties, ChangeEventHandler } from "react"
+} from "@mantine/core";
+import { useAtom } from "jotai";
+import { avatarPreviewUrlAton, characterFormAton } from "../../state";
+import type { CSSProperties, ChangeEventHandler } from "react";
 
 interface CharacterDescriptionProps {
-  styles: CSSProperties
+  styles: CSSProperties;
 }
 
 export default function CharacterDescription({
   styles,
 }: CharacterDescriptionProps) {
-  const [form, setForm] = useAtom(characterFormAton)
-  const [avatarPreviewUrl, setAvatarPreviewUrl] = useAtom(avatarPreviewUrlAton)
+  const [form, setForm] = useAtom(characterFormAton);
+  const [avatarPreviewUrl, setAvatarPreviewUrl] = useAtom(avatarPreviewUrlAton);
 
   const handleSetName: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setForm((form) => ({ ...form, name: e.currentTarget.value }))
-  }
+    setForm((form) => ({ ...form, name: e.currentTarget.value }));
+  };
 
   const handleSetBackstory: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    setForm((form) => ({ ...form, backstory: e.currentTarget.value }))
-  }
+    setForm((form) => ({ ...form, backstory: e.currentTarget.value }));
+  };
 
   const handleSetPicture = (picture: File) => {
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (e: ProgressEvent<FileReader>) => {
-      e.target && setAvatarPreviewUrl(e.target.result as string)
-      const pictureUrl = (e.target?.result as string) ?? ""
-      setForm((form) => ({ ...form, picture: pictureUrl }))
-    }
+      e.target && setAvatarPreviewUrl(e.target.result as string);
+      const pictureUrl = (e.target?.result as string) ?? "";
+      setForm((form) => ({ ...form, picture: pictureUrl }));
+    };
 
-    if (picture) reader.readAsDataURL(picture)
-    else setAvatarPreviewUrl("")
-  }
+    if (picture) reader.readAsDataURL(picture);
+    else setAvatarPreviewUrl("");
+  };
 
   return (
     <Stack style={styles} gap="md" h="100%">
@@ -68,7 +68,7 @@ export default function CharacterDescription({
               fontWeight: 700,
             },
           }}
-          onChange={handleSetPicture}
+          onChange={handleSetPicture as any}
         />
         <TextInput
           name="name"
@@ -108,5 +108,5 @@ export default function CharacterDescription({
         onChange={handleSetBackstory}
       />
     </Stack>
-  )
+  );
 }

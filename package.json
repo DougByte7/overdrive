@@ -7,11 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
-    "build-storybook": "build-storybook",
-    "chromatic": "npx chromatic --project-token=uir5a7azo0f"
+    "test": "jest"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.27.0",
+    "@clerk/themes": "^1.7.9",
     "@emotion/react": "^11.11.1",
     "@mantine/carousel": "^7.1.2",
     "@mantine/core": "^7.1.2",
@@ -23,6 +23,7 @@
     "@mantine/notifications": "^7.1.2",
     "@mantine/nprogress": "^7.1.2",
     "@mantine/tiptap": "^7.1.2",
+    "@prisma/client": "^5.5.2",
     "@sentry/nextjs": "^7.38.0",
     "@tabler/icons-react": "^2.30.0",
     "@tiptap/extension-link": "^2.0.0-beta.212",
@@ -35,11 +36,11 @@
     "idb": "^7.0.2",
     "jotai": "^2.1.1",
     "lodash.isnil": "^4.0.0",
+    "micro": "^10.0.1",
     "mongodb": "^5.0.1",
     "mongoose": "^6.9.1",
     "nanoid": "^5.0.2",
     "next": "^13.1.2",
-    "next-auth": "^4.19.2",
     "next-pwa": "^5.6.0",
     "nodemailer": "^6.9.1",
     "nodemailer-smtp-transport": "^2.7.4",
@@ -53,6 +54,7 @@
     "simple-peer": "^9.11.1",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1",
+    "svix": "^1.13.0",
     "valibot": "^0.20.1"
   },
   "devDependencies": {
@@ -73,6 +75,7 @@
     "cssnano": "^6.0.1",
     "eslint": "^7.30.0",
     "eslint-config-next": "^13.1.2",
+    "eslint-config-prettier": "^9.0.0",
     "postcss": "^8.4.31",
     "postcss-preset-mantine": "^1.8.0",
     "postcss-simple-vars": "^7.0.1",

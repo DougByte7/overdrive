@@ -4,9 +4,10 @@ import theme from "@/theme";
 import { Analytics } from "@vercel/analytics/react";
 import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
-import { SessionProvider } from "next-auth/react";
 import { Provider as JotaiProvider } from "jotai";
 import { MantineProvider } from "@mantine/core";
+import { ClerkProvider } from "@clerk/nextjs";
+
 import "@mantine/core/styles.css";
 import "src/styles/global.css";
 import "src/styles/variables.css";
@@ -40,7 +41,7 @@ export default function MyApp({
         />
         <title>Dice Overdrive</title>
       </Head>
-      <SessionProvider session={session}>
+      <ClerkProvider>
         <JotaiProvider>
           <MantineProvider theme={{ ...theme }} defaultColorScheme="dark">
             <Notifications />
@@ -49,7 +50,7 @@ export default function MyApp({
             </ModalsProvider>
           </MantineProvider>
         </JotaiProvider>
-      </SessionProvider>
+      </ClerkProvider>
       <Analytics />
     </>
   );

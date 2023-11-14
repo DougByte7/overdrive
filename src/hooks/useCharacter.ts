@@ -16,24 +16,19 @@ export default function useCharacter() {
   };
 
   const getCharacter = (id: string) => {
-    return characters!.find((char) => char.id === id);
+    return characters.find((char) => char.id === id);
   };
 
   const removeCharacter = (id: string) => {
-    const index = characters!.findIndex((char) => char.id === id);
-    if (index > -1) {
-      setCharacters((prev) => {
-        prev.splice(index, 1);
-        return prev;
-      });
-    }
+    const filteredChars = characters.filter((char) => char.id !== id);
+    setCharacters(filteredChars);
   };
 
   const updateCharacter = (
     id: string,
     newCharacter: CharacterSheetProps<"name">,
   ) => {
-    const index = characters!.findIndex((char) => char.id === id);
+    const index = characters.findIndex((char) => char.id === id);
     if (index > -1) {
       setCharacters((prev) => {
         prev[index] = newCharacter;

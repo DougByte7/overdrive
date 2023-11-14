@@ -30,7 +30,10 @@ function sortByLevel(arr: DnD5eSpell[][], spell: DnD5eSpell) {
 export default function Grimoire() {
   return (
     <>
-      <Tabs w="100vw" defaultValue="prepared">
+      <Tabs
+        className="h-[calc(100vh-80px)] w-full max-w-[450px] overflow-auto"
+        defaultValue="prepared"
+      >
         <Tabs.List>
           <Tabs.Tab value="prepared">Preparadas</Tabs.Tab>
           <Tabs.Tab value="know">Conhecidas</Tabs.Tab>

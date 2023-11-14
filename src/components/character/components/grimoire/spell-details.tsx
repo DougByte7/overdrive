@@ -7,8 +7,8 @@ import {
   Group,
   Badge,
   Divider,
-} from "@mantine/core"
-import { useFocusTrap } from "@mantine/hooks"
+} from "@mantine/core";
+import { useFocusTrap } from "@mantine/hooks";
 import {
   IconBox,
   IconChevronLeft,
@@ -16,34 +16,34 @@ import {
   IconHemisphere,
   IconLineDashed,
   IconSphere,
-} from "@tabler/icons-react"
-import { CSSProperties, useEffect } from "react"
-import { useAtom } from "jotai"
-import { selectedSpellAton } from "../../state"
+} from "@tabler/icons-react";
+import { CSSProperties, useEffect } from "react";
+import { useAtom } from "jotai";
+import { selectedSpellAton } from "../../state";
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
+import { css } from "@emotion/react";
 
 interface SpellDetailsProps {
-  backdrop?: boolean
-  verticalOffset?: number
-  h?: string | number
+  backdrop?: boolean;
+  verticalOffset?: number;
+  h?: string | number;
 }
 export function SpellDetails({
   backdrop = true,
   verticalOffset = 72,
   h = "auto",
 }: SpellDetailsProps) {
-  const [selectedSpell, setSelectedSpell] = useAtom(selectedSpellAton)
+  const [selectedSpell, setSelectedSpell] = useAtom(selectedSpellAton);
 
-  const focusTrapRef = useFocusTrap(!!selectedSpell)
+  const focusTrapRef = useFocusTrap(!!selectedSpell);
 
   useEffect(() => {
-    const originalStyle = window.getComputedStyle(document.body).overflow
-    document.body.style.overflow = selectedSpell ? "hidden" : originalStyle
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = selectedSpell ? "hidden" : originalStyle;
     return () => {
-      document.body.style.overflow = originalStyle
-    }
-  }, [selectedSpell])
+      document.body.style.overflow = originalStyle;
+    };
+  }, [selectedSpell]);
 
   return (
     <>
@@ -240,26 +240,28 @@ export function SpellDetails({
 
               <Divider w="100%" />
 
-              <Spoiler
-                maxHeight={75}
-                showLabel="Ver mais"
-                hideLabel="Ver menos"
-              >
-                <Text>{selectedSpell?.description}</Text>
-              </Spoiler>
-              <Spoiler
-                maxHeight={75}
-                showLabel="Ver mais"
-                hideLabel="Ver menos"
-              >
-                <Text>{selectedSpell?.higher_levels}</Text>
-              </Spoiler>
+              <Stack className="max-w-[650px]" align="center" gap="sm">
+                <Spoiler
+                  maxHeight={75}
+                  showLabel="Ver mais"
+                  hideLabel="Ver menos"
+                >
+                  <Text>{selectedSpell?.description}</Text>
+                </Spoiler>
+                <Spoiler
+                  maxHeight={75}
+                  showLabel="Ver mais"
+                  hideLabel="Ver menos"
+                >
+                  <Text>{selectedSpell?.higher_levels}</Text>
+                </Spoiler>
+              </Stack>
             </Stack>
           </div>
         )}
       </Transition>
     </>
-  )
+  );
 }
 
 const backdropStyles: CSSProperties = {
@@ -270,10 +272,10 @@ const backdropStyles: CSSProperties = {
   left: 0,
   background: "rgba(0, 0, 0, 0.6)",
   zIndex: 1001,
-}
+};
 const spellInfoStyles = (
   verticalOffset: number,
-  h: string | number
+  h: string | number,
 ): CSSProperties => ({
   position: "fixed",
   right: 0,
@@ -289,4 +291,4 @@ const spellInfoStyles = (
   maxHeight: "calc(100vh - 150px)",
   overflow: "auto",
   background: "var(--mantine-color-body)",
-})
+});

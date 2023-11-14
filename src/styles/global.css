@@ -5,5 +5,5 @@
 @tailwind utilities;
 
 :root {
-  --mantine-color-body: #17151c !important;
+  --mantine-color-body: rgba(23, 21, 28, 0.95) !important;
 }

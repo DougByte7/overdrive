@@ -1,111 +1,138 @@
-import Image from "next/image"
+import breakpoints from "@/utils/breakpoints";
+import { SignUp, useUser } from "@clerk/nextjs";
+import { Stack, Title, Text, Button } from "@mantine/core";
+import { useViewportSize } from "@mantine/hooks";
+import { IconExternalLink } from "@tabler/icons-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useMemo } from "react";
 
 export default function Home() {
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+  const { width } = useViewportSize();
+
+  useEffect(() => {
+    if (!isSignedIn) return;
+
+    router.push("/home");
+  }, [isSignedIn]);
+
   return (
-    <main className="container">
-      <div className="logo-text">
+    <main className="justify-center">
+      <Stack
+        className="relative z-10 h-screen max-w-[550px] bg-[var(--mantine-color-body)] px-6 py-12 md:p-20"
+        align="center"
+      >
         <Image
-          src="/images/LOGO-TEXT.svg"
-          alt="Dice Overdrive. Charge your rolls"
-          width={414}
-          height={129}
+          src="/images/icon-logo.svg"
+          alt="d10 Logo: Dice Overdrive. Charge your rolls"
+          width={100}
+          height={100}
+        />
+        <div className="mb-12">
+          <Title className="leading-normal" ta="center" c="#F2F2F2" size="24px">
+            Dice Overdrive
+          </Title>
+          <Text className="leading-normal" ta="center">
+            Sua primeira vez aqui? Crie uma conta ou faça login com uma
+            existente.
+          </Text>
+        </div>
+        <SignUp
+          appearance={{
+            elements: {
+              rootBox: {
+                width: "100%",
+              },
+              card: {
+                boxShadow: "none",
+                border: "none",
+                padding: 0,
+                width: "100%",
+                backgroundColor: "transparent",
+              },
+              header: { display: "none" },
+              socialButtons: {
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "12px",
+              },
+              socialButtonsIconButton: {
+                borderRadius: 4,
+                height: "56px",
+                width: "100%",
+                backgroundColor: "white",
+
+                "&:hover": {
+                  backgroundColor: "white",
+                  opacity: 0.8,
+                },
+              },
+              footer: { display: "none" },
+            },
+          }}
         />
 
-        <Image
-          aria-hidden={true}
-          alt="Dice Overdrive logo"
-          src="/d10-electric.svg"
-          width={194}
-          height={222}
-        />
-      </div>
+        <Button
+          className="mt-3 h-12 w-full bg-[#2A2F37] text-base font-normal text-[#c8c8c8]"
+          component={Link}
+          href="/home"
+          onClick={() => localStorage.setItem("user:name", "guest")}
+        >
+          Entrar sem usuário
+        </Button>
 
-      <div className="logo">
         <Image
+          className="mt-auto opacity-10"
           src="/images/FULL-LOGO.svg"
           alt="d10 Logo: Dice Overdrive. Charge your rolls"
-          width={731}
-          height={301}
-          layout="fixed"
+          width={146}
+          height={60}
         />
-      </div>
-
-      <div className="banner">
-        <p className="warning">
-          Website&nbsp;Under
-          <br />
-          Construction
-        </p>
-      </div>
-
-      <style jsx>{`
-        .container {
-          background: #8100be;
-          height: 100vh;
-          width: 100%;
-          display: grid;
-          grid-template-rows: 60% 1fr;
-          grid-template-columns: 100%;
-          justify-items: center;
-          align-items: center;
-        }
-
-        .logo-text {
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-          gap: 32px;
-        }
-
-        .logo {
-          display: none;
-        }
-
-        .banner {
-          align-self: start;
-          display: flex;
-          align-items: center;
-          height: 207px;
-          width: 100%;
-          background: repeating-linear-gradient(
-            -49deg,
-            white,
-            white 20px,
-            #8100be 20px,
-            #8100be 40px
-          );
-        }
-
-        .warning {
-          color: #8100be;
-          width: 100%;
-          background: white;
-          padding: 24px 0;
-          text-align: center;
-          text-transform: uppercase;
-          font-size: 2.5rem;
-          font-family: Inter, sans-serif;
-          margin: 0;
-        }
-
-        @media screen and (min-width: 750px) {
-          .container {
-            grid-template-rows: 50% 1fr;
-          }
-
-          .logo-text {
-            display: none;
-          }
-
-          .logo {
-            display: initial;
-          }
-
-          .warning {
-            font-size: 3rem;
-          }
-        }
-      `}</style>
+      </Stack>
+      {width >= breakpoints.md && <Cover />}
     </main>
-  )
+  );
+}
+
+function Cover() {
+  const sources = [
+    {
+      imgUrl:
+        "https://cdnb.artstation.com/p/assets/images/images/039/578/335/4k/roman-kuteynikov-magia-lunare-particular.jpg?1626301007",
+      artist: "Roman Kuteynikov",
+      portfolio: "https://www.artstation.com/rroland",
+    },
+    {
+      imgUrl:
+        "https://cdnb.artstation.com/p/assets/images/images/024/991/071/4k/graey-erb-dm-screen-sprex.jpg?1584212551",
+      artist: "Graey Erb",
+      portfolio: "https://www.artstation.com/graeyerb",
+    },
+  ];
+
+  const src = useMemo(
+    () => sources[Math.floor(Math.random() * sources.length)],
+    [],
+  );
+
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        style={{ backgroundImage: `url(${src.imgUrl})` }}
+        className="fixed top-0 h-screen w-screen bg-cover bg-center"
+      />
+      <a
+        className="fixed bottom-8 right-8 flex items-center gap-3 rounded-s border border-[#202123] bg-[#17151C] px-3 py-2 text-sm text-[#f2f2f2]"
+        href={src.portfolio}
+        target="_blank"
+      >
+        <IconExternalLink color="#13AFF0" size={20} />
+        {src.artist}
+      </a>
+    </>
+  );
 }

@@ -1,36 +1,28 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import {
   Card,
-  Modal,
   TextInput,
   Title,
   Text,
   ActionIcon,
   Transition,
 } from "@mantine/core";
-import { useDebouncedState, useDisclosure } from "@mantine/hooks";
-//import CardCampaign from "./card-campaign"
+import { useDebouncedState } from "@mantine/hooks";
 import CardCharacter from "./card-character";
 import SideScrollingBox from "./side-scrolling-box";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
-import CharacterBuilder from "./character-builder/character-builder";
 import { type ChangeEventHandler, useEffect, useState } from "react";
 import { removeDiacritics } from "@/utils/removeDiacritics";
-import type { CharacterSheetProps } from "@/assets/dnd/5e/utils/CharacterSheet";
+import Link from "next/link";
 
 interface HomeComponentProps {
   campaigns: any[];
   characters: any[];
-  setCharacters: (newCharacter: CharacterSheetProps<"name">) => void;
 }
 
 export default function HomeComponent({
   //  campaigns,
   characters,
-  setCharacters,
 }: HomeComponentProps) {
-  const [opened, { open, close }] = useDisclosure(false);
   const [search, setSearch] = useDebouncedState("", 200);
   const [filteredCharacters, setFilteredCharacters] = useState(characters);
 
@@ -53,11 +45,7 @@ export default function HomeComponent({
 
   return (
     <>
-      <main
-        css={css`
-          margin-block: 16px;
-        `}
-      >
+      <main className="mx-4">
         <TextInput
           type="search"
           mr={16}
@@ -69,59 +57,6 @@ export default function HomeComponent({
           }
           onChange={handleFilter}
         />
-
-        {/* <div>
-          <Title size="h3" mt="xl" mb="md" mr={16} ml={16}>
-            Minhas campanhas
-          </Title>
-
-          <SideScrollingBox>
-            <Card
-              css={css`
-                background-color: var(--do_color_primary_light_50);
-                border: 1px dashed rgba(0, 0, 0, 0.25);
-                border-radius: var(--do_border_radius_md);
-                display: flex;
-                align-content: center;
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 8px;
-              `}
-              w={223}
-              h={351}
-            >
-              <Text weight={600} align="center">
-                Criar uma mesa
-              </Text>
-
-              <Text size="sm" align="center">
-                Crie uma mesa e viva novas aventuras!
-              </Text>
-
-              <ActionIcon
-                mt="sm"
-                size="xl"
-                color="brand"
-                variant="filled"
-                onClick={handleNewBoard}
-              >
-                <IconPlus size="1.5rem" />
-              </ActionIcon>
-            </Card>
-            {campaigns.map((campaign, i) => (
-              <CardCampaign
-                key={i}
-                id={campaign.id}
-                imgSrc={campaign.imgSrc}
-                title={campaign.title}
-                description={campaign.description}
-                players={campaign.players}
-                limit={campaign.limit}
-                onJoin={open}
-              />
-            ))}
-          </SideScrollingBox>
-        </div> */}
 
         <div>
           <div className="mx-4 mb-4 mt-8">
@@ -151,7 +86,8 @@ export default function HomeComponent({
                   mt="sm"
                   size="xl"
                   variant="transparent"
-                  onClick={open}
+                  component={Link}
+                  href="/character/new"
                 >
                   <IconPlus color="white" size="1.5rem" />
                 </ActionIcon>
@@ -176,22 +112,6 @@ export default function HomeComponent({
           </SideScrollingBox>
         </div>
       </main>
-
-      <Modal
-        css={css`
-          .mantine-ScrollArea-viewport > div {
-            display: block !important;
-            width: 0;
-          }
-        `}
-        size="xs"
-        opened={opened}
-        onClose={close}
-        centered
-        withCloseButton={false}
-      >
-        <CharacterBuilder onCancel={close} setCharacters={setCharacters} />
-      </Modal>
     </>
   );
 }
