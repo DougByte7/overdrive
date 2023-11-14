@@ -13,7 +13,8 @@ module.exports = withSentryConfig(
   withPWA({
     i18n: {
       locales: ["en-US", "pt-BR"],
-      defaultLocale: "pt-BR",
+      defaultLocale: "en-US",
+      localeDetection: false,
     },
     reactStrictMode: true,
   }),
