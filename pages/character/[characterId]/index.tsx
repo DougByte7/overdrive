@@ -260,7 +260,7 @@ export default function CharacterSheetPage({
             </Group>
           </Group>
         </header>
-        <main className="flex w-full justify-center gap-4">
+        <main className="flex w-full flex-wrap justify-center gap-4">
           {activeTab === "basic" && (
             <Stack className="min-w-[350px] max-w-[450px] p-4">
               <CharacterPortrait
@@ -442,7 +442,7 @@ export default function CharacterSheetPage({
           )}
 
           {(activeTab === "skills" || !isMobile) && (
-            <Stack className="min-w-[330px]" gap="xs">
+            <Stack className="min-w-[320px]" gap="xs">
               {skills.map((attr) => {
                 const isTrained = sheet.proficiencies.includes(attr.value);
 

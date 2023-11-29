@@ -31,7 +31,7 @@ export default function Grimoire() {
   return (
     <>
       <Tabs
-        className="h-[calc(100vh-80px)] w-full overflow-auto"
+        className="h-[calc(100vh-80px)] min-w-[300px] shrink grow basis-0 overflow-auto"
         defaultValue="prepared"
       >
         <Tabs.List>
