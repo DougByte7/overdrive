@@ -1,39 +1,20 @@
 import HomeComponent from "@/components/home";
 import races from "@/assets/dnd/5e/races";
 import useCharacter from "@/hooks/useCharacter";
-import { useEffect } from "react";
-import { CharacterSheetSchema } from "@/assets/dnd/5e/utils/schema";
-import { parse } from "valibot";
+import { useMemo } from "react";
 import { Group, Text } from "@mantine/core";
 import { IconCrown, IconPuzzle } from "@tabler/icons-react";
 import classes from "@/assets/dnd/5e/classes";
+import useRouteGuard from "@/hooks/routeGuard";
 
 export default function Home() {
   const campaigns: unknown[] = [];
 
-  const {
-    characters: storedCharacters,
-    clearCharacters,
-  } = useCharacter();
+  const { characters } = useCharacter();
+  useRouteGuard();
 
-  useEffect(() => {
-    if (!storedCharacters?.length) return;
-
-    try {
-      storedCharacters.forEach((data) => {
-        parse(CharacterSheetSchema, data);
-      });
-    } catch (e) {
-      console.error(e);
-      clearCharacters();
-    }
-  }, [storedCharacters]);
-
-  /**
-   * @todo Create a generic interface for every system
-   */
-  const characters =
-    storedCharacters?.map((character) => {
+  const normalizedCharacters = useMemo(() => {
+    return characters.map((character) => {
       return {
         id: character.id,
         name: character.name,
@@ -60,7 +41,10 @@ export default function Home() {
         ),
         imgSrc: character.picture,
       };
-    }) ?? [];
+    });
+  }, [characters]);
 
-  return <HomeComponent campaigns={campaigns} characters={characters} />;
+  return (
+    <HomeComponent campaigns={campaigns} characters={normalizedCharacters} />
+  );
 }

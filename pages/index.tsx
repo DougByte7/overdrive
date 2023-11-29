@@ -79,7 +79,7 @@ export default function Home() {
           className="mt-3 h-12 w-full bg-[#2A2F37] text-base font-normal text-[#c8c8c8]"
           component={Link}
           href="/home"
-          onClick={() => localStorage.setItem("user:name", "guest")}
+          onClick={() => localStorage.setItem("user:isGuest", "true")}
         >
           Entrar sem usuário
         </Button>

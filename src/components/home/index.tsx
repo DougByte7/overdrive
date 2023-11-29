@@ -45,7 +45,7 @@ export default function HomeComponent({
 
   return (
     <>
-      <main className="mx-4">
+      <main className="mx-4 py-4">
         <TextInput
           type="search"
           mr={16}
@@ -88,6 +88,7 @@ export default function HomeComponent({
                   variant="transparent"
                   component={Link}
                   href="/character/new"
+                  aria-label="Criar um personagem"
                 >
                   <IconPlus color="white" size="1.5rem" />
                 </ActionIcon>
