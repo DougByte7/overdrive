@@ -11,8 +11,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "@mantine/core/styles.css";
 import "src/styles/global.css";
 import "src/styles/variables.css";
+import { api } from "@/utils/api";
 
-export default function MyApp({
+function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }: {
@@ -55,3 +56,5 @@ export default function MyApp({
     </>
   );
 }
+
+export default api.withTRPC(MyApp);

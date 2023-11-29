@@ -1,13 +1,19 @@
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-export default function useRouteGuard() {
+export default function useRouteGuard(guestAccess = true) {
   const { isLoaded, isSignedIn } = useUser();
   const router = useRouter();
 
-  if (isLoaded && !isSignedIn) {
-    router.push("/");
-  }
-
-  return status;
+  useEffect(() => {
+    if (
+      isLoaded &&
+      !isSignedIn &&
+      guestAccess &&
+      window?.localStorage.getItem("user:isGuest") !== "true"
+    ) {
+      router.push("/");
+    }
+  });
 }

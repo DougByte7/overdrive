@@ -1,20 +1,18 @@
 import useCharacter from "@/hooks/useCharacter";
+import { api } from "@/utils/api";
 import {
   Card,
   Text,
   Image,
   UnstyledButton,
-  Paper,
   Button,
-  Transition,
+  ActionIcon,
+  Modal,
+  Group,
 } from "@mantine/core";
-import { useClickOutside } from "@mantine/hooks";
-import {
-  type CSSProperties,
-  type MouseEventHandler,
-  type ReactNode,
-  useState,
-} from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { IconTrash } from "@tabler/icons-react";
+import { type CSSProperties, type ReactNode } from "react";
 
 interface CardCharacterProps {
   style: CSSProperties;
@@ -36,22 +34,13 @@ export default function CardCharacter({
   const fallbackImg =
     "https://img.freepik.com/vetores-gratis/guerreiro-escandinavo-de-personagem-viking-no-capacete_107791-15005.jpg?w=1380&t=st=1687125692~exp=1687126292~hmac=608bcc92a79a2fd9ae1a6b449b8537c476bdd3165c0c00c9f6ceaffa751d253d";
 
-  const [showMenu, setShowMenu] = useState(false);
-  const [pos, setPos] = useState({ x: 16, y: 16 });
-  const ref = useClickOutside(() => setShowMenu(false));
+  const [opened, { open, close }] = useDisclosure(false);
   const { removeCharacter } = useCharacter();
-
-  const handleOpenContextMenu: MouseEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
-    setShowMenu(true);
-    setPos({
-      x: e.clientX - 50,
-      y: e.clientY,
-    });
-  };
+  const { isLoading: isDeleteCharacterLoading } =
+    api.characters.delete.useMutation();
 
   const handleRemove = () => {
-    setShowMenu(false);
+    close();
     removeCharacter(id);
   };
 
@@ -64,7 +53,6 @@ export default function CardCharacter({
         w={240}
         h={345}
         p={0}
-        onContextMenu={handleOpenContextMenu}
       >
         <UnstyledButton component="a" href={`/character/${id}`}>
           <Image
@@ -83,27 +71,41 @@ export default function CardCharacter({
             {extra}
           </div>
         </UnstyledButton>
+        <ActionIcon
+          className="absolute right-2 top-2"
+          color="red"
+          variant="outline"
+          title={`Excluir ${name}`}
+          onClick={open}
+        >
+          <IconTrash />
+        </ActionIcon>
       </Card>
-
-      <Transition mounted={showMenu} transition="pop" duration={200}>
-        {(styles) => (
-          <Paper
-            ref={ref}
-            shadow="xs"
-            p="sm"
-            className="fixed z-10"
-            style={{
-              ...styles,
-              top: pos.y,
-              left: pos.x,
-            }}
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={`Deseja apagar ${name} da existência?`}
+        centered
+        size="lg"
+      >
+        <Group justify="center">
+          <Button
+            className="w-full sm:w-auto"
+            variant="outline"
+            onClick={close}
           >
-            <Button color="red" onClick={handleRemove}>
-              Delete
-            </Button>
-          </Paper>
-        )}
-      </Transition>
+            NÃO!! EU CLIQUEI ERRADOOO!!!!
+          </Button>
+          <Button
+            className="w-full sm:w-auto"
+            onClick={handleRemove}
+            disabled={isDeleteCharacterLoading}
+            loading={isDeleteCharacterLoading}
+          >
+            Adeus velho amigo ;-;
+          </Button>
+        </Group>
+      </Modal>
     </>
   );
 }
