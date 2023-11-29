@@ -53,8 +53,13 @@ export default function useCharacter() {
     if (!isSuccess) return;
 
     // Save characters of previously guest user now with new account
-    if (window?.localStorage.getItem("user:isGuest") === "true" && isSignedIn) {
+    if (
+      (window?.localStorage.getItem("user:isGuest") === "true" ||
+        window?.localStorage.getItem("isLegacySync") !== "true") &&
+      isSignedIn
+    ) {
       addManyCharacters(localCharacters);
+      window.localStorage.setItem("isLegacySync", "true");
       window.localStorage.removeItem("user:isGuest");
       return;
     }
