@@ -44,3 +44,4 @@ build-storybook.log
 
 # Sentry
 next.config.original.js
+.vercel
