@@ -53,6 +53,9 @@ export default function useCharacter() {
     if (!isSuccess) return;
 
     // Save characters of previously guest user now with new account
+    /**
+     *  @todo remove isLegacySync stuff on alpha release
+     * */
     if (
       (window?.localStorage.getItem("user:isGuest") === "true" ||
         window?.localStorage.getItem("isLegacySync") !== "true") &&
