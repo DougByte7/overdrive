@@ -1,6 +1,6 @@
-import classes, { DnD5eClassName } from "@/assets/dnd/5e/classes"
+import classes, { DnD5eClassName } from "@/assets/dnd/5e/classes";
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
+import { css } from "@emotion/react";
 import {
   Stack,
   Box,
@@ -12,22 +12,25 @@ import {
   Paper,
   Badge,
   Text,
-} from "@mantine/core"
-import { useAtom } from "jotai"
-import { characterFormAton } from "../../state"
-import type { CSSProperties, MouseEventHandler } from "react"
+} from "@mantine/core";
+import { useAtom } from "jotai";
+import { characterFormAton } from "../../state";
+import type { CSSProperties, MouseEventHandler } from "react";
 
 interface ClassSelectionProps {
-  styles: CSSProperties
+  styles: CSSProperties;
 }
 export default function ClassSelection({ styles }: ClassSelectionProps) {
-  const [form, setForm] = useAtom(characterFormAton)
+  const [form, setForm] = useAtom(characterFormAton);
 
   const handleSelectClass =
     (className: DnD5eClassName): MouseEventHandler<HTMLButtonElement> =>
     (_) => {
-      setForm((form) => ({ ...form, classes: [{ name: className, level: 1 }] }))
-    }
+      setForm((form) => ({
+        ...form,
+        classes: [{ name: className, level: 1 }],
+      }));
+    };
 
   return (
     <Stack style={styles} gap="md">
@@ -43,10 +46,7 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
           control: {
             padding: "12px",
           },
-          item: {
-            background: "none",
-            border: "1px solid var(--do_text_color_500)",
-          },
+
           chevron: {
             justifySelf: "end",
             marginLeft: "0",
@@ -59,6 +59,15 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
             key={classData.name}
             value={classData.name}
             pos="relative"
+            styles={{
+              item: {
+                background: "none",
+                border:
+                  form.classes[0]?.name === classKey
+                    ? "2px solid var(--do_color_primary_base)"
+                    : "1px solid var(--do_text_color_500)",
+              },
+            }}
           >
             <UnstyledButton
               css={css`
@@ -71,18 +80,9 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
               aria-label={`Selecionar: ${classData.name}, ${classData.description};`}
               onClick={handleSelectClass(classKey as DnD5eClassName)}
             />
-            <Accordion.Control
-              css={css`
-                border-radius: inherit;
-                border: 1px solid
-                  ${form.classes[0]?.name === classKey
-                    ? "var(--do_color_primary_base)"
-                    : "transparent"};
-              `}
-              aria-label="Exibir mais informações"
-            >
+            <Accordion.Control aria-label="Exibir mais informações">
               <Group gap="xs">
-                <Avatar size={40} alt="" src={`/icons/${classKey}.svg`} />
+                <Avatar size={40} alt="" src={`/icons/${classKey}.png`} />
                 <div
                   css={css`
                     width: 78%;
@@ -119,5 +119,5 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
         ))}
       </Accordion>
     </Stack>
-  )
+  );
 }
