@@ -131,7 +131,16 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
         }}
       >
         {spells.map((spell) => (
-          <Accordion.Item key={spell.name} value={spell.name} pos="relative">
+          <Accordion.Item
+            key={spell.name}
+            value={spell.name}
+            pos="relative"
+            styles={{
+              item: form.spells.includes(spell.name)
+                ? { border: "2px solid var(--do_color_primary_base)" }
+                : {},
+            }}
+          >
             <UnstyledButton
               css={css`
                 position: absolute;
@@ -143,16 +152,7 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
               aria-label={`Selecionar: ${spell.name}`}
               onClick={handleSelectSpell(spell.name)}
             />
-            <Accordion.Control
-              css={css`
-                border-radius: inherit;
-                border: 1px solid
-                  ${form.spells.includes(spell.name)
-                    ? "var(--do_color_primary_light_50)"
-                    : "transparent"};
-              `}
-              aria-label="Exibir mais informações"
-            >
+            <Accordion.Control aria-label="Exibir mais informações">
               <Group gap="xs">
                 {spell.name}
 
