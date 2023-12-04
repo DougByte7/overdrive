@@ -80,11 +80,10 @@ export default function CardCharacter({
         <ActionIcon
           className="absolute right-2 top-2"
           color="red"
-          variant="outline"
           title={`Excluir ${name}`}
           onClick={open}
         >
-          <IconTrash />
+          <IconTrash size={18} />
         </ActionIcon>
       </Card>
       <Modal
