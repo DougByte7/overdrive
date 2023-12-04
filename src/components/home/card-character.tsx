@@ -21,6 +21,7 @@ interface CardCharacterProps {
   name: string;
   detail: string;
   extra?: ReactNode;
+  onClick: VoidFunction;
 }
 
 export default function CardCharacter({
@@ -30,6 +31,7 @@ export default function CardCharacter({
   detail,
   extra,
   id,
+  onClick,
 }: CardCharacterProps) {
   const fallbackImg =
     "https://img.freepik.com/vetores-gratis/guerreiro-escandinavo-de-personagem-viking-no-capacete_107791-15005.jpg?w=1380&t=st=1687125692~exp=1687126292~hmac=608bcc92a79a2fd9ae1a6b449b8537c476bdd3165c0c00c9f6ceaffa751d253d";
@@ -54,7 +56,11 @@ export default function CardCharacter({
         h={345}
         p={0}
       >
-        <UnstyledButton component="a" href={`/character/${id}`}>
+        <UnstyledButton
+          component="a"
+          href={`/character/${id}`}
+          onClick={onClick}
+        >
           <Image
             src={imgSrc ?? fallbackImg}
             radius="4px 0 0 4px"
@@ -64,7 +70,7 @@ export default function CardCharacter({
           />
 
           <div className="grid h-[105px] px-4 py-3">
-            <Text className="text-white leading-none" fw="bold">
+            <Text className="leading-none text-white" fw="bold">
               {name}
             </Text>
             <Text size="sm">{detail}</Text>
