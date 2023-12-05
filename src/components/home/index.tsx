@@ -5,7 +5,6 @@ import {
   Text,
   ActionIcon,
   Transition,
-  Box as main,
   LoadingOverlay,
 } from "@mantine/core";
 import { useDebouncedState, useDisclosure } from "@mantine/hooks";
