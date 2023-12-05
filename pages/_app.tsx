@@ -7,11 +7,11 @@ import { ModalsProvider } from "@mantine/modals";
 import { Provider as JotaiProvider } from "jotai";
 import { MantineProvider } from "@mantine/core";
 import { ClerkProvider } from "@clerk/nextjs";
+import { api } from "@/utils/api";
 
 import "@mantine/core/styles.css";
 import "src/styles/global.css";
 import "src/styles/variables.css";
-import { api } from "@/utils/api";
 
 function MyApp({
   Component,

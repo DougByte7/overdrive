@@ -124,6 +124,9 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
       .map((item, i) => {
         if ("index" in item) return JSON.stringify(item);
 
+        if ("category_range" in item && listGroupValue[key + (i - 1)]) {
+          return listGroupValue[key + (i - 1)];
+        }
         if (listGroupValue[key + i]) return listGroupValue[key + i];
 
         return key + i;
@@ -197,6 +200,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
     selectedItems.current[group] = JSON.parse(
       value,
     ) as WithAmount<EquipmentIndex>[];
+
     setForm((prevForm) => {
       return {
         ...prevForm,
@@ -215,6 +219,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
     const multipleValues = Object.keys(radioValue).filter((v) =>
       v.startsWith(key),
     );
+
     if (multipleValues.length)
       return Object.entries(radioValue)
         .filter(([k]) => multipleValues.includes(k))
@@ -270,7 +275,9 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
                           }}
                           value={value}
                           disabled={(JSON.parse(value) as ComboboxData).some(
-                            (v) => typeof v === "number",
+                            (v) => {
+                              return typeof v === "number";
+                            },
                           )}
                           label={
                             "index" in itemData ? (

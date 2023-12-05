@@ -62,7 +62,20 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
         }}
       >
         {Object.entries(races).map(([raceKey, race]) => (
-          <Accordion.Item value={race.name} key={race.name} pos="relative">
+          <Accordion.Item
+            styles={{
+              item: {
+                background: "none",
+                border:
+                  form.race === raceKey
+                    ? "2px solid var(--do_color_primary_base)"
+                    : "1px solid var(--do_text_color_500)",
+              },
+            }}
+            value={race.name}
+            key={race.name}
+            pos="relative"
+          >
             <UnstyledButton
               css={css`
                 position: absolute;
@@ -74,16 +87,7 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
               aria-label={`Selecionar: ${race.name}, ${race.description};`}
               onClick={handleSelectRace(raceKey as DnD5eRaceName)}
             />
-            <Accordion.Control
-              css={css`
-                border-radius: inherit;
-                border: 1px solid
-                  ${form.race === raceKey
-                    ? "var(--do_color_primary_base)"
-                    : "transparent"};
-              `}
-              aria-label="Exibir mais informações"
-            >
+            <Accordion.Control aria-label="Exibir mais informações">
               <Group>
                 <Avatar
                   size={40}

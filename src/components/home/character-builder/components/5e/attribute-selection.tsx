@@ -283,7 +283,9 @@ export default function AttributeSelection({
 
       {races[form.race!].boost?.anyAttr && (
         <MultiSelect
-          data={attributeOptions}
+          data={attributeOptions.filter(
+            (attr) => !races[form.race!].boost?.[attr.value],
+          )}
           label={`Escolha ${races[form.race!].boost!.anyAttr!.amount} atributo${
             races[form.race!].boost!.anyAttr!.amount > 1 ? "s" : ""
           } para aumentar em ${races[form.race!].boost!.anyAttr!.value}`}

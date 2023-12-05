@@ -23,6 +23,7 @@ import { useAtom } from "jotai";
 import { characterFormAton, avatarPreviewUrlAton } from "../../state";
 import {
   Fragment,
+  useMemo,
   type CSSProperties,
   type Dispatch,
   type SetStateAction,
@@ -44,6 +45,18 @@ interface ReviewOptionsProps {
 export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
   const [form] = useAtom(characterFormAton);
   const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton);
+
+  const normalizedItemList = useMemo(() => {
+    return form.items.reduce((acc, item) => {
+      const duplicateItemIndex = acc.findIndex((i) => i.index === item.index);
+      if (duplicateItemIndex !== -1) {
+        acc[duplicateItemIndex].amount += item.amount;
+        return [...acc];
+      }
+
+      return [...acc, item];
+    }, [] as WithAmount<EquipmentIndex>[]);
+  }, [form]);
 
   return (
     <Stack style={styles} gap="md">
@@ -259,26 +272,16 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
           <Space h="md" />
 
           <Stack>
-            {form.items
-              .reduce((acc, item) => {
-                const prevItem = acc.find((i) => i.index === item.index);
-                if (prevItem) {
-                  prevItem.amount++;
-                  return acc;
-                }
-
-                return [...acc, item];
-              }, [] as WithAmount<EquipmentIndex>[])
-              .map((item, i) => {
-                return (
-                  <Text key={`${item.index}${i}`}>
-                    {item.amount}x{" "}
-                    {equipmentList.find((e) => e.index === item.index)?.name ??
-                      "ITEM_NOT_FOUND"}
-                    {item.ammo && ` e ${item.ammo}x munições`}
-                  </Text>
-                );
-              })}
+            {normalizedItemList.map((item, i) => {
+              return (
+                <Text key={`${item.index}${i}`}>
+                  {item.amount}x{" "}
+                  {equipmentList.find((e) => e.index === item.index)?.name ??
+                    "ITEM_NOT_FOUND"}
+                  {item.ammo && ` e ${item.ammo}x munições`}
+                </Text>
+              );
+            })}
           </Stack>
         </Paper>
       </Box>

@@ -83,7 +83,7 @@ function SpellCard({ spell, isEdit, onAddOrRemoveSpell }: SpellCardProps) {
   const [, setSelectedSpell] = useAtom(selectedSpellAton);
   const [isMarked, { toggle }] = useDisclosure(spell.marked);
   const schoolColorMap = {
-    necromancy: "dark",
+    necromancy: "teal",
     transmutation: "green",
     abjuration: "blue",
     illusion: "violet",
