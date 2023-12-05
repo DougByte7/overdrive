@@ -200,6 +200,7 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
     selectedItems.current[group] = JSON.parse(
       value,
     ) as WithAmount<EquipmentIndex>[];
+
     setForm((prevForm) => {
       return {
         ...prevForm,
