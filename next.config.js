@@ -17,6 +17,14 @@ module.exports = withSentryConfig(
       localeDetection: false,
     },
     reactStrictMode: true,
+    images: {
+      remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "5fsqi7jl1uruyhdv.public.blob.vercel-storage.com",
+        },
+      ],
+    },
   }),
   { silent: true },
   { hideSourcemaps: true },
