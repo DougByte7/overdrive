@@ -60,7 +60,7 @@
     "react-markdown": "^8.0.7",
     "react-use": "^17.4.0",
     "remark-gfm": "^3.0.1",
-    "sharp": "^0.33.0",
+    "sharp": "^0.32.6",
     "simple-peer": "^9.11.1",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1",
