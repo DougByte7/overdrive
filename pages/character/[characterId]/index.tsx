@@ -260,7 +260,7 @@ export default function CharacterSheetPage({
             </Group>
           </Group>
         </header>
-        <main className="flex w-full flex-wrap justify-center gap-4">
+        <main className="flex w-full flex-wrap justify-center gap-4 pb-24">
           {activeTab === "basic" && (
             <Stack className="min-w-[350px] max-w-[450px] p-4">
               <CharacterPortrait
