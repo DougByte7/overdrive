@@ -66,7 +66,7 @@ export default function CardCharacter({
             radius="4px 0 0 4px"
             h={240}
             w={240}
-            alt=""
+            alt="Retrato do personagem"
           />
 
           <div className="grid h-[105px] px-4 py-3">

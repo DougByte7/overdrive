@@ -13,6 +13,7 @@ import {
 import { useAtom } from "jotai";
 import { avatarPreviewUrlAton, characterFormAton } from "../../state";
 import type { CSSProperties, ChangeEventHandler } from "react";
+import { notifications } from "@mantine/notifications";
 
 interface CharacterDescriptionProps {
   styles: CSSProperties;
@@ -40,8 +41,18 @@ export default function CharacterDescription({
       setForm((form) => ({ ...form, picture: pictureUrl }));
     };
 
-    if (picture) reader.readAsDataURL(picture);
-    else setAvatarPreviewUrl("");
+    if (picture) {
+      // Menor que 10mb
+      if (picture.size < 10 * 1024 ** 2) reader.readAsDataURL(picture);
+      else
+        notifications.show({
+          color: "red",
+          title: "Falha crítica!",
+          message: "Imagem maior que 10Mb",
+        });
+    } else {
+      setAvatarPreviewUrl("");
+    }
   };
 
   return (
@@ -61,7 +72,7 @@ export default function CharacterDescription({
           name="character-picture"
           label="Foto do personagem"
           placeholder="Selecione uma foto..."
-          accept="image/png,image/jpeg,image/avif"
+          accept="image/png,image/jpeg"
           styles={{
             label: {
               fontSize: "var(--do_text_size_sm)",
