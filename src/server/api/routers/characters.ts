@@ -14,7 +14,11 @@ const ratelimit = new Ratelimit({
   analytics: true,
 });
 
-async function publishImage(picture: string, id: string) {
+async function publishImage(
+  picture: string,
+  characterId: string,
+  playerId: string,
+) {
   // If default picture return
   if (picture.endsWith(".png") && picture.length < 100) return picture;
 
@@ -36,10 +40,14 @@ async function publishImage(picture: string, id: string) {
   if (characterPicture.byteLength > oneMega)
     throw new TRPCError({ code: "PAYLOAD_TOO_LARGE" });
 
-  const { url } = await put(`characters/${id}.jpeg`, characterPicture, {
-    access: "public",
-    contentType: "image/jpeg",
-  });
+  const { url } = await put(
+    `players/${playerId}/characters/${characterId}.jpeg`,
+    characterPicture,
+    {
+      access: "public",
+      contentType: "image/jpeg",
+    },
+  );
 
   return url;
 }
@@ -72,7 +80,11 @@ export const charactersRouter = createTRPCRouter({
       const { success } = await ratelimit.limit(playerId);
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
-      const pictureUrl = await publishImage(input.data.picture, input.data.id);
+      const pictureUrl = await publishImage(
+        input.data.picture,
+        input.data.id,
+        playerId,
+      );
 
       return ctx.prisma.character.create({
         data: {
@@ -110,7 +122,7 @@ export const charactersRouter = createTRPCRouter({
 
       const pictureUrls = (await Promise.allSettled(
         input.map(async (i) => {
-          const url = await publishImage(i.data.picture, i.data.id);
+          const url = await publishImage(i.data.picture, i.data.id, playerId);
           return url;
         }),
       )) as PromiseFulfilledResult<string>[];
