@@ -20,6 +20,7 @@ import {
   attrMethodAtom,
   avatarPreviewUrlAton,
   characterFormAton,
+  itemSelectionLockAton,
   pointBuyAtom,
 } from "./state";
 import CharacterDescription from "./components/5e/character-description";
@@ -59,6 +60,7 @@ export default function CharacterBuilder() {
   const [attrMethod] = useAtom(attrMethodAtom);
   const [availablePoints] = useAtom(pointBuyAtom);
   const [avatarPreviewUrl] = useAtom(avatarPreviewUrlAton);
+  const [itemSelectionLock] = useAtom(itemSelectionLockAton);
   const router = useRouter();
   const { addCharacter } = useCharacter();
 
@@ -164,6 +166,9 @@ export default function CharacterBuilder() {
             )) ||
           (attrMethod === "pointbuy" && availablePoints > 0)
         );
+      }
+      case Steps.ITEMS: {
+        return !itemSelectionLock;
       }
       default: {
         return false;

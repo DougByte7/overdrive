@@ -28,3 +28,5 @@ export const avatarPreviewUrlAton = atom("");
 export const attrMethodAtom = atom<AttrMethod | "">("");
 
 export const pointBuyAtom = atom(27);
+
+export const itemSelectionLockAton = atom(false)

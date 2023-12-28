@@ -11,7 +11,7 @@ import {
   ComboboxItem,
 } from "@mantine/core";
 import { useAtom } from "jotai";
-import { characterFormAton } from "../../state";
+import { characterFormAton, itemSelectionLockAton } from "../../state";
 import classes from "@/assets/dnd/5e/classes";
 import equipmentList from "@/assets/dnd/5e/equipment.json";
 import { type CSSProperties, Fragment, useState, useRef } from "react";
@@ -29,6 +29,7 @@ interface ItemsSelectionProps {
 }
 export default function ItemsSelection({ styles }: ItemsSelectionProps) {
   const [form, setForm] = useAtom(characterFormAton);
+  const [, setItemSelectionLockAton] = useAtom(itemSelectionLockAton);
   const [radioValue, setRadioValue] = useState<Record<string, string>>({});
   const [listGroupValue, setListGroupValue] = useState<Record<string, string>>(
     {},
@@ -200,6 +201,11 @@ export default function ItemsSelection({ styles }: ItemsSelectionProps) {
     selectedItems.current[group] = JSON.parse(
       value,
     ) as WithAmount<EquipmentIndex>[];
+
+    setItemSelectionLockAton(
+      selectedItems.current.flat().length ===
+        classes[form.classes[0].name].proficiencies.equipmentOptions.length,
+    );
 
     setForm((prevForm) => {
       return {
