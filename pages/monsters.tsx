@@ -1,9 +1,5 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import {
   Group,
-  ActionIcon,
-  Title,
   Tabs,
   Stack,
   Switch,
@@ -16,7 +12,7 @@ import {
   Box,
   Divider,
 } from "@mantine/core";
-import { IconChevronLeft, IconFilter, IconSearch } from "@tabler/icons-react";
+import { IconFilter, IconSearch } from "@tabler/icons-react";
 import monsters from "@/assets/dnd/5e/monsters.json";
 import { ChangeEventHandler, useEffect, useMemo, useState } from "react";
 import { MonsterCard } from "@/components/monsters/monster-card";
@@ -28,6 +24,7 @@ import {
 import type { DnD5eMonster } from "@/assets/dnd/5e/interfaces";
 import { useAtom } from "jotai";
 import { selectedMonsterAtom } from "@/components/monsters/state";
+import TopBar from "@/components/top-bar";
 
 const initialFilterState: {
   type: string;
@@ -142,23 +139,8 @@ export default function PageMonsters() {
 
   return (
     <>
-      <header>
-        <Group p="md">
-          <ActionIcon
-            size="xl"
-            variant="light"
-            title="Voltar para página inicial"
-            component="a"
-            href="/home"
-          >
-            <IconChevronLeft size="1rem" color="var(--do_color_primary_base)" />
-          </ActionIcon>
+      <TopBar title="Monstros" />
 
-          <Title css={pageTitleStyles} size="md">
-            Monstros
-          </Title>
-        </Group>
-      </header>
       <main>
         <Tabs defaultValue="encounter">
           <Tabs.List>
@@ -396,12 +378,6 @@ export default function PageMonsters() {
     </>
   );
 }
-
-const pageTitleStyles = css`
-  position: absolute;
-  left: 50%;
-  translate: -50%;
-`;
 
 const monsterSizes = [
   {

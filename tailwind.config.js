@@ -14,6 +14,9 @@ module.exports = {
           500: "#8100be",
           200: "#f6f0fa",
         },
+        support: {
+          600: "var(--do_color_support_dark_60)",
+        },
       },
     },
   },

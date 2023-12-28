@@ -6,6 +6,7 @@ import { Group, Text } from "@mantine/core";
 import { IconCrown, IconPuzzle } from "@tabler/icons-react";
 import classes from "@/assets/dnd/5e/classes";
 import useRouteGuard from "@/hooks/routeGuard";
+import TopBar from "@/components/top-bar";
 
 export default function Home() {
   const campaigns: unknown[] = [];
@@ -45,6 +46,9 @@ export default function Home() {
   }, [characters]);
 
   return (
-    <HomeComponent campaigns={campaigns} characters={normalizedCharacters} />
+    <>
+      <TopBar />
+      <HomeComponent campaigns={campaigns} characters={normalizedCharacters} />
+    </>
   );
 }
