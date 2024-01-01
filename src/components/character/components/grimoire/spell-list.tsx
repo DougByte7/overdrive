@@ -6,7 +6,6 @@ import {
   Divider,
   Badge,
   Group,
-  Tooltip,
   UnstyledButton,
   Text,
   Box,
@@ -19,7 +18,7 @@ import {
   Checkbox,
   Radio,
 } from "@mantine/core";
-import { useClickOutside, useDisclosure } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconCone2,
   IconHemisphere,
@@ -36,43 +35,14 @@ import { useAtom } from "jotai";
 import {
   ChangeEventHandler,
   Fragment,
-  MouseEventHandler,
-  ReactNode,
   useState,
 } from "react";
 import { selectedSpellAton } from "../../state";
 import type { AddOrRemoveSpellEvent } from "./interfaces";
 import { removeDiacritics } from "@/utils/removeDiacritics";
+import ToggleTip from "@/components/shared/toggle-tip";
 
-interface ToggleTipProps {
-  label: string | string[];
-  children: ReactNode;
-}
-function ToggleTip({ label, children }: ToggleTipProps) {
-  const [opened, setOpened] = useState(false);
-  const ref = useClickOutside(() => setOpened(false));
 
-  const handleToggle: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
-    setOpened((o) => !o);
-  };
-
-  return (
-    <Tooltip
-      css={css`
-        position: relative;
-        z-index: 2;
-      `}
-      label={label}
-      multiline
-      opened={opened}
-    >
-      <UnstyledButton ref={ref} onClick={handleToggle}>
-        {children}
-      </UnstyledButton>
-    </Tooltip>
-  );
-}
 
 interface SpellCardProps {
   spell: DnD5eSpell;
