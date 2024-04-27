@@ -18,7 +18,7 @@ export default function Home() {
         if (!isSignedIn) return
 
         router.push('/home')
-    }, [isSignedIn])
+    }, [isSignedIn, router])
 
     return (
         <main className="justify-center">
@@ -47,6 +47,8 @@ export default function Home() {
                     </Text>
                 </div>
                 <SignUp
+                    routing="hash"
+                    fallbackRedirectUrl="/home"
                     appearance={{
                         elements: {
                             rootBox: {

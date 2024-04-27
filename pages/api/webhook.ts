@@ -1,11 +1,12 @@
-import { EmailAddressJSON, WebhookEvent } from '@clerk/nextjs/server'
+import type { EmailAddressJSON } from '@clerk/backend'
+import type { WebhookEvent } from '@clerk/nextjs/server'
 import { Pool, neonConfig } from '@neondatabase/serverless'
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
 import { randomInt } from 'crypto'
 import dotenv from 'dotenv'
 import { buffer } from 'micro'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { Webhook } from 'svix'
 import ws from 'ws'
 
@@ -95,7 +96,7 @@ export default async function handler(
             const { data: userData } = evt
             const userEmail = getUserEmail(
                 userData.email_addresses,
-                userData.primary_email_address_id
+                userData.primary_email_address_id ?? ''
             )
             if (!userEmail) {
                 console.error('Error user email not found')
@@ -108,7 +109,7 @@ export default async function handler(
                 data: {
                     id: userData.id,
                     email: userEmail,
-                    name: userData.username ?? userData.first_name,
+                    name: userData.username ?? userData.first_name ?? '',
                     nameTag: randomInt(0, 10_000),
                     imageUrl: userData.image_url,
                 },
@@ -118,7 +119,7 @@ export default async function handler(
             const { data: userData } = evt
             const userEmail = getUserEmail(
                 userData.email_addresses,
-                userData.primary_email_address_id
+                userData.primary_email_address_id ?? ''
             )
             if (!userEmail) {
                 console.error('Error user email not found')
@@ -131,7 +132,7 @@ export default async function handler(
                 where: { id: userData.id },
                 data: {
                     email: userEmail,
-                    name: userData.username ?? userData.first_name,
+                    name: userData.username ?? userData.first_name ?? '',
                     nameTag: randomInt(0, 10_000),
                     imageUrl: userData.image_url,
                 },

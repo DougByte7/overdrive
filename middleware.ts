@@ -1,12 +1,12 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { clerkMiddleware } from '@clerk/nextjs/server'
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({
-  publicRoutes: ["/api/webhooks(.*)"],
-});
+export default clerkMiddleware((auth, req) => {
+    // Restrict admin route to users with specific role
+    // if (isAdminRoute(req)) auth().protect({ role: 'org:admin' });
+    // // Restrict dashboard routes to signed in users
+    // if (isDashboardRoute(req)) auth().protect();
+})
 
 export const config = {
-  matcher: ["/(api|trpc)(.*)"],
-};
+    matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+}
