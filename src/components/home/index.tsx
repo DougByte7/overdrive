@@ -1,129 +1,148 @@
 import {
-  Card,
-  TextInput,
-  Title,
-  Text,
-  ActionIcon,
-  Transition,
-  LoadingOverlay,
-} from "@mantine/core";
-import { useDebouncedState, useDisclosure } from "@mantine/hooks";
-import CardCharacter from "./card-character";
-import SideScrollingBox from "./side-scrolling-box";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
-import { type ChangeEventHandler, useEffect, useState } from "react";
-import { removeDiacritics } from "@/utils/removeDiacritics";
-import Link from "next/link";
+    ActionIcon,
+    Card,
+    LoadingOverlay,
+    Text,
+    TextInput,
+    Title,
+    Transition,
+    UnstyledButton,
+} from '@mantine/core'
+import { useDebouncedState, useDisclosure } from '@mantine/hooks'
+import { IconPlus, IconSearch } from '@tabler/icons-react'
+import Link from 'next/link'
+import { type ChangeEventHandler, useEffect, useState } from 'react'
+
+import { removeDiacritics } from '@/utils/removeDiacritics'
+
+import CardCharacter from './card-character'
+import SideScrollingBox from './side-scrolling-box'
 
 interface HomeComponentProps {
-  campaigns: any[];
-  characters: any[];
+    campaigns: any[]
+    characters: any[]
 }
 
 export default function HomeComponent({
-  //  campaigns,
-  characters,
+    //  campaigns,
+    characters,
 }: HomeComponentProps) {
-  const [search, setSearch] = useDebouncedState("", 200);
-  const [filteredCharacters, setFilteredCharacters] = useState(characters);
-  const [visible, { toggle }] = useDisclosure(false);
+    const [search, setSearch] = useDebouncedState('', 200)
+    const [filteredCharacters, setFilteredCharacters] = useState(characters)
+    const [visible, { toggle }] = useDisclosure(false)
 
-  const handleFilter: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!characters.length) return;
-    setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()));
-  };
+    const handleFilter: ChangeEventHandler<HTMLInputElement> = (e) => {
+        if (!characters.length) return
+        setSearch(removeDiacritics(e.currentTarget.value.toLocaleLowerCase()))
+    }
 
-  useEffect(() => {
-    if (!search) return setFilteredCharacters(characters);
+    useEffect(() => {
+        if (!search) return setFilteredCharacters(characters)
 
-    setFilteredCharacters(
-      characters.filter(
-        (char) =>
-          removeDiacritics(char.name.toLowerCase()).includes(search) ||
-          removeDiacritics(char.campaignName.toLowerCase()).includes(search),
-      ),
-    );
-  }, [search, characters]);
+        setFilteredCharacters(
+            characters.filter(
+                (char) =>
+                    removeDiacritics(char.name.toLowerCase()).includes(
+                        search
+                    ) ||
+                    removeDiacritics(char.campaignName.toLowerCase()).includes(
+                        search
+                    )
+            )
+        )
+    }, [search, characters])
 
-  return (
-    <>
-      <main className="relative mx-4 h-screen py-4">
-        <LoadingOverlay
-          visible={visible}
-          zIndex={1000}
-          overlayProps={{ radius: "sm", blur: 2 }}
-          loaderProps={{ type: "bars" }}
-        />
+    return (
+        <>
+            <main className="relative mx-4 h-screen py-4">
+                <LoadingOverlay
+                    visible={visible}
+                    zIndex={1000}
+                    overlayProps={{ radius: 'sm', blur: 2 }}
+                    loaderProps={{ type: 'bars' }}
+                />
 
-        <TextInput
-          type="search"
-          mr={16}
-          ml={16}
-          size="lg"
-          placeholder="O que está procurando?"
-          rightSection={
-            <IconSearch color="var(--do_color_primary_light_50)" size={24} />
-          }
-          onChange={handleFilter}
-        />
+                <TextInput
+                    type="search"
+                    mr={16}
+                    ml={16}
+                    size="lg"
+                    placeholder="O que está procurando?"
+                    rightSection={
+                        <IconSearch
+                            color="var(--do_color_primary_light_50)"
+                            size={24}
+                        />
+                    }
+                    onChange={handleFilter}
+                />
 
-        <div>
-          <div className="mx-4 mb-4 mt-8">
-            <Title className="text-white" size="h3">
-              Meus personagens
-            </Title>
-            <Text>Os heróis das minhas histórias...</Text>
-          </div>
+                <div>
+                    <div className="mx-4 mb-4 mt-8">
+                        <Title className="text-white" size="h3">
+                            Meus personagens
+                        </Title>
+                        <Text>Os heróis das minhas histórias...</Text>
+                    </div>
 
-          <SideScrollingBox>
-            {!search && (
-              <Card
-                className="flex flex-wrap items-center justify-center gap-2 rounded-lg border border-dashed border-[#2a2f37]"
-                bg="transparent"
-                w={240}
-                h={345}
-              >
-                <Text className="text-white" fw={600} ta="center">
-                  Criar um personagem
-                </Text>
+                    <SideScrollingBox>
+                        {!search && (
+                            <UnstyledButton
+                                component={Link}
+                                href="/character/new"
+                                onClick={toggle}
+                            >
+                                <Card
+                                    className="flex flex-wrap items-center justify-center rounded-lg border border-dashed border-[#2a2f37] hover:border-brand-500"
+                                    bg="transparent"
+                                    w={240}
+                                    h={345}
+                                >
+                                    <IconPlus
+                                        className="mb-2"
+                                        color="white"
+                                        size="2rem"
+                                    />
 
-                <Text size="sm" ta="center">
-                  Crie um personagem para utilizar onde quiser!
-                </Text>
+                                    <Text
+                                        className="text-white"
+                                        fw={600}
+                                        ta="center"
+                                    >
+                                        Criar um personagem
+                                    </Text>
 
-                <ActionIcon
-                  mt="sm"
-                  size="xl"
-                  variant="transparent"
-                  component={Link}
-                  href="/character/new"
-                  aria-label="Criar um personagem"
-                  onClick={toggle}
-                >
-                  <IconPlus color="white" size="1.5rem" />
-                </ActionIcon>
-              </Card>
-            )}
-            {filteredCharacters.map((character, i) => {
-              return (
-                <Transition key={i} mounted={true} transition="fade">
-                  {(styles) => (
-                    <CardCharacter
-                      style={styles}
-                      imgSrc={character.imgSrc}
-                      name={character.name}
-                      detail={character.detail}
-                      extra={character.extra}
-                      id={character.id ?? i}
-                      onClick={toggle}
-                    />
-                  )}
-                </Transition>
-              );
-            })}
-          </SideScrollingBox>
-        </div>
-      </main>
-    </>
-  );
+                                    <Text size="sm" ta="center">
+                                        Crie um personagem para utilizar onde
+                                        quiser!
+                                    </Text>
+                                </Card>
+                            </UnstyledButton>
+                        )}
+                        {filteredCharacters.map((character, i) => {
+                            return (
+                                <Transition
+                                    key={i}
+                                    mounted={true}
+                                    transition="fade"
+                                >
+                                    {(styles) => (
+                                        <CardCharacter
+                                            style={styles}
+                                            imgSrc={character.imgSrc}
+                                            name={character.name}
+                                            detail={character.detail}
+                                            extra={character.extra}
+                                            id={character.id ?? i}
+                                            onClick={toggle}
+                                        />
+                                    )}
+                                </Transition>
+                            )
+                        })}
+                    </SideScrollingBox>
+                </div>
+            </main>
+        </>
+    )
 }
