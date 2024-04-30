@@ -1,10 +1,12 @@
+'use client'
+
 import { SignUp, useUser } from '@clerk/nextjs'
 import { Button, Stack, Text, Title } from '@mantine/core'
 import { useViewportSize } from '@mantine/hooks'
 import { IconExternalLink } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo } from 'react'
 
 import breakpoints from '@/utils/breakpoints'

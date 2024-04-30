@@ -1,22 +1,10 @@
 import type { EmailAddressJSON } from '@clerk/backend'
 import type { WebhookEvent } from '@clerk/nextjs/server'
-import { Pool, neonConfig } from '@neondatabase/serverless'
-import { PrismaNeon } from '@prisma/adapter-neon'
-import { PrismaClient } from '@prisma/client'
 import { randomInt } from 'crypto'
-import dotenv from 'dotenv'
-import { buffer } from 'micro'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { headers } from 'next/headers'
 import { Webhook } from 'svix'
-import ws from 'ws'
 
-dotenv.config()
-neonConfig.webSocketConstructor = ws
-const connectionString = `${process.env.DATABASE_URL}`
-
-const pool = new Pool({ connectionString })
-const adapter = new PrismaNeon(pool)
-const prisma = new PrismaClient({ adapter })
+import { prisma } from '@/server/db'
 
 export const config = {
     api: {
@@ -24,13 +12,7 @@ export const config = {
     },
 }
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
-    if (req.method !== 'POST') {
-        return res.status(405)
-    }
+export default async function POST(req: Request) {
     // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 
@@ -41,20 +23,20 @@ export default async function handler(
     }
 
     // Get the headers
-    const svix_id = req.headers['svix-id'] as string
-    const svix_timestamp = req.headers['svix-timestamp'] as string
-    const svix_signature = req.headers['svix-signature'] as string
+    const headerPayload = headers()
+    const svix_id = headerPayload.get('svix-id')
+    const svix_timestamp = headerPayload.get('svix-timestamp')
+    const svix_signature = headerPayload.get('svix-signature')
 
     // If there are no headers, error out
     if (!svix_id || !svix_timestamp || !svix_signature) {
-        return res
-            .status(400)
-            .json({ error: 'Error occured -- no svix headers' })
+        return new Response('Error occured -- no svix headers', { status: 400 })
     }
 
     console.log('headers', req.headers, svix_id, svix_signature, svix_timestamp)
     // Get the body
-    const body = (await buffer(req)).toString()
+    const payload = await req.json()
+    const body = JSON.stringify(payload)
 
     // Create a new Svix instance with your secret.
     const wh = new Webhook(WEBHOOK_SECRET)
@@ -70,7 +52,7 @@ export default async function handler(
         }) as WebhookEvent
     } catch (err) {
         console.error('Error verifying webhook:', err)
-        return res.status(400).json({ Error: err })
+        return new Response(JSON.stringify(err), { status: 400 })
     }
 
     // Get the ID and type
@@ -100,9 +82,9 @@ export default async function handler(
             )
             if (!userEmail) {
                 console.error('Error user email not found')
-                return res
-                    .status(400)
-                    .json({ Error: new Error('Error user email not found') })
+                return new Response('Error user email not found', {
+                    status: 400,
+                })
             }
 
             await prisma.user.create({
@@ -123,9 +105,9 @@ export default async function handler(
             )
             if (!userEmail) {
                 console.error('Error user email not found')
-                return res
-                    .status(400)
-                    .json({ Error: new Error('Error user email not found') })
+                return new Response('Error user email not found', {
+                    status: 400,
+                })
             }
 
             await prisma.user.update({
@@ -149,5 +131,7 @@ export default async function handler(
         }
     }
 
-    return res.status(200).json({ response: 'Success' })
+    return new Response('', {
+        status: 201,
+    })
 }
