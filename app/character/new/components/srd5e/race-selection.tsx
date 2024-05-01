@@ -4,9 +4,11 @@ import {
     Avatar,
     Box,
     Button,
+    Checkbox,
     Divider,
     Fieldset,
     Group,
+    NumberInput,
     Paper,
     Select,
     Stack,
@@ -18,9 +20,21 @@ import {
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { randomId } from '@mantine/hooks'
+import { modals } from '@mantine/modals'
 import { IconPlus } from '@tabler/icons-react'
 import { useAtom } from 'jotai'
+import { valibotResolver } from 'mantine-form-valibot-resolver'
 import { CSSProperties, Fragment, MouseEventHandler } from 'react'
+import {
+    array,
+    boolean,
+    integer,
+    is,
+    minLength,
+    number,
+    object,
+    string,
+} from 'valibot'
 
 import races, { DnD5eRace, DnD5eRaceName } from '@/assets/dnd/5e/races'
 import storageKeys from '@/constants/storageKeys'
@@ -157,10 +171,39 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
     )
 }
 
+const customRaceSchema = object({
+    public: boolean(),
+    name: string([minLength(1, 'O campo deve ter pelo menos um caractere')]),
+    description: string(),
+    speed: object({
+        land: number([integer('A velocidade precisa ser um número inteiro')]),
+        climb: number([integer('A velocidade precisa ser um número inteiro')]),
+        fly: number([integer('A velocidade precisa ser um número inteiro')]),
+        swimming: number([
+            integer('A velocidade precisa ser um número inteiro'),
+        ]),
+        burrow: number([integer('A velocidade precisa ser um número inteiro')]),
+    }),
+    type: string(),
+    size: string(),
+    darkvision: number([integer('O campo precisa ser um número inteiro')]),
+    traits: array(
+        object({
+            name: string([
+                minLength(1, 'O campo deve ter pelo menos um caractere'),
+            ]),
+            description: string([
+                minLength(1, 'O campo deve ter pelo menos um caractere'),
+            ]),
+        })
+    ),
+})
+
 function FormCustomRace() {
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: {
+            public: false,
             name: '',
             description: '',
             speed: {
@@ -181,21 +224,46 @@ function FormCustomRace() {
                 },
             ],
         },
+        validate: valibotResolver(customRaceSchema),
     })
 
-    const save = (race: DnD5eRace) => {
-        const races = JSON.parse(
-            localStorage.getItem(storageKeys.srd5Races) ?? '[]'
-        ) as DnD5eRace[]
+    const save = (race: typeof form.values) => {
+        if (race.public) {
+            modals.openConfirmModal({
+                centered: true,
+                title: 'Confirmação de publicação de material homebrew',
+                children: (
+                    <>
+                        <Text>
+                            Ao clicar em ‘Confirmar’, você está atestando que o
+                            material fornecido não viola os direitos autorais de
+                            terceiros nem nossos termos de uso.
+                        </Text>
+                        <Text>
+                            Esteja ciente de que qualquer infração pode resultar
+                            na remoção permanente do material e na suspensão da
+                            sua conta.
+                        </Text>
+                    </>
+                ),
+                labels: { confirm: 'Confirmar', cancel: 'Cancelar' },
+                onConfirm: () => console.log(race),
+            })
+        } else {
+            console.log(race)
+        }
 
-        localStorage.setItem(
-            storageKeys.srd5Races,
-            JSON.stringify([...races, race])
-        )
+        // const races = JSON.parse(
+        //     localStorage.getItem(storageKeys.srd5Races) ?? '[]'
+        // ) as DnD5eRace[]
+        // localStorage.setItem(
+        //     storageKeys.srd5Races,
+        //     JSON.stringify([...races, race])
+        // )
     }
 
     return (
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form onSubmit={form.onSubmit((values) => save(values))}>
             <Stack gap="md">
                 <TextInput
                     withAsterisk
@@ -208,34 +276,34 @@ function FormCustomRace() {
                     {...form.getInputProps('description')}
                 />
                 <Fieldset legend="Velocidade (Metros)">
-                    <TextInput
+                    <NumberInput
                         label="Terrestre"
                         defaultValue={9}
-                        type="number"
+                        step={1}
                         {...form.getInputProps('speed.land')}
                     />
-                    <TextInput
+                    <NumberInput
                         label="Escalada"
                         defaultValue={0}
-                        type="number"
+                        step={1}
                         {...form.getInputProps('speed.climb')}
                     />
-                    <TextInput
+                    <NumberInput
                         label="Voo"
                         defaultValue={0}
-                        type="number"
+                        step={1}
                         {...form.getInputProps('speed.fly')}
                     />
-                    <TextInput
+                    <NumberInput
                         label="Natação"
                         defaultValue={0}
-                        type="number"
+                        step={1}
                         {...form.getInputProps('speed.swimming')}
                     />
-                    <TextInput
+                    <NumberInput
                         label="Escavação"
                         defaultValue={0}
-                        type="number"
+                        step={1}
                         {...form.getInputProps('speed.burrow')}
                     />
                 </Fieldset>
@@ -275,9 +343,9 @@ function FormCustomRace() {
                     ]}
                     {...form.getInputProps('size')}
                 />
-                <TextInput
+                <NumberInput
                     label="Visão no escuro (Metros)"
-                    type="number"
+                    step={1}
                     defaultValue={0}
                     {...form.getInputProps('darkvision')}
                 />
@@ -315,6 +383,11 @@ function FormCustomRace() {
                     </ActionIcon>
                 </Fieldset>
 
+                <Checkbox
+                    label="Tornar publico na galeria homebrew"
+                    description="É estritamente proibido a publicação de material oficial"
+                    {...form.getInputProps('public', { type: 'checkbox' })}
+                />
                 <Button type="submit">Salvar e Selecionar</Button>
             </Stack>
         </form>

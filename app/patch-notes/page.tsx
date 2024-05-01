@@ -1,3 +1,5 @@
+'use client'
+
 import { List, Space, Stack, Text, Title } from '@mantine/core'
 
 import TopBar from '@/components/top-bar/top-bar'
@@ -18,12 +20,9 @@ export default function PatchNotes() {
 
     return (
         <>
-            <TopBar />
+            <TopBar title="Novidades" />
             <main className="p-4">
                 <Stack gap="xl" align="center">
-                    <Title>Novidades</Title>
-                    <Space h="xl" />
-
                     {notes.map((note) => {
                         return (
                             <Stack key={note.version} gap="xs">
