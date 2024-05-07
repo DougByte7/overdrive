@@ -3,6 +3,7 @@ import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
 import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
+import '@mantine/notifications/styles.css'
 import { Analytics } from '@vercel/analytics/react'
 import { Provider as JotaiProvider } from 'jotai'
 import type { Metadata, Viewport } from 'next'
@@ -40,10 +41,12 @@ export default function RootLayout({
                             theme={{ ...theme }}
                             defaultColorScheme="dark"
                         >
-                            <Notifications />
-                            <ModalsProvider>
-                                <TRPCProvider>{children}</TRPCProvider>
-                            </ModalsProvider>
+                            <TRPCProvider>
+                                <ModalsProvider>
+                                    <Notifications />
+                                    {children}
+                                </ModalsProvider>
+                            </TRPCProvider>
                         </MantineProvider>
                     </JotaiProvider>
                 </ClerkProvider>

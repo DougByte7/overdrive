@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo } from 'react'
 
+import storageKeys from '@/constants/storageKeys'
 import breakpoints from '@/utils/breakpoints'
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
     useEffect(() => {
         if (!isSignedIn) return
 
+        localStorage.removeItem(storageKeys.user.isGuest)
         router.push('/home')
     }, [isSignedIn, router])
 
@@ -89,7 +91,9 @@ export default function Home() {
                     className="block mt-3 h-[56px] w-full bg-[#2A2F37] text-base font-normal text-[#c8c8c8]"
                     component={Link}
                     href="/home"
-                    onClick={() => localStorage.setItem('user:isGuest', 'true')}
+                    onClick={() =>
+                        localStorage.setItem(storageKeys.user.isGuest, 'true')
+                    }
                 >
                     Entrar sem usuário
                 </Button>

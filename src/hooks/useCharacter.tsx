@@ -7,7 +7,8 @@ import { useEffect } from 'react'
 import { parse } from 'valibot'
 
 import type { CharacterSheetProps } from '@/assets/dnd/5e/utils/CharacterSheet'
-import { CharacterSheetSchema } from '@/assets/dnd/5e/utils/schema'
+import { CharacterSheetSchema } from '@/assets/dnd/5e/utils/schemas/charater'
+import storageKeys from '@/constants/storageKeys'
 import { SupportedSystems } from '@/server/api/routers/characters'
 import { api } from '@/utils/api'
 
@@ -52,14 +53,15 @@ export default function useCharacter() {
          *  @todo remove isLegacySync stuff on alpha release
          * */
         if (
-            (window?.localStorage.getItem('user:isGuest') === 'true' ||
+            (window?.localStorage.getItem(storageKeys.user.isGuest) ===
+                'true' ||
                 window?.localStorage.getItem('isLegacySync') !== 'true') &&
             isSignedIn &&
             localCharacters.length
         ) {
             addManyCharacters(localCharacters)
             window.localStorage.setItem('isLegacySync', 'true')
-            window.localStorage.removeItem('user:isGuest')
+            window.localStorage.removeItem(storageKeys.user.isGuest)
             return
         }
 
