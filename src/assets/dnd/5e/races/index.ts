@@ -21,6 +21,6 @@ const races = {
     tiefling,
 }
 
-export type DnD5eRaceName = keyof typeof races | 'custom'
+export type DnD5eRaceName = keyof typeof races
 export type { DnD5eTrait, DnD5eSubrace, DnD5eRace } from './interfaces'
 export default races as Record<DnD5eRaceName, DnD5eRace>

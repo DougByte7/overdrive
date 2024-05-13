@@ -28,16 +28,18 @@ enum GameSystem {
 }
 
 model User {
-  id          String          @id @default(cuid())
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  name        String
-  nameTag     Int
-  email       String          @unique
-  imageUrl    String
-  role        Role            @default(BASIC)
-  preferences UserPreference?
-  characters  Character[]
+  id               String           @id @default(cuid())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  name             String
+  nameTag          Int
+  email            String           @unique
+  imageUrl         String
+  role             Role             @default(BASIC)
+  preferences      UserPreference?
+  characters       Character[]
+  srdCustomRaces   SRDCustomRace[]
+  srdCustomClasses SRDCustomClass[]
 
   @@unique([name, nameTag])
   @@index([email])
@@ -59,4 +61,42 @@ model Character {
 
   @@index([playerId])
   @@index([system])
+}
+
+model SRDCustomRace {
+  id             String  @id @default(cuid())
+  author         User    @relation(fields: [authorId], references: [id])
+  authorId       String
+  public         Boolean
+  name           String
+  description    String
+  speed_land     Int
+  speed_climb    Int
+  speed_fly      Int
+  speed_swimming Int
+  speed_burrow   Int
+  type           String
+  size           String
+  darkvision     Int
+  /// [SRDTrait]
+  traits         Json[]
+}
+
+model SRDCustomClass {
+  id                         String   @id @default(cuid())
+  author                     User     @relation(fields: [authorId], references: [id])
+  authorId                   String
+  public                     Boolean
+  name                       String
+  description                String
+  hp                         String
+  proficiencies_armor        String[]
+  proficiencies_weapon       String[]
+  proficiencies_savingThrows String[]
+  proficiencies_skills       String[]
+  proficiencies_skillAmount  Int
+  /// [SRDEquipmentOptions]
+  equipmentOptions           Json
+  /// [SRDFeature]
+  features                   Json[]
 }

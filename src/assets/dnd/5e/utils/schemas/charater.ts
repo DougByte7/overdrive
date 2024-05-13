@@ -10,8 +10,8 @@ import {
   optional,
   boolean,
 } from "valibot";
-import type { DnD5eClassName, Skill } from "../classes";
-import { DnD5eRaceName } from "../races";
+import type { DnD5eClassName, Skill } from "../../classes";
+import { DnD5eRaceName } from "../../races";
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   k: infer I,

@@ -1,3 +1,6 @@
+'use client'
+
+import { useAuth } from '@clerk/nextjs'
 import {
     Accordion,
     ActionIcon,
@@ -8,6 +11,7 @@ import {
     Divider,
     Fieldset,
     Group,
+    Loader,
     NumberInput,
     Paper,
     Select,
@@ -19,25 +23,17 @@ import {
     UnstyledButton,
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { randomId } from '@mantine/hooks'
+import { randomId, useMediaQuery } from '@mantine/hooks'
 import { modals } from '@mantine/modals'
 import { IconPlus } from '@tabler/icons-react'
 import { useAtom } from 'jotai'
 import { valibotResolver } from 'mantine-form-valibot-resolver'
-import { CSSProperties, Fragment, MouseEventHandler } from 'react'
-import {
-    array,
-    boolean,
-    integer,
-    is,
-    minLength,
-    number,
-    object,
-    string,
-} from 'valibot'
+import Link from 'next/link'
+import { type CSSProperties, Fragment } from 'react'
 
-import races, { DnD5eRace, DnD5eRaceName } from '@/assets/dnd/5e/races'
-import storageKeys from '@/constants/storageKeys'
+import races, { type DnD5eRaceName } from '@/assets/dnd/5e/races'
+import { CustomRaceSchema } from '@/assets/dnd/5e/utils/schemas/race'
+import { type RouterOutputs, api } from '@/utils/api'
 
 import { characterFormAton } from '../../state'
 
@@ -46,23 +42,43 @@ interface RaceSelectionProps {
 }
 export default function RaceSelection({ styles }: RaceSelectionProps) {
     const [form, setForm] = useAtom(characterFormAton)
+    const matches = useMediaQuery('(min-width: 900px)')
+    const { data: customRaces, isLoading } =
+        api.srdCustoms.getAllAuthorRaces.useQuery()
 
     const handleSelectRace =
-        (race: DnD5eRaceName): MouseEventHandler<HTMLButtonElement> =>
-        (_) => {
+        (race: DnD5eRaceName) =>
+        (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            event.stopPropagation()
             setForm((form) => {
                 form.race = race
-                if (race === 'custom') return { ...form }
 
-                form.strength.bonus = races[race].boost?.strength ?? 0
-                form.dexterity.bonus = races[race].boost?.dexterity ?? 0
-                form.constitution.bonus = races[race].boost?.constitution ?? 0
-                form.intelligence.bonus = races[race].boost?.intelligence ?? 0
-                form.wisdom.bonus = races[race].boost?.wisdom ?? 0
-                form.charisma.bonus = races[race].boost?.charisma ?? 0
+                form.strength.bonus =
+                    races[race as DnD5eRaceName].boost?.strength ?? 0
+                form.dexterity.bonus =
+                    races[race as DnD5eRaceName].boost?.dexterity ?? 0
+                form.constitution.bonus =
+                    races[race as DnD5eRaceName].boost?.constitution ?? 0
+                form.intelligence.bonus =
+                    races[race as DnD5eRaceName].boost?.intelligence ?? 0
+                form.wisdom.bonus =
+                    races[race as DnD5eRaceName].boost?.wisdom ?? 0
+                form.charisma.bonus =
+                    races[race as DnD5eRaceName].boost?.charisma ?? 0
 
                 return { ...form }
             })
+        }
+
+    const handleSelectCustomRace =
+        (race: RouterOutputs['srdCustoms']['getAllAuthorRaces'][number]) =>
+        (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            event.stopPropagation()
+            setForm((prev) => {
+                prev.race = race.id
+                return { ...prev }
+            })
+            sessionStorage.setItem('charbuilder:race', JSON.stringify(race))
         }
 
     return (
@@ -89,6 +105,8 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
             >
                 {Object.entries(races).map(([raceKey, race]) => (
                     <Accordion.Item
+                        value={race.name}
+                        key={race.name}
                         styles={{
                             item: {
                                 background: 'none',
@@ -98,27 +116,29 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
                                         : '1px solid var(--do_text_color_500)',
                             },
                         }}
-                        value={race.name}
-                        key={race.name}
-                        pos="relative"
                     >
-                        <UnstyledButton
-                            className="absolute top-4 left-4 bottom-4 right-14"
-                            aria-label={`Selecionar: ${race.name}, ${race.description};`}
-                            onClick={handleSelectRace(raceKey as DnD5eRaceName)}
-                        />
                         <Accordion.Control aria-label="Exibir mais informações">
-                            <Group>
-                                <Avatar
-                                    size={40}
-                                    alt=""
-                                    src={`/images/fantasy/races/${raceKey}.png`}
-                                />
-                                <span>
-                                    <Text fw={600}>{race.name}</Text>
-                                    <Text size="sm">{race.description}</Text>
-                                </span>
-                            </Group>
+                            <UnstyledButton
+                                className="w-full"
+                                aria-label={`Selecionar: ${race.name}, ${race.description};`}
+                                onClick={handleSelectRace(
+                                    raceKey as DnD5eRaceName
+                                )}
+                            >
+                                <Group>
+                                    <Avatar
+                                        size={40}
+                                        alt=""
+                                        src={`/images/fantasy/races/${raceKey}.png`}
+                                    />
+                                    <span>
+                                        <Text fw={600}>{race.name}</Text>
+                                        <Text size="sm">
+                                            {race.description}
+                                        </Text>
+                                    </span>
+                                </Group>
+                            </UnstyledButton>
                         </Accordion.Control>
                         <Accordion.Panel>
                             <Stack gap="md">
@@ -140,66 +160,97 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
                     </Accordion.Item>
                 ))}
 
-                <Accordion.Item
-                    styles={{
-                        item: {
-                            background: 'none',
-                            border:
-                                form.race === 'custom'
-                                    ? '2px solid var(--do_color_primary_base)'
-                                    : '1px solid var(--do_text_color_500)',
-                        },
-                    }}
-                    value={'custom'}
-                    pos="relative"
-                >
-                    <Accordion.Control aria-label="Exibir mais informações">
-                        <Group>
-                            <Avatar size={40} alt="" />
-                            <span>
-                                <Text fw={600}>Customizado</Text>
-                                <Text size="sm">Crie uma raça customizada</Text>
-                            </span>
-                        </Group>
-                    </Accordion.Control>
-                    <Accordion.Panel>
-                        <FormCustomRace />
-                    </Accordion.Panel>
-                </Accordion.Item>
+                {isLoading ? (
+                    <Group className="my-4" justify="center">
+                        <Loader /> Carregando suas customizações
+                    </Group>
+                ) : (
+                    customRaces?.map((race) => {
+                        return (
+                            <Accordion.Item
+                                value={race.name}
+                                key={race.id}
+                                styles={{
+                                    item: {
+                                        background: 'none',
+                                        border:
+                                            form.race === race.id
+                                                ? '2px solid var(--do_color_primary_base)'
+                                                : '1px solid var(--do_text_color_500)',
+                                    },
+                                }}
+                            >
+                                <Accordion.Control aria-label="Exibir mais informações">
+                                    <UnstyledButton
+                                        className="w-full"
+                                        aria-label={`Selecionar: ${race.name};`}
+                                        onClick={handleSelectCustomRace(race)}
+                                    >
+                                        <Group>
+                                            <Avatar size={40} alt="" />
+                                            <span>
+                                                <Text fw={600}>
+                                                    {race.name}
+                                                </Text>
+                                                <Text size="sm">
+                                                    {race.description}
+                                                </Text>
+                                            </span>
+                                        </Group>
+                                    </UnstyledButton>
+                                </Accordion.Control>
+                                <Accordion.Panel>
+                                    <Stack gap="md">
+                                        {race.traits.map((trait) => (
+                                            <Paper
+                                                key={
+                                                    race.name +
+                                                    (trait as any).name
+                                                }
+                                                withBorder
+                                                p="md"
+                                                radius="md"
+                                            >
+                                                <Group>
+                                                    <Text fw={600}>
+                                                        {(trait as any).name}
+                                                    </Text>
+                                                    <Text>
+                                                        {
+                                                            (trait as any)
+                                                                .description
+                                                        }
+                                                    </Text>
+                                                </Group>
+                                            </Paper>
+                                        ))}
+                                    </Stack>
+                                </Accordion.Panel>
+                            </Accordion.Item>
+                        )
+                    })
+                )}
             </Accordion>
+            <Button
+                className=" mb-4"
+                leftSection={<IconPlus />}
+                variant="subtle"
+                onClick={() =>
+                    modals.open({
+                        fullScreen: !matches,
+                        title: 'Nova Raça',
+                        children: <FormCustomRace />,
+                    })
+                }
+            >
+                <Text size="sm">Criar uma raça customizada</Text>
+            </Button>
         </Stack>
     )
 }
 
-const customRaceSchema = object({
-    public: boolean(),
-    name: string([minLength(1, 'O campo deve ter pelo menos um caractere')]),
-    description: string(),
-    speed: object({
-        land: number([integer('A velocidade precisa ser um número inteiro')]),
-        climb: number([integer('A velocidade precisa ser um número inteiro')]),
-        fly: number([integer('A velocidade precisa ser um número inteiro')]),
-        swimming: number([
-            integer('A velocidade precisa ser um número inteiro'),
-        ]),
-        burrow: number([integer('A velocidade precisa ser um número inteiro')]),
-    }),
-    type: string(),
-    size: string(),
-    darkvision: number([integer('O campo precisa ser um número inteiro')]),
-    traits: array(
-        object({
-            name: string([
-                minLength(1, 'O campo deve ter pelo menos um caractere'),
-            ]),
-            description: string([
-                minLength(1, 'O campo deve ter pelo menos um caractere'),
-            ]),
-        })
-    ),
-})
-
 function FormCustomRace() {
+    const { isSignedIn } = useAuth()
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: {
@@ -224,46 +275,62 @@ function FormCustomRace() {
                 },
             ],
         },
-        validate: valibotResolver(customRaceSchema),
+        validate: valibotResolver(CustomRaceSchema),
+    })
+
+    const queryUtils = api.useUtils()
+    const { isLoading, mutate } = api.srdCustoms.createRace.useMutation({
+        onSuccess() {
+            queryUtils.invalidate(undefined, {
+                queryKey: ['srdCustoms.getAllAuthorRaces'],
+            })
+            modals.closeAll()
+        },
     })
 
     const save = (race: typeof form.values) => {
-        if (race.public) {
-            modals.openConfirmModal({
-                centered: true,
-                title: 'Confirmação de publicação de material homebrew',
-                children: (
-                    <>
-                        <Text>
-                            Ao clicar em ‘Confirmar’, você está atestando que o
-                            material fornecido não viola os direitos autorais de
-                            terceiros nem nossos termos de uso.
-                        </Text>
-                        <Text>
-                            Esteja ciente de que qualquer infração pode resultar
-                            na remoção permanente do material e na suspensão da
-                            sua conta.
-                        </Text>
-                    </>
-                ),
-                labels: { confirm: 'Confirmar', cancel: 'Cancelar' },
-                onConfirm: () => console.log(race),
-            })
-        } else {
-            console.log(race)
+        const createAndSelectCustomRace = () => {
+            mutate(race)
         }
 
-        // const races = JSON.parse(
-        //     localStorage.getItem(storageKeys.srd5Races) ?? '[]'
-        // ) as DnD5eRace[]
-        // localStorage.setItem(
-        //     storageKeys.srd5Races,
-        //     JSON.stringify([...races, race])
-        // )
+        if (isSignedIn) {
+            if (race.public) {
+                modals.openConfirmModal({
+                    centered: true,
+                    title: 'Confirmação de publicação de material homebrew',
+                    children: (
+                        <>
+                            <Text>
+                                Ao clicar em ‘Confirmar’, você está atestando
+                                que o material fornecido não viola os direitos
+                                autorais de terceiros nem nossos{' '}
+                                <Link
+                                    className="underline text-brand-200"
+                                    href="/tos"
+                                    target="_blank"
+                                >
+                                    termos de uso
+                                </Link>
+                                .
+                            </Text>
+                            <Text>
+                                Esteja ciente de que qualquer infração pode
+                                resultar na remoção permanente do material e na
+                                suspensão da sua conta.
+                            </Text>
+                        </>
+                    ),
+                    labels: { confirm: 'Confirmar', cancel: 'Cancelar' },
+                    onConfirm: createAndSelectCustomRace,
+                })
+            } else {
+                createAndSelectCustomRace()
+            }
+        }
     }
 
     return (
-        <form onSubmit={form.onSubmit((values) => save(values))}>
+        <form onSubmit={form.onSubmit(save)}>
             <Stack gap="md">
                 <TextInput
                     withAsterisk
@@ -352,13 +419,16 @@ function FormCustomRace() {
 
                 <Fieldset legend="Habilidades adicionais">
                     {form.values.traits.map((_, i) => (
-                        <Fragment key={form.key(`traits${i}.key`)}>
+                        <Fragment key={form.key(`traits.${i}.key`)}>
                             {i !== 0 && <Divider color="gray" my="md" />}
                             <TextInput
+                                withAsterisk
                                 label="Nome"
                                 {...form.getInputProps(`traits.${i}.name`)}
                             />
-                            <TextInput
+                            <Textarea
+                                autosize
+                                withAsterisk
                                 label="Descrição"
                                 {...form.getInputProps(
                                     `traits.${i}.description`
@@ -384,11 +454,14 @@ function FormCustomRace() {
                 </Fieldset>
 
                 <Checkbox
+                    disabled={!isSignedIn}
                     label="Tornar publico na galeria homebrew"
                     description="É estritamente proibido a publicação de material oficial"
                     {...form.getInputProps('public', { type: 'checkbox' })}
                 />
-                <Button type="submit">Salvar e Selecionar</Button>
+                <Button loading={isLoading} type="submit">
+                    Salvar
+                </Button>
             </Stack>
         </form>
     )

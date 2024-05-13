@@ -27,7 +27,7 @@ export interface CharacterSheetProps<T extends 'data' | 'name' = 'data'> {
     race: DnD5eRaceName
     classes: T extends 'data'
         ? Array<{ data: DnD5eClass; level: number }>
-        : Array<{ name: DnD5eClassName; level: number }>
+        : Array<{ name: DnD5eClassName | string; level: number }>
     strength: number
     dexterity: number
     constitution: number

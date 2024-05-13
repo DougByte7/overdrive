@@ -19,12 +19,14 @@ import { nanoid } from 'lib/nanoid'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
-import classes from '@/assets/dnd/5e/classes'
-import races from '@/assets/dnd/5e/races'
+import classes, { DnD5eClassName } from '@/assets/dnd/5e/classes'
+import races, { type DnD5eRaceName } from '@/assets/dnd/5e/races'
 import type { CharacterSheetProps } from '@/assets/dnd/5e/utils/CharacterSheet'
 import getModifier from '@/assets/dnd/5e/utils/getModifier'
 import TopBar from '@/components/top-bar'
 import useCharacter from '@/hooks/useCharacter'
+import { useIsSignedOutNotification } from '@/hooks/useIsSignedNotification'
+import { api } from '@/utils/api'
 
 import AttributeMethod from './components/srd5e/attribute-method'
 import AttributeSelection from './components/srd5e/attribute-selection'
@@ -59,6 +61,7 @@ export enum Steps {
 }
 
 export default function CharacterBuilder() {
+    useIsSignedOutNotification()
     const [form, setForm] = useAtom(characterFormAton)
     const [attrMethod] = useAtom(attrMethodAtom)
     const [availablePoints] = useAtom(pointBuyAtom)
@@ -70,7 +73,12 @@ export default function CharacterBuilder() {
     const [step, setStep] = useState(Steps.DESCRIPTION)
     const id = useMemo(nanoid, [])
 
-    const { spellsKnown, cantripKnown } = classes[form.classes[0]?.name] ?? {}
+    // Prefetch custom data
+    api.srdCustoms.getAllAuthorRaces.useQuery()
+    api.srdCustoms.getAllAuthorClasses.useQuery()
+
+    const { spellsKnown, cantripKnown } =
+        classes[form.classes[0]?.name as DnD5eClassName] ?? {}
     const hasCantrips = cantripKnown?.length
     const hasSpells =
         !!spellsKnown &&
@@ -95,17 +103,19 @@ export default function CharacterBuilder() {
     const handleNext = () => {
         if (step + 1 === Steps.FINAL) {
             try {
-                const initialHp =
-                    classes[form.classes[0].name].hp.average +
-                    getModifier(
-                        form.constitution.base + form.constitution.bonus
-                    )
-
                 const newCharacter: CharacterSheetProps<'name'> = {
                     ...form,
                     id,
-                    hp: initialHp,
-                    currentHp: initialHp,
+                    hp:
+                        form.hp +
+                        getModifier(
+                            form.constitution.base + form.constitution.bonus
+                        ),
+                    currentHp:
+                        form.currentHp +
+                        getModifier(
+                            form.constitution.base + form.constitution.bonus
+                        ),
                     tempHp: 0,
                     initiative: getModifier(
                         form.dexterity.base + form.dexterity.bonus
@@ -113,7 +123,7 @@ export default function CharacterBuilder() {
                     picture:
                         avatarPreviewUrl ||
                         `/images/fantasy/races/${form.race}.png`,
-                    race: form.race!,
+                    race: form.race! as DnD5eRaceName,
                     classes: form.classes,
                     strength: form.strength.base + form.strength.bonus,
                     dexterity: form.dexterity.base + form.dexterity.bonus,
@@ -289,7 +299,12 @@ export default function CharacterBuilder() {
                                                 c="var(--do_text_color_300)"
                                                 size="sm"
                                             >
-                                                {races[form.race!]?.name},
+                                                {
+                                                    races[
+                                                        form.race! as DnD5eRaceName
+                                                    ]?.name
+                                                }
+                                                ,
                                                 {
                                                     classes[
                                                         form.classes[0]?.name
