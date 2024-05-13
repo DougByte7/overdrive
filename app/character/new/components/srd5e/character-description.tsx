@@ -103,6 +103,7 @@ export default function CharacterDescription({
             </Paper>
 
             <Textarea
+                autosize
                 name="backstory"
                 label="História do personagem"
                 placeholder="Órfão em busca de vingança..."
