@@ -1,6 +1,7 @@
-import { SignOutButton } from '@clerk/nextjs'
+'use client'
+
+import { useAuth } from '@clerk/nextjs'
 import {
-    Box,
     Burger,
     Button,
     Group,
@@ -26,6 +27,7 @@ interface TopBarProps {
 export default function TopBar({ title }: TopBarProps) {
     const [opened, { toggle, close }] = useDisclosure()
     const ref = useClickOutside(close)
+    const { isSignedIn, signOut } = useAuth()
 
     return (
         <header
@@ -50,7 +52,7 @@ export default function TopBar({ title }: TopBarProps) {
             </Link>
 
             <Burger
-                className="absolute  right-4"
+                className="absolute right-4"
                 opened={opened}
                 onClick={toggle}
                 aria-label="Alternar menu"
@@ -95,9 +97,33 @@ export default function TopBar({ title }: TopBarProps) {
                             }
                             leftSection={<IconBellRinging />}
                         />
-                        <Button className="mt-auto mb-8" component={Box}>
-                            <SignOutButton redirectUrl="/" />
-                        </Button>
+
+                        <div className="mt-auto mb-8 px-4">
+                            <NavLink
+                                href="/privacy"
+                                label="Politica de Privacidade"
+                            />
+                            <NavLink href="/tos" label="Termos de Serviço" />
+
+                            {isSignedIn ? (
+                                <Button
+                                    className="w-full mt-4"
+                                    onClick={() =>
+                                        signOut({ redirectUrl: '/' })
+                                    }
+                                >
+                                    Sair
+                                </Button>
+                            ) : (
+                                <Button
+                                    className="w-full mt-4"
+                                    component={Link}
+                                    href="/"
+                                >
+                                    Entrar ou Cadastrar
+                                </Button>
+                            )}
+                        </div>
                     </Stack>
                 )}
             </Transition>
