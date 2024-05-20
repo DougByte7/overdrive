@@ -1207,7 +1207,7 @@ const attributeOptions: LabelValue<Attribute>[] = [
     },
 ]
 
-const skills: LabelValue<Skill>[] = [
+export const skills: LabelValue<Skill>[] = [
     { label: 'Arcana', value: 'arcana' },
     { label: 'Acrobacia (Acrobatics)', value: 'acrobatics' },
     { label: 'Atletismo (Athletics)', value: 'athletics' },
