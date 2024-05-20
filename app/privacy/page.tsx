@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import TopBar from '@/components/top-bar/top-bar'
 
 export const metadata = {

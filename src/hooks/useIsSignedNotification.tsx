@@ -13,7 +13,6 @@ export function useIsSignedOutNotification() {
     useEffect(() => {
         const isGuest = localStorage.getItem(storageKeys.user.isGuest)
         if (isGuest === 'true' || (isLoaded && isSignedIn)) return
-        console.log(isLoaded, isSignedIn)
 
         const id = notifications.show({
             title: 'Sua sessão expirou!',
@@ -29,5 +28,5 @@ export function useIsSignedOutNotification() {
         return () => {
             notifications.hide(id)
         }
-    }, [])
+    }, [isLoaded, isSignedIn])
 }
