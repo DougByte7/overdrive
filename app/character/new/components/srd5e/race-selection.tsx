@@ -33,6 +33,7 @@ import { type CSSProperties, Fragment } from 'react'
 
 import races, { type DnD5eRaceName } from '@/assets/dnd/5e/races'
 import { CustomRaceSchema } from '@/assets/dnd/5e/utils/schemas/race'
+import storageKeys from '@/constants/storageKeys'
 import { type RouterOutputs, api } from '@/utils/api'
 
 import { characterFormAton } from '../../state'
@@ -78,7 +79,10 @@ export default function RaceSelection({ styles }: RaceSelectionProps) {
                 prev.race = race.id
                 return { ...prev }
             })
-            sessionStorage.setItem('charbuilder:race', JSON.stringify(race))
+            sessionStorage.setItem(
+                storageKeys.charBuilder.race,
+                JSON.stringify(race)
+            )
         }
 
     return (

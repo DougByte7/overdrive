@@ -34,7 +34,7 @@ import { useAtom } from 'jotai'
 import { valibotResolver } from 'mantine-form-valibot-resolver'
 import Link from 'next/link'
 import { type CSSProperties, Fragment } from 'react'
-import { type Input, safeParse } from 'valibot'
+import { safeParse } from 'valibot'
 
 import classes, {
     type DnD5eClassName,
@@ -42,7 +42,8 @@ import classes, {
 } from '@/assets/dnd/5e/classes'
 import equipment from '@/assets/dnd/5e/equipment.json'
 import { CustomClassSchema } from '@/assets/dnd/5e/utils/schemas/classes'
-import { api } from '@/utils/api'
+import storageKeys from '@/constants/storageKeys'
+import { type RouterOutputs, api } from '@/utils/api'
 
 import { characterFormAton } from '../../state'
 
@@ -71,15 +72,13 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
         }
 
     const handleSelectCustomClass =
-        (classId: string) =>
+        (
+            customClass: RouterOutputs['srdCustoms']['getAllAuthorClasses'][number]
+        ) =>
         (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             event.stopPropagation()
 
-            const selectedClassHp = customClasses?.find(
-                (c) => c.id === classId
-            )?.hp
-
-            if (!selectedClassHp) {
+            if (!customClass.hp) {
                 notifications.show({
                     color: 'red',
                     title: 'Erro: A classe selecionada não possui HP',
@@ -90,13 +89,18 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
                 return
             }
 
-            const averageHp = +selectedClassHp.replace('d', '') + 1
+            const averageHp = +customClass.hp.replace('d', '') + 1
+
+            sessionStorage.setItem(
+                storageKeys.charBuilder.class,
+                JSON.stringify(customClass)
+            )
 
             setForm((form) => ({
                 ...form,
                 hp: averageHp,
                 currentHp: averageHp,
-                classes: [{ name: classId, level: 1 }],
+                classes: [{ name: customClass.id, level: 1 }],
             }))
         }
 
@@ -212,7 +216,7 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
                                         className="w-full"
                                         aria-label={`Selecionar: ${customClass.name};`}
                                         onClick={handleSelectCustomClass(
-                                            customClass.id
+                                            customClass
                                         )}
                                     >
                                         <Group wrap="nowrap">
