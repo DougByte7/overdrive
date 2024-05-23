@@ -1,6 +1,6 @@
 import type { DnD5eClassName, Skill } from '@/assets/dnd/5e/classes'
-import { EquipmentIndex, WithAmount } from '@/assets/dnd/5e/classes/interfaces'
-import { DnD5eRaceName } from '@/assets/dnd/5e/races'
+import type { EquipmentOption } from '@/assets/dnd/5e/classes/interfaces'
+import type { DnD5eRaceName } from '@/assets/dnd/5e/races'
 
 export interface CharacterForm {
     hp: number
@@ -19,7 +19,7 @@ export interface CharacterForm {
     traits: Record<string, string | string[]>
     features: Record<string, string | string[]>
     proficiencies: Skill[]
-    items: WithAmount<EquipmentIndex>[]
+    items: EquipmentOption[]
     spells: string[]
     preparedSpells: string[]
 }

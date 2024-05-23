@@ -1,329 +1,262 @@
-import {
-  Stack,
-  Box,
-  Title,
-  Text,
-  Radio,
-  Select,
-  Paper,
-  ComboboxData,
-  ComboboxItemGroup,
-  ComboboxItem,
-} from "@mantine/core";
-import { useAtom } from "jotai";
-import { characterFormAton, itemSelectionLockAton } from "../../state";
-import classes from "@/assets/dnd/5e/classes";
-import equipmentList from "@/assets/dnd/5e/equipment.json";
-import { type CSSProperties, Fragment, useState, useRef } from "react";
-import type {
-  EquipmentCategoryList,
-  EquipmentGearList,
-  EquipmentIndex,
-  EquipmentOption,
-  EquipmentToolList,
-  WithAmount,
-} from "@/assets/dnd/5e/classes/interfaces";
+import { Box, Fieldset, Radio, Select, Stack, Text, Title } from '@mantine/core'
+import { atom, useAtom } from 'jotai'
+import { type CSSProperties, useEffect, useState } from 'react'
+
+import classes, { type DnD5eClassName } from '@/assets/dnd/5e/classes'
+import type { EquipmentOption } from '@/assets/dnd/5e/classes/interfaces'
+import equipmentList from '@/assets/dnd/5e/equipment.json'
+import storageKeys from '@/constants/storageKeys'
+import type { RouterOutputs } from '@/utils/api'
+
+import { characterFormAton, itemSelectionLockAton } from '../../state'
+
+const itemsMapAtom = atom<Record<string, EquipmentOption[]>>({})
 
 interface ItemsSelectionProps {
-  styles: CSSProperties;
+    styles: CSSProperties
 }
 export default function ItemsSelection({ styles }: ItemsSelectionProps) {
-  const [form, setForm] = useAtom(characterFormAton);
-  const [, setItemSelectionLockAton] = useAtom(itemSelectionLockAton);
-  const [radioValue, setRadioValue] = useState<Record<string, string>>({});
-  const [listGroupValue, setListGroupValue] = useState<Record<string, string>>(
-    {},
-  );
-  const selectedItems = useRef<WithAmount<EquipmentIndex>[][]>([]);
+    const [form, setForm] = useAtom(characterFormAton)
+    const [, setItemSelectionLockAton] = useAtom(itemSelectionLockAton)
+    const [itemsMap] = useAtom(itemsMapAtom)
 
-  const getItemByIndex = (index: string) => {
-    return equipmentList.find((e) => e.index === index);
-  };
+    const [equipmentOptions] = useState(
+        () =>
+            (form.classes[0].name in classes
+                ? classes[form.classes[0].name as DnD5eClassName]
+                      .equipmentOptions
+                : (
+                      JSON.parse(
+                          sessionStorage.getItem(
+                              storageKeys.charBuilder.class
+                          ) ?? '{}'
+                      ) as RouterOutputs['srdCustoms']['getAllAuthorClasses'][number]
+                  ).equipmentOptions) as EquipmentOption[][][]
+    )
 
-  const getItemsByCategoryRange = (query: string) => {
-    return equipmentList.filter((e) => e.category_range?.includes(query));
-  };
-
-  const getItemsByToolCategory = (query: string) => {
-    return equipmentList.filter((e) => e.tool_category === query);
-  };
-
-  const getItemsByGearCategory = (query: string) => {
-    return equipmentList.filter((e) => e.gear_category?.index === query);
-  };
-
-  const getCategoryRangeDataAndLabel = (
-    item: WithAmount<EquipmentCategoryList>,
-  ): [string, ComboboxData] => {
-    return [
-      `Selecione 1 arma ${item.category_range.toLowerCase()}`,
-      getItemsByCategoryRange(item.category_range).reduce((acc, e) => {
-        const label = `${e.name} - ${e.damage?.damage_dice ?? ""} ${e.properties
-          .map((p) => p.name)
-          .join(", ")}`;
-        const value = JSON.stringify({ index: e.index, amount: 1 });
-        const group = e.category_range!;
-        const item: ComboboxItem = { label, value };
-
-        const index = acc.findIndex((d) => d.group === group);
-        if (index > -1) {
-          acc[index].items.push(item);
-        } else {
-          acc.push({ group, items: [item] });
-        }
-        return acc;
-      }, [] as ComboboxItemGroup[]),
-    ];
-  };
-
-  const getToolCategoryDataAndLabel = (
-    item: WithAmount<EquipmentToolList>,
-  ): [string, ComboboxData] => {
-    return [
-      "Selecione 1 ferramenta",
-      getItemsByToolCategory(item.tool_category).reduce((acc, e) => {
-        const label = e.name;
-        const value = JSON.stringify({ index: e.index, amount: 1 });
-        const group = e.tool_category!;
-        const item: ComboboxItem = { label, value };
-
-        const index = acc.findIndex((d) => d.group === group);
-        if (index > -1) {
-          acc[index].items.push(item);
-        } else {
-          acc.push({ group, items: [item] });
-        }
-        return acc;
-      }, [] as ComboboxItemGroup[]),
-    ];
-  };
-
-  const getGearCategoryDataAndLabel = (
-    item: WithAmount<EquipmentGearList>,
-  ): [string, ComboboxData] => {
-    const gears = getItemsByGearCategory(item.gear_category);
-
-    return [
-      `Selecione 1 ${gears[0]?.gear_category?.name}`,
-      gears.map((e) => ({
-        label: e.name,
-        value: JSON.stringify({ index: e.index, amount: 1 }),
-      })),
-    ];
-  };
-
-  const buildListValue = (
-    key: string,
-    itemList: WithAmount<
-      | EquipmentIndex
-      | EquipmentCategoryList
-      | EquipmentToolList
-      | EquipmentGearList
-    >[],
-  ): string => {
-    return itemList
-      .map((item, i) => {
-        if ("index" in item) return JSON.stringify(item);
-
-        if ("category_range" in item && listGroupValue[key + (i - 1)]) {
-          return listGroupValue[key + (i - 1)];
-        }
-        if (listGroupValue[key + i]) return listGroupValue[key + i];
-
-        return key + i;
-      })
-      .join();
-  };
-
-  const handleChangeListGroupValue = (key: string) => (value: string) => {
-    setListGroupValue((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const buildRadioData = (
-    key: string,
-    item: EquipmentOption,
-  ): [string | JSX.Element[], ComboboxData] => {
-    if ("list" in item) {
-      return [
-        item.list.flatMap((listItem) => {
-          let label = "";
-          let data: ComboboxData = [];
-
-          if ("index" in listItem) {
-            return [
-              <>
-                {`${listItem.amount}x ${getItemByIndex(listItem.index)?.name} ${
-                  "ammo" in listItem ? ` e ${listItem.ammo}x munições ` : ""
-                }`}
-                <br />
-              </>,
-            ];
-          } else if ("category_range" in listItem) {
-            [label, data] = getCategoryRangeDataAndLabel(listItem);
-          } else if ("tool_category" in listItem) {
-            [label, data] = getToolCategoryDataAndLabel(listItem);
-          } else if ("gear_category" in listItem) {
-            [label, data] = getGearCategoryDataAndLabel(listItem);
-          }
-
-          return new Array(listItem.amount).fill(null).map((_, i) => {
-            return (
-              <Select
-                key={label + i}
-                placeholder={label}
-                data={data}
-                searchable
-                nothingFoundMessage="Nada encontrado"
-                onChange={handleChangeListGroupValue(key + i) as any}
-              />
-            );
-          });
-        }),
-        [{ value: buildListValue(key, item.list), label: "" }],
-      ];
-    } else if ("category_range" in item) {
-      return getCategoryRangeDataAndLabel(item);
-    } else if ("tool_category" in item) {
-      return getToolCategoryDataAndLabel(item);
-    } else if ("gear_category" in item) {
-      return getGearCategoryDataAndLabel(item);
+    // get selected items with lodash.at(Radio.key)
+    const [selectedItems, setSelectedItems] = useState<Array<string>>(() =>
+        Array(equipmentOptions.length).fill(null)
+    )
+    const handleSelectItem = (i: number) => (value: any) => {
+        setSelectedItems((prev) => {
+            prev[i] = value
+            return [...prev]
+        })
     }
 
-    return [
-      `${item.amount}x ${getItemByIndex(item.index)?.name}${
-        "ammo" in item ? `, e ${item.ammo}x munições` : ""
-      }`,
-      [{ value: JSON.stringify(item), label: "" }],
-    ];
-  };
+    useEffect(() => {
+        const allSettled = selectedItems
+            .flatMap((selected) => itemsMap[selected])
+            .every((item) => !!item)
 
-  const handleComboboxData = (group: number) => (value: string) => {
-    selectedItems.current[group] = JSON.parse(
-      value,
-    ) as WithAmount<EquipmentIndex>[];
+        setItemSelectionLockAton(allSettled)
+        if (!allSettled) return
 
-    setItemSelectionLockAton(
-      selectedItems.current.flat().length ===
-        classes[form.classes[0].name].proficiencies.equipmentOptions.length,
-    );
+        setForm((prev) => {
+            return {
+                ...prev,
+                items: selectedItems
+                    .flatMap((selected) => itemsMap[selected])
+                    .reduce((acc, item) => {
+                        if (!item) return acc
 
-    setForm((prevForm) => {
-      return {
-        ...prevForm,
-        items: selectedItems.current.flat(),
-      };
-    });
-  };
+                        const duplicateIndex = acc.findIndex(
+                            (equipment) => equipment.item === item.item
+                        )
+                        if (duplicateIndex >= 0) {
+                            const duplicate = acc[duplicateIndex]
+                            acc[duplicateIndex] = {
+                                ...duplicate,
+                                amount: duplicate.amount + 1,
+                            }
+                        } else {
+                            acc.push(item)
+                        }
 
-  const getRadioValue = (
-    key: string,
-    equipment: string | JSX.Element[],
-    data: ComboboxData,
-  ) => {
-    if (radioValue[key]) return radioValue[key];
+                        return acc
+                    }, [] as EquipmentOption[]),
+            }
+        })
+    }, [itemsMap, selectedItems])
 
-    const multipleValues = Object.keys(radioValue).filter((v) =>
-      v.startsWith(key),
-    );
+    return (
+        <Stack style={styles} gap="md">
+            <Box>
+                <Title size="h4">Escolha seu equipamento</Title>
+                <Text size="sm">
+                    Marque uma opção de cada caixa, selecione um item específico
+                    se necessário
+                </Text>
+            </Box>
 
-    if (multipleValues.length)
-      return Object.entries(radioValue)
-        .filter(([k]) => multipleValues.includes(k))
-        .map(([_, v]) => v)
-        .join();
-
-    if (typeof equipment === "string" && !equipment.startsWith("Selecione"))
-      return (data[0] as ComboboxItem).value;
-
-    if (Array.isArray(equipment))
-      return data.map((d) => (d as ComboboxItem).value).join();
-
-    return key;
-  };
-
-  const handleSetRadioValue = (key: string) => (value: string) => {
-    setRadioValue((prev) => ({ ...prev, [key]: value }));
-  };
-
-  return (
-    <Stack style={styles} gap="md">
-      <Box>
-        <Title size="h4">Escolha seu equipamento</Title>
-        <Text size="sm">Escolha seu equipamento</Text>
-      </Box>
-
-      <Stack gap="md" pb={32} mih="calc(100% - 170px)">
-        {classes[form.classes[0].name].proficiencies.equipmentOptions.map(
-          (item, i) => {
-            return (
-              <Paper key={i} withBorder p="xs">
-                <Radio.Group onChange={handleComboboxData(i)}>
-                  {item.map((itemData, j) => {
-                    const key = `1${i}${j}`;
-                    const [equipmentLabel, data] = buildRadioData(
-                      key,
-                      itemData,
-                    );
-
-                    const value = `[${getRadioValue(
-                      key,
-                      equipmentLabel,
-                      data,
-                    )}]`;
-
+            <Stack gap="md" pb={32} mih="calc(100% - 170px)">
+                {equipmentOptions.map((options, i) => {
                     return (
-                      <Fragment key={key}>
-                        {j > 0 && <Text>ou</Text>}
-                        <Radio
-                          styles={{
-                            inner: { alignSelf: "center" },
-                            labelWrapper: { width: "100%" },
-                          }}
-                          value={value}
-                          disabled={(JSON.parse(value) as ComboboxData).some(
-                            (v) => {
-                              return typeof v === "number";
-                            },
-                          )}
-                          label={
-                            "index" in itemData ? (
-                              equipmentLabel
-                            ) : (
-                              <>
-                                {Array.isArray(equipmentLabel) &&
-                                  equipmentLabel}
-                                {"amount" in itemData &&
-                                  new Array(itemData.amount)
-                                    .fill(null)
-                                    .map((_, k) => {
-                                      return (
-                                        <Select
-                                          key={`${i}${j}${k}`}
-                                          placeholder={equipmentLabel as string}
-                                          data={data}
-                                          searchable
-                                          nothingFoundMessage="Nada encontrado"
-                                          onChange={
-                                            handleSetRadioValue(
-                                              `1${i}${j}${k}`,
-                                            ) as any
-                                          }
-                                        />
-                                      );
+                        <Fieldset key={i}>
+                            <Radio.Group
+                                value={selectedItems[i]}
+                                onChange={handleSelectItem(i)}
+                            >
+                                <Stack>
+                                    {options.map((items, j) => {
+                                        const key = `[${i}].[${j}]`
+                                        return (
+                                            <Radio
+                                                key={key}
+                                                value={key}
+                                                label={items.map(
+                                                    (data, k, arr) => {
+                                                        return (
+                                                            <ItemDisplay
+                                                                key={`${i}${j}${k}`}
+                                                                mapKey={key}
+                                                                index={k}
+                                                                size={
+                                                                    arr.length
+                                                                }
+                                                                equipmentOption={
+                                                                    data
+                                                                }
+                                                            />
+                                                        )
+                                                    }
+                                                )}
+                                            />
+                                        )
                                     })}
-                              </>
-                            )
-                          }
-                        />
-                      </Fragment>
-                    );
-                  })}
-                </Radio.Group>
-              </Paper>
-            );
-          },
-        )}
-      </Stack>
-    </Stack>
-  );
+                                </Stack>
+                            </Radio.Group>
+                        </Fieldset>
+                    )
+                })}
+            </Stack>
+        </Stack>
+    )
+}
+
+interface ItemDisplayProps {
+    mapKey: string
+    index: number
+    size: number
+    equipmentOption: EquipmentOption
+}
+function ItemDisplay({
+    mapKey,
+    index,
+    size,
+    equipmentOption,
+}: ItemDisplayProps) {
+    const [, setItemsMap] = useAtom(itemsMapAtom)
+    const isCategoryRange = [
+        'martial weapon',
+        'simple weapon',
+        'martial melee',
+        'martial ranged',
+        'simple melee',
+        'simple ranged',
+    ].includes(equipmentOption.item.toLowerCase())
+
+    const isTool = [
+        "artisan's tools",
+        'musical instrument',
+        'gaming sets',
+        'other tools',
+    ].includes(equipmentOption.item.toLowerCase())
+
+    const isGear = [
+        'standard gear',
+        'holy symbols',
+        'ammunition',
+        'equipment packs',
+        'kits',
+        'arcane foci',
+        'druidic foci',
+    ].includes(equipmentOption.item.toLowerCase())
+
+    const getItemByIndex = (index: string) => {
+        return equipmentList.find((e) => e.index === index)
+    }
+
+    const getItemsByCategoryRange = (query: string) => {
+        return equipmentList.filter((e) => e.category_range?.includes(query))
+    }
+
+    const getItemsByToolCategory = (query: string) => {
+        return equipmentList.filter((e) => e.tool_category === query)
+    }
+
+    const getItemsByGearCategory = (query: string) => {
+        return equipmentList.filter((e) => e.gear_category?.index === query)
+    }
+
+    const parseData = (list: typeof equipmentList) =>
+        list.map((item) => ({
+            label:
+                item.name +
+                (item.damage
+                    ? ` - ${item.damage.damage_dice} ${item.damage.damage_type.name}`
+                    : ''),
+            value: item.index,
+        }))
+
+    const handleSelectOption =
+        (localIndex: number, amount = 1, isItem = false) =>
+        (value: string | null) =>
+            setItemsMap((prev) => {
+                if (!prev[mapKey]) {
+                    const length = isItem ? size : size + amount - 1
+                    prev[mapKey] = Array(length).fill(null)
+                }
+
+                prev[mapKey][index + localIndex] = {
+                    item: value!,
+                    amount: isItem ? amount : 1,
+                }
+
+                return { ...prev }
+            })
+
+    let equipmentOptions: typeof equipmentList = []
+    if (isCategoryRange) {
+        equipmentOptions = getItemsByCategoryRange(
+            equipmentOption.item.split(' ')[0]
+        )
+    } else if (isTool) {
+        equipmentOptions = getItemsByToolCategory(equipmentOption.item)
+    } else if (isGear) {
+        equipmentOptions = getItemsByGearCategory(equipmentOption.item)
+    }
+
+    useEffect(() => {
+        if (isCategoryRange || isTool || isGear) return
+
+        handleSelectOption(
+            0,
+            equipmentOption.amount,
+            true
+        )(equipmentOption.item)
+    }, [])
+
+    return isCategoryRange || isTool || isGear ? (
+        <>
+            {Array(equipmentOption.amount)
+                .fill(0)
+                .map((_, i) => (
+                    <Select
+                        key={equipmentOption.item + i}
+                        searchable
+                        clearable={false}
+                        label={equipmentOption.item}
+                        data={parseData(equipmentOptions)}
+                        onChange={handleSelectOption(i)}
+                    />
+                ))}
+        </>
+    ) : (
+        <Text>
+            {getItemByIndex(equipmentOption.item)?.name}{' '}
+            {equipmentOption.amount}x
+        </Text>
+    )
 }
