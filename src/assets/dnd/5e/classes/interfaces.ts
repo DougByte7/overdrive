@@ -87,4 +87,5 @@ export interface DnD5eClass {
 export type EquipmentOption = {
     item: string
     amount: number
+    equipped?: boolean
 }

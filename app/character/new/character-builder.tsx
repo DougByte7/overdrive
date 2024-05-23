@@ -24,9 +24,10 @@ import races, { type DnD5eRaceName } from '@/assets/dnd/5e/races'
 import type { CharacterSheetProps } from '@/assets/dnd/5e/utils/CharacterSheet'
 import getModifier from '@/assets/dnd/5e/utils/getModifier'
 import TopBar from '@/components/top-bar'
+import storageKeys from '@/constants/storageKeys'
 import useCharacter from '@/hooks/useCharacter'
 import { useIsSignedOutNotification } from '@/hooks/useIsSignedNotification'
-import { api } from '@/utils/api'
+import { type RouterOutputs, api } from '@/utils/api'
 
 import AttributeMethod from './components/srd5e/attribute-method'
 import AttributeSelection from './components/srd5e/attribute-selection'
@@ -123,7 +124,7 @@ export default function CharacterBuilder() {
                     picture:
                         avatarPreviewUrl ||
                         `/images/fantasy/races/${form.race}.png`,
-                    race: form.race! as DnD5eRaceName,
+                    race: form.race!,
                     classes: form.classes,
                     strength: form.strength.base + form.strength.bonus,
                     dexterity: form.dexterity.base + form.dexterity.bonus,
@@ -134,6 +135,8 @@ export default function CharacterBuilder() {
                     wisdom: form.wisdom.base + form.wisdom.bonus,
                     charisma: form.charisma.base + form.charisma.bonus,
                 }
+                console.log(newCharacter)
+
                 addCharacter(newCharacter)
             } catch (e) {
                 captureException(e)
@@ -197,6 +200,19 @@ export default function CharacterBuilder() {
             }
         }
     }
+
+    const selectedRace =
+        form.race! in races
+            ? races[form.race as DnD5eRaceName]
+            : (JSON.parse(
+                  sessionStorage.getItem(storageKeys.charBuilder.race) ?? ''
+              ) as RouterOutputs['srdCustoms']['getAllAuthorRaces'][number])
+    const selectedClass =
+        form.classes[0]?.name in classes
+            ? classes[form.classes[0]?.name as DnD5eClassName]
+            : (JSON.parse(
+                  sessionStorage.getItem(storageKeys.charBuilder.class) ?? ''
+              ) as RouterOutputs['srdCustoms']['getAllAuthorClasses'][number])
 
     return (
         <>
@@ -299,18 +315,8 @@ export default function CharacterBuilder() {
                                                 c="var(--do_text_color_300)"
                                                 size="sm"
                                             >
-                                                {
-                                                    races[
-                                                        form.race! as DnD5eRaceName
-                                                    ]?.name
-                                                }
-                                                ,
-                                                {
-                                                    classes[
-                                                        form.classes[0]?.name
-                                                    ]?.name
-                                                }
-                                                .
+                                                {selectedRace?.name},{' '}
+                                                {selectedClass?.name}.
                                             </Text>
 
                                             <Text

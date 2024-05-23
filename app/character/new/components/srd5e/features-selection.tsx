@@ -1,7 +1,7 @@
 import { Box, Code, Divider, Select, Stack, Text, Title } from '@mantine/core'
 import { skills } from 'app/character/[characterId]'
 import { useAtom } from 'jotai'
-import { type CSSProperties, type ReactNode, useMemo } from 'react'
+import { type CSSProperties, Fragment, type ReactNode, useMemo } from 'react'
 
 import classes, {
     type DnD5eClassName,
@@ -129,53 +129,55 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
 
         if (!isSrdClass) {
             options.push(
-                <Divider label="Habilidades de classe (se houver)" />,
-                <Select
-                    label="Proficiência em habilidade"
-                    value={
-                        form.proficiencies[
-                            homebrewClass.proficiencies_skillAmount
-                        ]
-                    }
-                    data={skills.filter(
-                        (op) =>
+                <Fragment key="class-proficiencies">
+                    <Divider label="Habilidades de classe (se houver)" />
+                    <Select
+                        label="Proficiência em habilidade"
+                        value={
                             form.proficiencies[
                                 homebrewClass.proficiencies_skillAmount
-                            ] === op.value ||
-                            !form.proficiencies.includes(op.value)
-                    )}
-                    onChange={(val) =>
-                        setForm((f) => {
-                            f.proficiencies[
-                                homebrewClass.proficiencies_skillAmount
-                            ] = val as Skill
-                            return { ...f }
-                        })
-                    }
-                />,
-                <Select
-                    label="Proficiência em habilidade"
-                    value={
-                        form.proficiencies[
-                            homebrewClass.proficiencies_skillAmount + 1
-                        ]
-                    }
-                    data={skills.filter(
-                        (op) =>
+                            ]
+                        }
+                        data={skills.filter(
+                            (op) =>
+                                form.proficiencies[
+                                    homebrewClass.proficiencies_skillAmount
+                                ] === op.value ||
+                                !form.proficiencies.includes(op.value)
+                        )}
+                        onChange={(val) =>
+                            setForm((f) => {
+                                f.proficiencies[
+                                    homebrewClass.proficiencies_skillAmount
+                                ] = val as Skill
+                                return { ...f }
+                            })
+                        }
+                    />
+                    <Select
+                        label="Proficiência em habilidade"
+                        value={
                             form.proficiencies[
                                 homebrewClass.proficiencies_skillAmount + 1
-                            ] === op.value ||
-                            !form.proficiencies.includes(op.value)
-                    )}
-                    onChange={(val) =>
-                        setForm((f) => {
-                            f.proficiencies[
-                                homebrewClass.proficiencies_skillAmount + 1
-                            ] = val as Skill
-                            return { ...f }
-                        })
-                    }
-                />
+                            ]
+                        }
+                        data={skills.filter(
+                            (op) =>
+                                form.proficiencies[
+                                    homebrewClass.proficiencies_skillAmount + 1
+                                ] === op.value ||
+                                !form.proficiencies.includes(op.value)
+                        )}
+                        onChange={(val) =>
+                            setForm((f) => {
+                                f.proficiencies[
+                                    homebrewClass.proficiencies_skillAmount + 1
+                                ] = val as Skill
+                                return { ...f }
+                            })
+                        }
+                    />
+                </Fragment>
             )
         }
 

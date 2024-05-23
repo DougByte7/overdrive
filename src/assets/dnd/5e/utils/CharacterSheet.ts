@@ -2,12 +2,7 @@ import equipment from '@/assets/dnd/5e/equipment.json'
 import randomIntFromInterval from '@/utils/randomIntFromInterval'
 
 import type { DnD5eClassName, Skill } from '../classes'
-import type {
-    DnD5eClass,
-    EquipmentIndex,
-    WithAmount,
-} from '../classes/interfaces'
-import type { DnD5eRaceName } from '../races'
+import type { DnD5eClass, EquipmentOption } from '../classes/interfaces'
 import getModifier from './getModifier'
 
 interface AttributeScore {
@@ -24,10 +19,10 @@ export interface CharacterSheetProps<T extends 'data' | 'name' = 'data'> {
     name: string
     picture: string
     backstory: string
-    race: DnD5eRaceName
+    race: string
     classes: T extends 'data'
         ? Array<{ data: DnD5eClass; level: number }>
-        : Array<{ name: DnD5eClassName | string; level: number }>
+        : Array<{ name: string | string; level: number }>
     strength: number
     dexterity: number
     constitution: number
@@ -37,7 +32,7 @@ export interface CharacterSheetProps<T extends 'data' | 'name' = 'data'> {
     traits: Record<string, string | string[]>
     features: Record<string, string | string[]>
     proficiencies: Skill[]
-    items: WithAmount<EquipmentIndex>[]
+    items: EquipmentOption[]
     spells: string[]
     preparedSpells: string[]
 }
@@ -67,12 +62,12 @@ export class CharacterSheet {
     name: string
     picture: string
     backstory: string
-    race: DnD5eRaceName
+    race: string
     classes: Array<{ data: DnD5eClass; level: number }>
     traits: Record<string, string | string[]>
     features: Record<string, string | string[]>
     proficiencies: Skill[]
-    items: WithAmount<EquipmentIndex>[]
+    items: EquipmentOption[]
     spells: string[]
     preparedSpells: string[]
 
@@ -141,14 +136,14 @@ export class CharacterSheet {
 
     addItem(itemIndex: string, amount = 1) {
         const currentItemIndex = this.items.findIndex(
-            (item) => item.index === itemIndex
+            (item) => item.item === itemIndex
         )
 
         if (currentItemIndex !== -1) {
             this.items[currentItemIndex].amount += amount
         } else {
             this.items.push({
-                index: itemIndex,
+                item: itemIndex,
                 amount,
             })
         }
@@ -197,7 +192,7 @@ export class CharacterSheet {
                 e.armor_category !== 'Shield' &&
                 this.items
                     .filter((i) => i.equipped)
-                    .map((i) => i.index)
+                    .map((i) => i.item)
                     .includes(e.index)
         )
         const shield = equipment.find(
@@ -206,7 +201,7 @@ export class CharacterSheet {
                 e.armor_category === 'Shield' &&
                 this.items
                     .filter((i) => i.equipped)
-                    .map((i) => i.index)
+                    .map((i) => i.item)
                     .includes(e.index)
         )
 

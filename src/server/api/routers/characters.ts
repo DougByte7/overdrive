@@ -75,7 +75,6 @@ export const charactersRouter = createTRPCRouter({
                         'Role Play System not supported'
                     ),
                 }),
-
                 input
             )
         )
