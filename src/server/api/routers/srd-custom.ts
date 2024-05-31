@@ -16,15 +16,13 @@ const ratelimit = new Ratelimit({
 })
 
 const raceActions = {
-    getRace: publicProcedure
-        .input(z.string().length(21))
-        .query(({ ctx, input }) => {
-            return ctx.prisma.sRDCustomRace.findFirst({
-                where: {
-                    id: input,
-                },
-            })
-        }),
+    getRace: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+        return ctx.prisma.sRDCustomRace.findFirst({
+            where: {
+                id: input,
+            },
+        })
+    }),
     getAllRaces: publicProcedure.query(({ ctx }) => {
         return ctx.prisma.sRDCustomRace.findMany({
             where: {
@@ -113,12 +111,19 @@ const raceActions = {
 }
 
 const classActions = {
-    getClass: publicProcedure
-        .input(z.string().length(21))
+    getClass: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+        return ctx.prisma.sRDCustomClass.findFirst({
+            where: {
+                id: input,
+            },
+        })
+    }),
+    getClasses: publicProcedure
+        .input(z.array(z.string()))
         .query(({ ctx, input }) => {
-            return ctx.prisma.sRDCustomClass.findFirst({
+            return ctx.prisma.sRDCustomClass.findMany({
                 where: {
-                    id: input,
+                    id: { in: input },
                 },
             })
         }),
