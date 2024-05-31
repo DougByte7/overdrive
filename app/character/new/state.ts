@@ -26,7 +26,7 @@ export const characterFormAtonInit: CharacterForm = {
 
 export const characterFormAton = atom(characterFormAtonInit)
 
-export const avatarPreviewUrlAton = atom('')
+export const avatarPreviewUrlAton = atom('/d10-electric.svg')
 
 export const attrMethodAtom = atom<AttrMethod | ''>('')
 
