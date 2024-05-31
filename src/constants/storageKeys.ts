@@ -6,6 +6,7 @@ const storageKeys = {
         race: 'charbuilder:race',
         class: 'charbuilder:class',
     },
+    characters: 'characters',
 }
 
 export default storageKeys
