@@ -4,14 +4,14 @@ import { useAuth } from '@clerk/nextjs'
 import {
     Burger,
     Button,
+    Drawer,
     Group,
     NavLink,
     Stack,
     Text,
     Title,
-    Transition,
 } from '@mantine/core'
-import { useClickOutside, useDisclosure } from '@mantine/hooks'
+import { useDisclosure } from '@mantine/hooks'
 import {
     IconBellRinging,
     IconHome,
@@ -26,14 +26,10 @@ interface TopBarProps {
 }
 export default function TopBar({ title }: TopBarProps) {
     const [opened, { toggle, close }] = useDisclosure()
-    const ref = useClickOutside(close)
     const { isSignedIn, signOut } = useAuth()
 
     return (
-        <header
-            ref={ref}
-            className="relative flex items-center justify-center bg-support-600 px-20 py-2"
-        >
+        <header className="relative flex items-center justify-center bg-support-600 px-20 py-2">
             <Title
                 className="absolute left-4 w-2/5 overflow-hidden text-ellipsis"
                 size="sm"
@@ -58,75 +54,63 @@ export default function TopBar({ title }: TopBarProps) {
                 aria-label="Alternar menu"
             />
 
-            <Transition
-                mounted={opened}
-                transition="slide-left"
-                duration={300}
-                timingFunction="ease"
-            >
-                {(styles) => (
-                    <Stack
-                        className="absolute right-0 top-16 z-50 h-[calc(100vh-60px)] w-96 max-w-full bg-inherit"
-                        style={styles}
-                    >
-                        <NavLink
-                            href="/home"
-                            label="Início"
-                            leftSection={<IconHome />}
-                        />
-                        <NavLink
-                            href="/monsters"
-                            label="Monstros"
-                            leftSection={<IconSkull />}
-                        />
-                        <NavLink
-                            href="/combat-manager"
-                            label="Gerenciador de combate"
-                            leftSection={<IconSwords />}
-                        />
+            <Drawer opened={opened} onClose={close} position="right">
+                <Stack className="h-[calc(100svh-60px)]">
+                    <NavLink
+                        href="/home"
+                        label="Início"
+                        leftSection={<IconHome />}
+                    />
+                    <NavLink
+                        href="/monsters"
+                        label="Monstros"
+                        leftSection={<IconSkull />}
+                    />
+                    <NavLink
+                        href="/combat-manager"
+                        label="Gerenciador de combate"
+                        leftSection={<IconSwords />}
+                    />
 
+                    <NavLink
+                        href="/patch-notes"
+                        label={
+                            <Group>
+                                Novidades
+                                <Text className="font-mono text-xs opacity-75">
+                                    {process.env.NEXT_PUBLIC_APP_VERSION}
+                                </Text>
+                            </Group>
+                        }
+                        leftSection={<IconBellRinging />}
+                    />
+
+                    <div className="mt-auto mb-8 px-4">
                         <NavLink
-                            href="/patch-notes"
-                            label={
-                                <Group>
-                                    Novidades
-                                    <Text className="font-mono text-xs opacity-75">
-                                        {process.env.NEXT_PUBLIC_APP_VERSION}
-                                    </Text>
-                                </Group>
-                            }
-                            leftSection={<IconBellRinging />}
+                            href="/privacy"
+                            label="Politica de Privacidade"
                         />
+                        <NavLink href="/tos" label="Termos de Serviço" />
 
-                        <div className="mt-auto mb-8 px-4">
-                            <NavLink
-                                href="/privacy"
-                                label="Politica de Privacidade"
-                            />
-                            <NavLink href="/tos" label="Termos de Serviço" />
-
-                            {isSignedIn ? (
-                                <Button
-                                    className="w-full mt-4"
-                                    onClick={() =>
-                                        signOut({ redirectUrl: '/' })
-                                    }
-                                >
-                                    Sair
-                                </Button>
-                            ) : (
-                                <Button
-                                    className="w-full mt-4"
-                                    component={Link}
-                                    href="/"
-                                >
-                                    Entrar ou Cadastrar
-                                </Button>
-                            )}
-                        </div>
-                    </Stack>
-                )}
-            </Transition>
+                        {isSignedIn ? (
+                            <Button
+                                className="w-full mt-4"
+                                onClick={() => signOut({ redirectUrl: '/' })}
+                            >
+                                Sair
+                            </Button>
+                        ) : (
+                            <Button
+                                className="w-full mt-4"
+                                component={Link}
+                                href="/"
+                            >
+                                Entrar ou Cadastrar
+                            </Button>
+                        )}
+                    </div>
+                </Stack>
+            </Drawer>
         </header>
     )
 }
