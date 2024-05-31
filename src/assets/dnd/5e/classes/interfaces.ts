@@ -1,5 +1,3 @@
-import type { DnD5eClassName } from '.'
-
 export interface DnD5eFeature {
     name: string
     level: number | number[]
@@ -59,7 +57,7 @@ export type Skill =
 export type Tool = 'musicalInstrument' | 'artisansTools'
 
 export interface DnD5eClass {
-    key: DnD5eClassName
+    key: string
     name: string
     description: string
     features: DnD5eFeature[]
