@@ -183,13 +183,26 @@ export default function CharacterSheetPage({
                 id,
                 authorId,
                 public: _,
+                proficiencies_armor,
+                proficiencies_savingThrows,
+                proficiencies_skillAmount,
+                proficiencies_skills,
+                proficiencies_weapon,
                 ...normalizedClass
             } = customClasses.find((custom) => custom.id === c.name)!
             return {
                 id,
-                data: normalizedClass as unknown as Input<
-                    typeof CustomClassSchema
-                >,
+                data: {
+                    ...normalizedClass,
+                    proficiencies: {
+                        skills: proficiencies_skills,
+                        armor: proficiencies_armor,
+                        weapon: proficiencies_weapon,
+                        savingThrows: proficiencies_savingThrows,
+                        skillAmount: proficiencies_skillAmount,
+                        tools: [],
+                    },
+                } as unknown as Input<typeof CustomClassSchema>,
                 level: c.level,
             }
         })
@@ -256,7 +269,7 @@ function AutoSaveCharacter() {
         updateCharacter(payload.id, payload)
 
         return
-    }, 2000)
+    }, 5000)
 
     if (!hasChanges) return <></>
 
@@ -675,7 +688,7 @@ function Attributes() {
                         <Text>{attr.label}</Text>
                         <Group gap="sm">
                             <Badge
-                                className="w-20"
+                                className="w-24"
                                 mr="sm"
                                 variant={hasProficiency ? 'dot' : 'outline'}
                                 color={hasProficiency ? 'white' : 'grey'}
