@@ -4,17 +4,17 @@ import { useUser } from '@clerk/nextjs'
 import { useLocalStorage } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { useEffect } from 'react'
-import { parse } from 'valibot'
+import { Input, parse } from 'valibot'
 
-import type { CharacterSheetProps } from '@/assets/dnd/5e/utils/CharacterSheet'
 import { CharacterSheetSchema } from '@/assets/dnd/5e/utils/schemas/charater'
 import storageKeys from '@/constants/storageKeys'
 import { SupportedSystems } from '@/server/api/routers/characters'
 import { api } from '@/utils/api'
 
+export type Character = Input<typeof CharacterSheetSchema>
 export default function useCharacter() {
     const [localCharacters, setLocalCharacters, clearCharacters] =
-        useLocalStorage<CharacterSheetProps<'name'>[]>({
+        useLocalStorage<Character[]>({
             key: 'characters',
             defaultValue: [],
         })
@@ -66,11 +66,7 @@ export default function useCharacter() {
         }
 
         // Override local with remote to sync deleted characters from other devices
-        setLocalCharacters(
-            remoteCharacters?.map(
-                (c) => c.data as unknown as CharacterSheetProps<'name'>
-            )
-        )
+        setLocalCharacters(remoteCharacters?.map((c) => c.data as Character))
     }, [isSuccess])
 
     useEffect(() => {
@@ -87,7 +83,7 @@ export default function useCharacter() {
     }, [createCharacterStatus])
 
     const addCharacter = (
-        newCharacter: CharacterSheetProps<'name'>,
+        newCharacter: Character,
         system: SupportedSystems = 'SRD5'
     ) => {
         setLocalCharacters((prev) => [...prev, newCharacter])
@@ -101,7 +97,7 @@ export default function useCharacter() {
     }
 
     const addManyCharacters = (
-        newCharacters: CharacterSheetProps<'name'>[],
+        newCharacters: Character[],
         system: SupportedSystems = 'SRD5'
     ) => {
         setLocalCharacters((prev) => [...prev, ...newCharacters])
@@ -126,10 +122,7 @@ export default function useCharacter() {
         deleteCharacter(id)
     }
 
-    const handleUpdateCharacter = (
-        id: string,
-        newCharacter: CharacterSheetProps<'name'>
-    ) => {
+    const handleUpdateCharacter = (id: string, newCharacter: Character) => {
         const index = localCharacters.findIndex((char) => char.id === id)
         if (index > -1) {
             setLocalCharacters((prev) => {
