@@ -1,5 +1,5 @@
 import { Box, Code, Divider, Select, Stack, Text, Title } from '@mantine/core'
-import { skills } from 'app/character/[characterId]'
+import { skills } from 'app/character/[characterId]/character-sheet'
 import { useAtom } from 'jotai'
 import { type CSSProperties, Fragment, type ReactNode, useMemo } from 'react'
 

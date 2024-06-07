@@ -21,11 +21,10 @@ import { useMemo, useState } from 'react'
 
 import classes, { DnD5eClassName } from '@/assets/dnd/5e/classes'
 import races, { type DnD5eRaceName } from '@/assets/dnd/5e/races'
-import type { CharacterSheetProps } from '@/assets/dnd/5e/utils/CharacterSheet'
 import getModifier from '@/assets/dnd/5e/utils/getModifier'
 import TopBar from '@/components/top-bar'
 import storageKeys from '@/constants/storageKeys'
-import useCharacter from '@/hooks/useCharacter'
+import useCharacter, { type Character } from '@/hooks/useCharacter'
 import { useIsSignedOutNotification } from '@/hooks/useIsSignedNotification'
 import { type RouterOutputs, api } from '@/utils/api'
 
@@ -104,7 +103,7 @@ export default function CharacterBuilder() {
     const handleNext = () => {
         if (step + 1 === Steps.FINAL) {
             try {
-                const newCharacter: CharacterSheetProps<'name'> = {
+                const newCharacter: Character = {
                     ...form,
                     id,
                     hp:
@@ -121,9 +120,7 @@ export default function CharacterBuilder() {
                     initiative: getModifier(
                         form.dexterity.base + form.dexterity.bonus
                     ),
-                    picture:
-                        avatarPreviewUrl ||
-                        `/images/fantasy/races/${form.race}.png`,
+                    picture: avatarPreviewUrl,
                     race: form.race!,
                     classes: form.classes,
                     strength: form.strength.base + form.strength.bonus,
@@ -135,7 +132,6 @@ export default function CharacterBuilder() {
                     wisdom: form.wisdom.base + form.wisdom.bonus,
                     charisma: form.charisma.base + form.charisma.bonus,
                 }
-                console.log(newCharacter)
 
                 addCharacter(newCharacter)
             } catch (e) {
@@ -205,13 +201,13 @@ export default function CharacterBuilder() {
         form.race! in races
             ? races[form.race as DnD5eRaceName]
             : (JSON.parse(
-                  sessionStorage.getItem(storageKeys.charBuilder.race) ?? ''
+                  sessionStorage.getItem(storageKeys.charBuilder.race) ?? '{}'
               ) as RouterOutputs['srdCustoms']['getAllAuthorRaces'][number])
     const selectedClass =
         form.classes[0]?.name in classes
             ? classes[form.classes[0]?.name as DnD5eClassName]
             : (JSON.parse(
-                  sessionStorage.getItem(storageKeys.charBuilder.class) ?? ''
+                  sessionStorage.getItem(storageKeys.charBuilder.class) ?? '{}'
               ) as RouterOutputs['srdCustoms']['getAllAuthorClasses'][number])
 
     return (
@@ -302,10 +298,7 @@ export default function CharacterBuilder() {
                                 </Box>
                                 <Card radius="md" w={280} h={275} p={0}>
                                     <BackgroundImage
-                                        src={
-                                            avatarPreviewUrl ||
-                                            `/images/fantasy/races/${form.race}.png`
-                                        }
+                                        src={avatarPreviewUrl}
                                         radius="md"
                                         h="100%"
                                     >

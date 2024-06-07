@@ -15,7 +15,7 @@ import {
     Title,
 } from '@mantine/core'
 import { IconPencil } from '@tabler/icons-react'
-import { skills } from 'app/character/[characterId]'
+import { skills } from 'app/character/[characterId]/character-sheet'
 import { useAtom } from 'jotai'
 import {
     type CSSProperties,
@@ -140,7 +140,7 @@ export default function ReviewOptions({ styles, setStep }: ReviewOptionsProps) {
                                     </Grid.Col>
                                     <Grid.Col span={8}>
                                         <Group>
-                                            <span className="flex justify-center items-center rounded size-10 bg-[var(--do_color_support_dark_30)] text-2xl font-bold">
+                                            <span className="flex justify-center items-center rounded size-10 bg-support-400 text-2xl font-bold">
                                                 {attVal}
                                             </span>
                                             <Badge variant="outline">
