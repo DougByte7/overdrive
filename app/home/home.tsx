@@ -25,7 +25,7 @@ import {
     IconTrash,
 } from '@tabler/icons-react'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import type {
     CSSProperties,
     ChangeEventHandler,
@@ -33,8 +33,8 @@ import type {
     ReactNode,
 } from 'react'
 
-import classes from '@/assets/dnd/5e/classes'
-import races from '@/assets/dnd/5e/races'
+import classes, { type DnD5eClassName } from '@/assets/dnd/5e/classes'
+import races, { type DnD5eRaceName } from '@/assets/dnd/5e/races'
 import TopBar from '@/components/top-bar'
 import useRouteGuard from '@/hooks/routeGuard'
 import useCharacter from '@/hooks/useCharacter'
@@ -44,13 +44,20 @@ import { removeDiacritics } from '@/utils/removeDiacritics'
 export default function Home() {
     const { characters } = useCharacter()
     useRouteGuard()
+    const { data: customRaces } = api.srdCustoms.getAllAuthorRaces.useQuery()
+    const { data: customClasses } =
+        api.srdCustoms.getAllAuthorClasses.useQuery()
 
     const normalizedCharacters = useMemo(() => {
         return characters.map((character) => {
+            const raceName =
+                character.race in races
+                    ? races[character.race as DnD5eRaceName].name
+                    : customRaces?.find((r) => r.id === character.race)?.name
             return {
                 id: character.id,
                 name: character.name,
-                detail: races[character.race!].name,
+                detail: raceName,
                 extra: (
                     <Group gap={0} justify="space-between">
                         <Group gap="xs">
@@ -60,11 +67,20 @@ export default function Home() {
                                     character.classes.length > 1 ? 'xs' : 'md'
                                 }
                             >
-                                {character.classes?.map((c) => (
-                                    <>
-                                        {classes[c.name].name} <br />
-                                    </>
-                                ))}
+                                {character.classes?.map((c) => {
+                                    const className =
+                                        c.name in classes
+                                            ? classes[c.name as DnD5eClassName]
+                                                  .name
+                                            : customClasses?.find(
+                                                  (cc) => cc.id === c.name
+                                              )?.name
+                                    return (
+                                        <Fragment key={c.name}>
+                                            {className} <br />
+                                        </Fragment>
+                                    )
+                                })}
                             </Text>
                         </Group>
                         <Group gap="xs">
@@ -82,7 +98,7 @@ export default function Home() {
                 imgSrc: character.picture,
             }
         })
-    }, [characters])
+    }, [characters, customRaces, customClasses])
 
     const [search, setSearch] = useDebouncedState('', 200)
     const [filteredCharacters, setFilteredCharacters] =
@@ -183,7 +199,7 @@ export default function Home() {
                                             style={styles}
                                             imgSrc={character.imgSrc}
                                             name={character.name}
-                                            detail={character.detail}
+                                            detail={character.detail ?? ''}
                                             extra={character.extra}
                                             id={character.id ?? i}
                                             onClick={toggle}
@@ -218,9 +234,6 @@ function CardCharacter({
     id,
     onClick,
 }: CardCharacterProps) {
-    const fallbackImg =
-        'https://img.freepik.com/vetores-gratis/guerreiro-escandinavo-de-personagem-viking-no-capacete_107791-15005.jpg?w=1380&t=st=1687125692~exp=1687126292~hmac=608bcc92a79a2fd9ae1a6b449b8537c476bdd3165c0c00c9f6ceaffa751d253d'
-
     const [opened, { open, close }] = useDisclosure(false)
     const { removeCharacter } = useCharacter()
     const { isLoading: isDeleteCharacterLoading } =
@@ -247,7 +260,8 @@ function CardCharacter({
                     onClick={onClick}
                 >
                     <Image
-                        src={imgSrc ?? fallbackImg}
+                        src={imgSrc}
+                        fit="contain"
                         radius="4px 0 0 4px"
                         h={240}
                         w={240}
