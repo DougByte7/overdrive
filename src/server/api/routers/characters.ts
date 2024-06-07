@@ -155,7 +155,7 @@ export const charactersRouter = createTRPCRouter({
             if (!success) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' })
 
             const updated = await ctx.prisma.character.update({
-                where: { id: input.id },
+                where: { id: input.id, playerId },
                 data: {
                     data: input,
                 },
