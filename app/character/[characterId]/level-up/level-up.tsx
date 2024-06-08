@@ -79,9 +79,9 @@ export default function LevelUp({ characterId }: LevelUpProps) {
         setSelectedClass(selected)
     }, [])
 
-    const level = classes.find((c) => c.data.name === selectedClass)?.level
-
-    console.log(currentStep)
+    const level = classes.find((c) =>
+        [c.data.name, c.id].includes(selectedClass!)
+    )?.level
 
     useEffect(() => {
         if (currentStep !== Steps.SAVE) return
@@ -89,8 +89,10 @@ export default function LevelUp({ characterId }: LevelUpProps) {
         const payload = getMutationPayload()
         updateCharacter(payload.id, payload)
 
-        router.push('/character/' + characterId)
+        setTimeout(() => router.push('/character/' + characterId), 2000)
     }, [currentStep])
+
+    if (currentStep === Steps.SAVE) return <Loader color="white" />
 
     return (
         <>
@@ -447,8 +449,9 @@ const NewFeatures = ({ styles, currentStep, onNextStep }: NewFeaturesProps) => {
     if (!(sheetPreview && selectedClass)) return null
 
     const newLevel =
-        (sheetPreview!.classes.find((c) => c.data.name === selectedClass)
-            ?.level ?? 0) + 1
+        (sheetPreview!.classes.find((c) =>
+            [c.data.name, c.id].includes(selectedClass)
+        )?.level ?? 0) + 1
 
     const handleSetFeature =
         (featureName: string, index: number) =>
@@ -518,18 +521,21 @@ const NewFeatures = ({ styles, currentStep, onNextStep }: NewFeaturesProps) => {
                             <Text>
                                 <strong>{f.name}.</strong>
                             </Text>
-                            {Array.isArray(f.description) ? (
-                                <ReactMarkdown
-                                    className="text-sm"
-                                    remarkPlugins={[remarkGfm]}
-                                >
-                                    {f.description.join('\n')}
-                                </ReactMarkdown>
-                            ) : (
-                                <Text size="sm">{f.description}</Text>
-                            )}
+
+                            <ReactMarkdown
+                                className="text-sm"
+                                remarkPlugins={[remarkGfm]}
+                            >
+                                {Array.isArray(f.description)
+                                    ? f.description.join('\n')
+                                    : f.description}
+                            </ReactMarkdown>
+
                             <Space h="sm" />
-                            {f.name === 'Melhoria de Atributo' && (
+                            {[
+                                'Melhoria de Atributo',
+                                'Ability Score Improvement',
+                            ].includes(f.name) && (
                                 <>
                                     <Select
                                         my="sm"
@@ -611,77 +617,86 @@ const NewFeatures = ({ styles, currentStep, onNextStep }: NewFeaturesProps) => {
                         </Box>
                     ))}
 
-                {selectedClassData.cantripKnown &&
-                    selectedClassData.cantripKnown[newLevel - 2] !==
-                        selectedClassData.cantripKnown[newLevel - 1] && (
-                        <Text>
-                            Agora você possui{' '}
-                            {selectedClassData.cantripKnown[newLevel]} truques
-                        </Text>
-                    )}
-                <NewSpellsSeletor
-                    isCantrip
-                    spellsKnown={
-                        Array.isArray(selectedClassData.cantripKnown)
-                            ? selectedClassData.cantripKnown
-                            : []
-                    }
-                    level={newLevel}
-                    className={selectedClass}
-                    characterSpells={sheetPreview.spells}
-                    expandedSpellList={
-                        selectedClassData.subclasses?.[0].expandedSpellList ??
-                        []
-                    }
-                    handleAddOrRemoveSpell={handleAddOrRemoveSpell}
-                />
-
-                {newLevel < 20 &&
-                    selectedClassData.spellsSlots &&
-                    selectedClassData.spellsSlots[newLevel - 2].join() !==
-                        selectedClassData.spellsSlots[newLevel - 1].join() && (
-                        <Text>
-                            Agora você possui espaços de magia{' '}
-                            {selectedClassData.spellsSlots[newLevel - 1].reduce(
-                                (acc, s, i) => {
-                                    if (s === Infinity) return acc
-
-                                    const newSlot =
-                                        selectedClassData.spellsSlots![
-                                            newLevel - 2
-                                        ][i] !== s
-
-                                    if (!newSlot) return acc
-
-                                    return !acc
-                                        ? `nível ${i} (${s}x)`
-                                        : `${acc}, nível ${i} (${s}x)`
-                                },
-                                ''
+                {'cantripKnown' in selectedClassData && (
+                    <>
+                        {selectedClassData.cantripKnown &&
+                            selectedClassData.cantripKnown[newLevel - 2] !==
+                                selectedClassData.cantripKnown[
+                                    newLevel - 1
+                                ] && (
+                                <Text>
+                                    Agora você possui{' '}
+                                    {selectedClassData.cantripKnown[newLevel]}{' '}
+                                    truques
+                                </Text>
                             )}
-                            .
-                        </Text>
-                    )}
-                <NewSpellsSeletor
-                    spellsKnown={
-                        Array.isArray(selectedClassData.spellsKnown)
-                            ? selectedClassData.spellsKnown
-                            : []
-                    }
-                    spellsSlots={
-                        Array.isArray(selectedClassData.spellsSlots)
-                            ? selectedClassData.spellsSlots
-                            : []
-                    }
-                    level={newLevel}
-                    className={selectedClass}
-                    characterSpells={sheetPreview.spells}
-                    expandedSpellList={
-                        selectedClassData.subclasses?.[0].expandedSpellList ??
-                        []
-                    }
-                    handleAddOrRemoveSpell={handleAddOrRemoveSpell}
-                />
+                        <NewSpellsSeletor
+                            isCantrip
+                            spellsKnown={
+                                Array.isArray(selectedClassData.cantripKnown)
+                                    ? selectedClassData.cantripKnown
+                                    : []
+                            }
+                            level={newLevel}
+                            className={selectedClass}
+                            characterSpells={sheetPreview.spells}
+                            expandedSpellList={
+                                selectedClassData.subclasses?.[0]
+                                    .expandedSpellList ?? []
+                            }
+                            handleAddOrRemoveSpell={handleAddOrRemoveSpell}
+                        />
+                        {newLevel < 20 &&
+                            selectedClassData.spellsSlots &&
+                            selectedClassData.spellsSlots[
+                                newLevel - 2
+                            ].join() !==
+                                selectedClassData.spellsSlots[
+                                    newLevel - 1
+                                ].join() && (
+                                <Text>
+                                    Agora você possui espaços de magia{' '}
+                                    {selectedClassData.spellsSlots[
+                                        newLevel - 1
+                                    ].reduce((acc, s, i) => {
+                                        if (s === Infinity) return acc
+
+                                        const newSlot =
+                                            selectedClassData.spellsSlots![
+                                                newLevel - 2
+                                            ][i] !== s
+
+                                        if (!newSlot) return acc
+
+                                        return !acc
+                                            ? `nível ${i} (${s}x)`
+                                            : `${acc}, nível ${i} (${s}x)`
+                                    }, '')}
+                                    .
+                                </Text>
+                            )}
+                        <NewSpellsSeletor
+                            spellsKnown={
+                                Array.isArray(selectedClassData.spellsKnown)
+                                    ? selectedClassData.spellsKnown
+                                    : []
+                            }
+                            spellsSlots={
+                                Array.isArray(selectedClassData.spellsSlots)
+                                    ? selectedClassData.spellsSlots
+                                    : []
+                            }
+                            level={newLevel}
+                            className={selectedClass}
+                            characterSpells={sheetPreview.spells}
+                            expandedSpellList={
+                                selectedClassData.subclasses?.[0]
+                                    .expandedSpellList ?? []
+                            }
+                            handleAddOrRemoveSpell={handleAddOrRemoveSpell}
+                        />{' '}
+                    </>
+                )}
             </StackContainer>
 
             <Button mt="auto" onClick={onNextStep}>
