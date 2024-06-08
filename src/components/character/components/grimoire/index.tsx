@@ -1,226 +1,210 @@
-import { useCallback, useMemo } from "react";
-import { Tabs, Text } from "@mantine/core";
-import spells from "@/assets/dnd/5e/spells.json";
-import { SpellDetails } from "./spell-details";
-import SpellList from "./spell-list";
-import classes from "@/assets/dnd/5e/classes";
-import { notifications } from "@mantine/notifications";
-import useCharacter from "@/hooks/useCharacter";
-import { useRouter } from "next/router";
-import { useAtom } from "jotai";
-import { characterAtom } from "../../state";
-import type { DnD5eSpell } from "@/assets/dnd/5e/interfaces";
-import { CharacterSheet } from "@/assets/dnd/5e/utils/CharacterSheet";
+import { Tabs, Text } from '@mantine/core'
+import { notifications } from '@mantine/notifications'
+import { useCallback, useMemo } from 'react'
+
+import type { DnD5eSpell } from '@/assets/dnd/5e/interfaces'
+import spells from '@/assets/dnd/5e/spells.json'
+import {
+    useCharacterClasses,
+    useCharacterPreparedSpells,
+    useCharacterSheetActions,
+    useCharacterSpells,
+} from '@/assets/dnd/5e/utils/CharacterSheet'
+
+import { SpellDetails } from './spell-details'
+import SpellList from './spell-list'
 
 function sortSpellByName(a: DnD5eSpell, b: DnD5eSpell) {
-  return a.name > b.name ? 1 : -1;
+    return a.name > b.name ? 1 : -1
 }
 
 function sortByLevel(arr: DnD5eSpell[][], spell: DnD5eSpell) {
-  const index = spell.level === "cantrip" ? 0 : +spell.level;
-  if (arr[index]) {
-    arr[index].push(spell);
-  } else {
-    arr[index] = [spell];
-  }
+    const index = spell.level === 'cantrip' ? 0 : +spell.level
+    if (arr[index]) {
+        arr[index].push(spell)
+    } else {
+        arr[index] = [spell]
+    }
 
-  return arr;
+    return arr
 }
 
 export default function Grimoire() {
-  return (
-    <>
-      <Tabs
-        className="h-[calc(100vh-80px)] min-w-[300px] shrink grow basis-0 overflow-auto"
-        defaultValue="prepared"
-      >
-        <Tabs.List>
-          <Tabs.Tab value="prepared">Preparadas</Tabs.Tab>
-          <Tabs.Tab value="know">Conhecidas</Tabs.Tab>
-          <Tabs.Tab value="all">Todas</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="prepared" p="md">
-          <PreparedSpells />
-        </Tabs.Panel>
+    return (
+        <>
+            <Tabs
+                className="h-[calc(100vh-80px)] min-w-[300px] shrink grow basis-0 overflow-auto"
+                defaultValue="prepared"
+            >
+                <Tabs.List>
+                    <Tabs.Tab value="prepared">Preparadas</Tabs.Tab>
+                    <Tabs.Tab value="know">Conhecidas</Tabs.Tab>
+                    <Tabs.Tab value="all">Todas</Tabs.Tab>
+                </Tabs.List>
+                <Tabs.Panel value="prepared" p="md">
+                    <PreparedSpells />
+                </Tabs.Panel>
 
-        <Tabs.Panel value="know" p="md">
-          <KnownSpells />
-        </Tabs.Panel>
+                <Tabs.Panel value="know" p="md">
+                    <KnownSpells />
+                </Tabs.Panel>
 
-        <Tabs.Panel value="all" p="md">
-          <AllSpells />
-        </Tabs.Panel>
-      </Tabs>
-      <SpellDetails verticalOffset={0} />
-    </>
-  );
+                <Tabs.Panel value="all" p="md">
+                    <AllSpells />
+                </Tabs.Panel>
+            </Tabs>
+            <SpellDetails verticalOffset={0} />
+        </>
+    )
 }
 
 function PreparedSpells() {
-  const [character] = useAtom(characterAtom);
+    const characterSpells = useCharacterSpells()
+    const characterPreparedSpells = useCharacterPreparedSpells()
 
-  const preparedSpells = useMemo(() => {
-    if (!character?.spells) return [];
+    const preparedSpells = useMemo(() => {
+        if (!characterSpells.length) return []
 
-    return [
-      ...spells
-        .filter(
-          (spell) =>
-            spell.level === "cantrip" && character.spells.includes(spell.name),
-        )
-        .sort(sortSpellByName),
-      ...character.preparedSpells
-        .reduce((acc, spellName) => {
-          const spell = spells.find((spell) => spell.name === spellName);
+        return [
+            ...spells
+                .filter(
+                    (spell) =>
+                        spell.level === 'cantrip' &&
+                        characterSpells.includes(spell.name)
+                )
+                .sort(sortSpellByName),
+            ...characterPreparedSpells
+                .reduce((acc, spellName) => {
+                    const spell = spells.find(
+                        (spell) => spell.name === spellName
+                    )
 
-          if (!spell) return acc;
+                    if (!spell) return acc
 
-          return sortByLevel(acc, spell);
-        }, [] as DnD5eSpell[][])
-        .flatMap((spells) => spells.sort(sortSpellByName)),
-    ];
-  }, [character]);
+                    return sortByLevel(acc, spell)
+                }, [] as DnD5eSpell[][])
+                .flatMap((spells) => spells.sort(sortSpellByName)),
+        ]
+    }, [characterPreparedSpells, characterSpells])
 
-  const handleCastSpell = useCallback((spellName: string) => {
-    notifications.show({ message: spellName });
-  }, []);
+    const handleCastSpell = useCallback((spellName: string) => {
+        notifications.show({ message: spellName })
+    }, [])
 
-  return preparedSpells.length ? (
-    <SpellList spells={preparedSpells} onAddOrRemoveSpell={handleCastSpell} />
-  ) : (
-    <Text ta="center">Nenhuma magia disponível</Text>
-  );
+    return preparedSpells.length ? (
+        <SpellList
+            spells={preparedSpells}
+            onAddOrRemoveSpell={handleCastSpell}
+        />
+    ) : (
+        <Text ta="center">Nenhuma magia disponível</Text>
+    )
 }
 
 function KnownSpells() {
-  const {
-    query: { characterId },
-  } = useRouter();
-  const [sheet, setSheet] = useAtom(characterAtom);
-  const { updateCharacter } = useCharacter();
+    const { setCharacterPreparedSpells } = useCharacterSheetActions()
+    const characterSpells = useCharacterSpells()
+    const characterPreparedSpells = useCharacterPreparedSpells()
+    const characterClasses = useCharacterClasses()
 
-  const knownSpells = useMemo(() => {
-    if (!sheet?.spells) return [];
+    const knownSpells = useMemo(() => {
+        if (!characterSpells) return []
 
-    return sheet.classes.flatMap((c) => {
-      return classes[c.data.key].spellsKnown === Infinity
-        ? spells
-            .reduce((acc, spell: DnD5eSpell) => {
-              if (
-                !spell.classes.includes(c.data.key) ||
-                spell.level === "cantrip"
-              )
-                return acc;
+        return characterClasses.flatMap((c) => {
+            return c.data.spellsKnown?.[0] === Infinity
+                ? spells
+                      .reduce((acc, spell: DnD5eSpell) => {
+                          if (
+                              !spell.classes.includes(c.data.name) ||
+                              spell.level === 'cantrip'
+                          )
+                              return acc
 
-              const newSpell = { ...spell };
-              newSpell.marked = sheet.preparedSpells.includes(newSpell.name);
-              return sortByLevel(acc, newSpell);
-            }, [] as DnD5eSpell[][])
-            .flatMap((spells) => spells.sort(sortSpellByName))
-        : sheet.spells
-            .reduce((acc, spellName) => {
-              const spell = spells.find(
-                (spell) => spell.name === spellName,
-              ) as DnD5eSpell;
+                          const newSpell = { ...spell }
+                          newSpell.marked = characterPreparedSpells.includes(
+                              newSpell.name
+                          )
+                          return sortByLevel(acc, newSpell)
+                      }, [] as DnD5eSpell[][])
+                      .flatMap((spells) => spells.sort(sortSpellByName))
+                : characterSpells
+                      .reduce((acc, spellName) => {
+                          const spell = spells.find(
+                              (spell) => spell.name === spellName
+                          ) as DnD5eSpell
 
-              if (!spell || spell.level === "cantrip") return acc;
+                          if (!spell || spell.level === 'cantrip') return acc
 
-              const newSpell = { ...spell };
-              newSpell.marked = sheet.preparedSpells.includes(newSpell.name);
-              return sortByLevel(acc, newSpell);
-            }, [] as DnD5eSpell[][])
-            .flatMap((spells) => spells.sort(sortSpellByName)) ?? [];
-    });
-  }, [sheet]);
+                          const newSpell = { ...spell }
+                          newSpell.marked = characterPreparedSpells.includes(
+                              newSpell.name
+                          )
+                          return sortByLevel(acc, newSpell)
+                      }, [] as DnD5eSpell[][])
+                      .flatMap((spells) => spells.sort(sortSpellByName)) ?? []
+        })
+    }, [characterClasses, characterPreparedSpells, characterSpells])
 
-  const handleUpdateCharacter = (newCharacter: CharacterSheet) => {
-    updateCharacter(characterId! as string, newCharacter.toProps());
-    setSheet(
-      new CharacterSheet({
-        ...newCharacter.toProps(),
-        classes: newCharacter!.classes,
-      }),
-    );
-  };
+    const handlePrepareSpell = (spellName: string) => {
+        const preparedSpellsSet = new Set(characterSpells)
+        if (preparedSpellsSet.has(spellName)) {
+            preparedSpellsSet.delete(spellName)
+        } else {
+            preparedSpellsSet.add(spellName)
+        }
 
-  const handlePrepareSpell = useCallback(
-    (spellName: string) => {
-      const { preparedSpells } = sheet!;
-      const preparedSpellsSet = new Set(preparedSpells);
-      if (preparedSpellsSet.has(spellName)) {
-        preparedSpellsSet.delete(spellName);
-      } else {
-        preparedSpellsSet.add(spellName);
-      }
-      sheet!.preparedSpells = [...preparedSpellsSet];
-      handleUpdateCharacter(sheet!);
-    },
-    [sheet],
-  );
-  return knownSpells.length ? (
-    <SpellList
-      spells={knownSpells}
-      isEdit
-      onAddOrRemoveSpell={handlePrepareSpell}
-    />
-  ) : (
-    <Text ta="center">Nenhuma magia disponível</Text>
-  );
+        setCharacterPreparedSpells([...preparedSpellsSet])
+    }
+
+    return knownSpells.length ? (
+        <SpellList
+            spells={knownSpells}
+            isEdit
+            onAddOrRemoveSpell={handlePrepareSpell}
+        />
+    ) : (
+        <Text ta="center">Nenhuma magia disponível</Text>
+    )
 }
 
 function AllSpells() {
-  const {
-    query: { characterId },
-  } = useRouter();
-  const [character, setCharacter] = useAtom(characterAtom);
-  const { updateCharacter } = useCharacter();
+    const { setCharacterPreparedSpells, setCharacterSpells } =
+        useCharacterSheetActions()
 
-  const allSpellsSorted = useMemo(
-    () =>
-      spells
-        .reduce((acc, spell: DnD5eSpell) => {
-          spell.marked = character!.spells.includes(spell.name);
+    const characterSpells = useCharacterSpells()
+    const characterPreparedSpells = useCharacterPreparedSpells()
 
-          return sortByLevel(acc, spell);
-        }, [] as DnD5eSpell[][])
-        .flatMap((spells) => spells.sort(sortSpellByName)),
-    [character],
-  );
+    const allSpellsSorted = useMemo(
+        () =>
+            spells
+                .reduce((acc, spell: DnD5eSpell) => {
+                    spell.marked = characterSpells.includes(spell.name)
 
-  const handleUpdateCharacter = (newCharacter: CharacterSheet) => {
-    updateCharacter(characterId! as string, newCharacter.toProps());
-    setCharacter(
-      new CharacterSheet({
-        ...newCharacter.toProps(),
-        classes: newCharacter!.classes,
-      }),
-    );
-  };
+                    return sortByLevel(acc, spell)
+                }, [] as DnD5eSpell[][])
+                .flatMap((spells) => spells.sort(sortSpellByName)),
+        [characterSpells]
+    )
 
-  const handleAddSpell = useCallback(
-    (spellName: string) => {
-      const { preparedSpells, spells } = character!;
-      const preparedSpellsSet = new Set(preparedSpells);
-      const spellsSet = new Set(spells);
+    const handleAddSpell = (spellName: string) => {
+        const preparedSpellsSet = new Set(characterPreparedSpells)
+        const spellsSet = new Set(characterSpells)
 
-      if (spellsSet.has(spellName)) {
-        preparedSpellsSet.delete(spellName);
-        spellsSet.delete(spellName);
-      } else {
-        spellsSet.add(spellName);
-      }
-      character!.preparedSpells = [...preparedSpellsSet];
-      character!.spells = [...spellsSet];
-      handleUpdateCharacter(character!);
-    },
-    [character],
-  );
+        if (spellsSet.has(spellName)) {
+            preparedSpellsSet.delete(spellName)
+            spellsSet.delete(spellName)
+        } else {
+            spellsSet.add(spellName)
+        }
+        setCharacterPreparedSpells([...preparedSpellsSet])
+        setCharacterSpells([...spellsSet])
+    }
 
-  return (
-    <SpellList
-      spells={allSpellsSorted}
-      isEdit
-      onAddOrRemoveSpell={handleAddSpell}
-    />
-  );
+    return (
+        <SpellList
+            spells={allSpellsSorted}
+            isEdit
+            onAddOrRemoveSpell={handleAddSpell}
+        />
+    )
 }

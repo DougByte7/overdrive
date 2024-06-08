@@ -1,239 +1,270 @@
-import randomIntFromInterval from "@/utils/randomIntFromInterval";
-import type { DnD5eClassName, Skill } from "../classes";
-import type {
-  WithAmount,
-  EquipmentIndex,
-  DnD5eClass,
-} from "../classes/interfaces";
-import type { DnD5eRaceName } from "../races";
-import getModifier from "./getModifier";
-import equipment from "@/assets/dnd/5e/equipment.json";
+import type { Input } from 'valibot'
+import { create } from 'zustand'
+import { useShallow } from 'zustand/react/shallow'
 
-interface AttributeScore {
-  mod: number;
-  total: number;
-}
+import equipment from '@/assets/dnd/5e/equipment.json'
 
-export interface CharacterSheetProps<T extends "data" | "name" = "data"> {
-  id: string;
-  hp: number;
-  currentHp: number;
-  initiative: number;
-  tempHp: number;
-  name: string;
-  picture: string;
-  backstory: string;
-  race: DnD5eRaceName;
-  classes: T extends "data"
-    ? Array<{ data: DnD5eClass; level: number }>
-    : Array<{ name: DnD5eClassName; level: number }>;
-  strength: number;
-  dexterity: number;
-  constitution: number;
-  intelligence: number;
-  wisdom: number;
-  charisma: number;
-  traits: Record<string, string | string[]>;
-  features: Record<string, string | string[]>;
-  proficiencies: Skill[];
-  items: WithAmount<EquipmentIndex>[];
-  spells: string[];
-  preparedSpells: string[];
-}
+import type { Skill } from '../classes'
+import type { EquipmentOption } from '../classes/interfaces'
+import type { DnD5eTrait } from '../races'
+import getModifier from './getModifier'
+import type { CustomClassSchema } from './schemas/classes'
 
-enum HPMethod {
-  AVERAGE,
-  DICE,
-  MANUAL,
-}
+// enum HPMethod {
+//     AVERAGE,
+//     DICE,
+//     MANUAL,
+// }
 
-export class CharacterSheet {
-  #id: string;
-  #hpMethod = HPMethod.AVERAGE;
-  #strength: AttributeScore;
-  #dexterity: AttributeScore;
-  #constitution: AttributeScore;
-  #intelligence: AttributeScore;
-  #wisdom: AttributeScore;
-  #charisma: AttributeScore;
-
-  // Stats
-  hp: number;
-  currentHp: number;
-  initiative: number;
-  tempHp: number;
-  // Info
-  name: string;
-  picture: string;
-  backstory: string;
-  race: DnD5eRaceName;
-  classes: Array<{ data: DnD5eClass; level: number }>;
-  traits: Record<string, string | string[]>;
-  features: Record<string, string | string[]>;
-  proficiencies: Skill[];
-  items: WithAmount<EquipmentIndex>[];
-  spells: string[];
-  preparedSpells: string[];
-
-  constructor(props: CharacterSheetProps) {
-    this.#id = props.id;
-    this.#strength = buildAttributeScore(props.strength);
-    this.#dexterity = buildAttributeScore(props.dexterity);
-    this.#constitution = buildAttributeScore(props.constitution);
-    this.#intelligence = buildAttributeScore(props.intelligence);
-    this.#wisdom = buildAttributeScore(props.wisdom);
-    this.#charisma = buildAttributeScore(props.charisma);
-
-    this.hp = props.hp;
-    this.currentHp = props.currentHp;
-    this.initiative = props.initiative;
-    this.tempHp = props.tempHp;
-    this.name = props.name;
-    this.picture = props.picture;
-    this.backstory = props.backstory;
-    this.traits = props.traits;
-    this.features = props.features;
-    this.proficiencies = props.proficiencies;
-    this.items = props.items;
-    this.spells = props.spells;
-    this.preparedSpells = props.preparedSpells;
-    this.race = props.race;
-    this.classes = props.classes;
-  }
-
-  save() {
-    localStorage.setItem("character:current", JSON.stringify(this.toProps()));
-  }
-
-  toProps(): CharacterSheetProps<"name"> {
-    return {
-      id: this.#id,
-      hp: this.hp,
-      currentHp: this.currentHp,
-      initiative: this.initiative,
-      tempHp: this.tempHp,
-      name: this.name,
-      picture: this.picture,
-      backstory: this.backstory,
-      race: this.race,
-      classes: this.classes.map((c) => ({ name: c.data.key, level: c.level })),
-      strength: this.strength.total,
-      dexterity: this.dexterity.total,
-      constitution: this.constitution.total,
-      intelligence: this.intelligence.total,
-      wisdom: this.wisdom.total,
-      charisma: this.charisma.total,
-      traits: this.traits,
-      features: this.features,
-      proficiencies: this.proficiencies,
-      items: this.items,
-      spells: this.spells,
-      preparedSpells: this.preparedSpells,
-    };
-  }
-
-  get id() {
-    return this.#id;
-  }
-
-  get totalLevel() {
-    return this.classes.reduce((acc, c) => (acc += c.level), 0);
-  }
-
-  set addOneClassLevel(className: DnD5eClassName) {
-    const classIndex = this.classes.findIndex((c) => c.data.name === className);
-
-    if (classIndex === -1) {
-      try {
-        throw new Error("Erro: Classe inexistente na base de dados");
-      } catch (error) {}
-      return;
+interface State {
+    hasChanges: boolean
+    id: string
+    hp: number
+    currentHp: number
+    initiative: number
+    tempHp: number
+    name: string
+    picture: string
+    backstory: string
+    race: {
+        id?: string
+        name: string
+        description: string
+        traits: DnD5eTrait[]
     }
-
-    this.classes[classIndex].level++;
-    switch (this.#hpMethod) {
-      case HPMethod.AVERAGE:
-        this.hp +=
-          this.constitution.mod + this.classes[classIndex].data.hp.average;
-
-        break;
-      case HPMethod.DICE:
-        const dice = +this.classes[classIndex].data.hp.dice.substring(1);
-        this.hp += this.constitution.mod + randomIntFromInterval(1, dice);
-        break;
+    classes: Array<{
+        id?: string
+        data: Input<typeof CustomClassSchema>
+        level: number
+    }>
+    strength: number
+    dexterity: number
+    constitution: number
+    intelligence: number
+    wisdom: number
+    charisma: number
+    traits: Record<string, string | string[]>
+    features: Record<string, string | string[]>
+    skills: Skill[]
+    items: EquipmentOption[]
+    spells: string[]
+    preparedSpells: string[]
+}
+interface Actions {
+    actions: {
+        getMutationPayload: () => TypeFixMe
+        setHasChanges: (hasChanges: boolean) => void
+        setCharacterSheet: (sheet: State) => void
+        setCharacterTempHP: (value: number) => void
+        setCharacterCurrentHP: (value: number) => void
+        setCharacterInitiative: (value: number) => void
+        setCharacterPreparedSpells: (preparedSpells: string[]) => void
+        setCharacterSpells: (spells: string[]) => void
+        toggleEquippedItem: (itemIndex: string) => void
     }
-  }
-
-  get armorClass() {
-    const armor = equipment.find(
-      (e) =>
-        e.equipment_category.index === "armor" &&
-        e.armor_category !== "Shield" &&
-        this.items
-          .filter((i) => i.equipped)
-          .map((i) => i.index)
-          .includes(e.index),
-    );
-    const shield = equipment.find(
-      (e) =>
-        e.equipment_category.index === "armor" &&
-        e.armor_category === "Shield" &&
-        this.items
-          .filter((i) => i.equipped)
-          .map((i) => i.index)
-          .includes(e.index),
-    );
-
-    return (
-      (armor?.armor_class?.base ?? 8) +
-      Math.min(
-        +(armor?.armor_class?.dex_bonus ?? 1) * this.dexterity.mod,
-        armor?.armor_class?.max_bonus ?? Infinity,
-      ) +
-      (shield?.armor_class?.base ?? 0)
-    );
-  }
-
-  // Base Stats /////////////////////////////////
-  get strength(): AttributeScore {
-    return this.#strength;
-  }
-  set strength(value: number | AttributeScore) {
-    this.#strength = buildAttributeScore(value as number);
-  }
-  get dexterity(): AttributeScore {
-    return this.#dexterity;
-  }
-  set dexterity(value: number | AttributeScore) {
-    this.#dexterity = buildAttributeScore(value as number);
-  }
-  get constitution(): AttributeScore {
-    return this.#constitution;
-  }
-  set constitution(value: number | AttributeScore) {
-    this.#constitution = buildAttributeScore(value as number);
-  }
-  get intelligence(): AttributeScore {
-    return this.#intelligence;
-  }
-  set intelligence(value: number | AttributeScore) {
-    this.#intelligence = buildAttributeScore(value as number);
-  }
-  get wisdom(): AttributeScore {
-    return this.#wisdom;
-  }
-  set wisdom(value: number | AttributeScore) {
-    this.#wisdom = buildAttributeScore(value as number);
-  }
-  get charisma(): AttributeScore {
-    return this.#charisma;
-  }
-  set charisma(value: number | AttributeScore) {
-    this.#charisma = buildAttributeScore(value as number);
-  }
-  /////////////////////////////////////////////////
 }
 
-function buildAttributeScore(value: number): AttributeScore {
-  return { mod: getModifier(value), total: value };
-}
+const useCharacterSheetStore = create<State & Actions>()((set, get) => ({
+    hasChanges: false,
+    id: '',
+    hp: 0,
+    currentHp: 0,
+    tempHp: 0,
+    initiative: 0,
+    name: '',
+    picture: '',
+    backstory: '',
+    race: {
+        id: '',
+        name: '',
+        description: '',
+        traits: [],
+    },
+    classes: [],
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intelligence: 0,
+    wisdom: 0,
+    charisma: 0,
+    traits: {},
+    features: {},
+    skills: [],
+    items: [],
+    spells: [],
+    preparedSpells: [],
+    actions: {
+        getMutationPayload: () => {
+            const sheet = get()
+            if (!(sheet.id && sheet.hasChanges)) return
+
+            const { classes, race, skills, actions, hasChanges, ...rest } =
+                sheet
+
+            const payload = {
+                ...rest,
+                classes: classes.map((c) => ({
+                    level: c.level,
+                    name: c.id ?? c.data.name,
+                })),
+                race: race.id || race.name,
+                proficiencies: skills,
+            }
+
+            return payload
+        },
+        setHasChanges: (hasChanges: boolean) => set({ hasChanges }),
+        setCharacterSheet: (sheet: State) => set(sheet),
+        setCharacterTempHP: (tempHp: number) =>
+            set({ tempHp, hasChanges: true }),
+        setCharacterCurrentHP: (currentHp: number) =>
+            set({ currentHp, hasChanges: true }),
+        setCharacterInitiative: (initiative: number) =>
+            set({ initiative, hasChanges: true }),
+        setCharacterPreparedSpells: (preparedSpells: string[]) =>
+            set({ preparedSpells, hasChanges: true }),
+        setCharacterSpells: (spells: string[]) =>
+            set({ spells, hasChanges: true }),
+        toggleEquippedItem: (itemIndex: string) =>
+            set((state) => {
+                const index = state.items.findIndex(
+                    (item) => item.item === itemIndex
+                )
+                if (index === -1) return state
+
+                state.items[index].equipped = !state.items[index].equipped
+
+                return { items: state.items, hasChanges: true }
+            }),
+    },
+}))
+
+export const useCharacterSheetActions = () =>
+    useCharacterSheetStore((state) => state.actions)
+
+// DO NOT USE UNLESS YOU ABSOLUTE NEED THE WHOLE SHEET
+export const useUnsafeCharacterSheet = () =>
+    useCharacterSheetStore((state) => {
+        const { actions, ...sheet } = state
+        return sheet
+    })
+
+export const useCharacterSheetHasChanges = () =>
+    useCharacterSheetStore((state) => state.hasChanges)
+
+export const useCharacterHP = () => useCharacterSheetStore((state) => state.hp)
+
+export const useCharacterCurrentHP = () =>
+    useCharacterSheetStore((state) => state.currentHp)
+
+export const useCharacterTempHP = () =>
+    useCharacterSheetStore((state) => state.tempHp)
+
+export const useCharacterPicture = () =>
+    useCharacterSheetStore((state) => state.picture)
+
+export const useCharacterName = () =>
+    useCharacterSheetStore((state) => state.name)
+
+export const useCharacterRace = () =>
+    useCharacterSheetStore((state) => state.race)
+
+export const useCharacterClasses = () =>
+    useCharacterSheetStore((state) => state.classes)
+
+export const useCharacterLevel = () =>
+    useCharacterSheetStore((state) =>
+        state.classes.reduce((acc, c) => acc + c.level, 0)
+    )
+
+export const useCharacterInitiative = () =>
+    useCharacterSheetStore((state) => state.initiative)
+
+export const useCharacterStrength = () =>
+    useCharacterSheetStore((state) => state.strength)
+export const useCharacterDexterity = () =>
+    useCharacterSheetStore((state) => state.dexterity)
+export const useCharacterConstitution = () =>
+    useCharacterSheetStore((state) => state.constitution)
+export const useCharacterIntelligence = () =>
+    useCharacterSheetStore((state) => state.intelligence)
+export const useCharacterWisdom = () =>
+    useCharacterSheetStore((state) => state.wisdom)
+export const useCharacterCharisma = () =>
+    useCharacterSheetStore((state) => state.charisma)
+export const useCharacterAttributes = () =>
+    useCharacterSheetStore(
+        useShallow((state) => ({
+            strength: state.strength,
+            dexterity: state.dexterity,
+            constitution: state.constitution,
+            intelligence: state.intelligence,
+            wisdom: state.wisdom,
+            charisma: state.charisma,
+        }))
+    )
+
+export const useCharacterArmorClass = () =>
+    useCharacterSheetStore((state) => {
+        const armors = state.items
+            .filter((item) => item.equipped)
+            .map((item) => equipment.find((eq) => eq.index === item.item)!)
+            .filter((item) => item.armor_class)
+
+        if (!armors.length) return 10 + getModifier(state.dexterity)
+
+        return armors.reduce((ac, armor) => {
+            if (!armor.armor_class) return ac
+
+            ac += armor.armor_class.base
+
+            if (!armor.armor_class.dex_bonus) return ac
+
+            return (
+                ac +
+                Math.min(
+                    getModifier(state.dexterity),
+                    armor.armor_class.max_bonus ?? Infinity
+                )
+            )
+        }, 0)
+    })
+export const useCharacterBackstory = () =>
+    useCharacterSheetStore((state) => state.backstory)
+
+export const useCharacterSkills = () =>
+    useCharacterSheetStore((state) => state.skills)
+
+export const useCharacterItems = () =>
+    useCharacterSheetStore((state) =>
+        state.items.map((item) => {
+            const data = equipment.find((eq) => eq.index === item.item)!
+
+            return {
+                ...data,
+                amount: item.amount,
+                equipped: item.equipped,
+            }
+        })
+    )
+
+export const useCharacterSpells = () =>
+    useCharacterSheetStore((state) => state.spells)
+
+export const useCharacterPreparedSpells = () =>
+    useCharacterSheetStore((state) => state.preparedSpells)
+
+export const useCharacterTraits = () =>
+    useCharacterSheetStore((state) => state.traits)
+
+export const useCharacterFeatures = () =>
+    useCharacterSheetStore((state) => state.features)
+
+export const useCharacterHasSpellSlots = () =>
+    useCharacterSheetStore(
+        useShallow((state) =>
+            state.classes.some(
+                (c) => !!c.data.spellsSlots?.flatMap((e) => e).at(1)
+            )
+        )
+    )

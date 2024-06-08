@@ -1,58 +1,49 @@
 {
-  "exclude": [
-    "node_modules"
-  ],
-  "compilerOptions": {
-    "types": [
-      "@emotion/react/types/css-prop"
-    ],
-    "sourceMap": true,
-    "allowJs": false,
-    "target": "esnext",
-    "jsx": "preserve",
-    "outDir": "build",
-    "removeComments": true,
-    "strict": true,
-    "strictFunctionTypes": true,
-    "skipLibCheck": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+    "exclude": ["node_modules"],
+    "compilerOptions": {
+        "types": ["@emotion/react/types/css-prop"],
+        "sourceMap": true,
+        "allowJs": false,
+        "target": "esnext",
+        "jsx": "preserve",
+        "outDir": "build",
+        "removeComments": true,
+        "strict": true,
+        "strictFunctionTypes": true,
+        "skipLibCheck": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "lib": ["esnext", "dom", "dom.iterable"],
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "module": "esnext",
+        "resolveJsonModule": true,
+        "incremental": true,
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ]
     },
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "module": "esnext",
-    "resolveJsonModule": true,
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
+    "formatCodeOptions": {
+        "indentSize": 2,
+        "tabSize": 2
+    },
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts",
+        "./prisma/typed-json.d.ts"
     ]
-  },
-  "formatCodeOptions": {
-    "indentSize": 2,
-    "tabSize": 2
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ]
 }
