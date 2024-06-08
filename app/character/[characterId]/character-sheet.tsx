@@ -269,7 +269,7 @@ function AutoSaveCharacter() {
         updateCharacter(payload.id, payload)
 
         return
-    }, 5000)
+    }, 1000)
 
     if (!hasChanges) return <></>
 
@@ -436,7 +436,7 @@ function Features() {
                         {data.features
                             .filter((f) =>
                                 Array.isArray(f.level)
-                                    ? f.level.includes(level)
+                                    ? f.level.some((lv) => lv <= level)
                                     : f.level <= level
                             )
                             .map((feature) => {
@@ -446,7 +446,19 @@ function Features() {
                                         className="rounded border border-brand-200 border-opacity-20 p-2"
                                         gap={0}
                                     >
-                                        <Text fw="bold">{feature.name}</Text>
+                                        <Group justify="space-between">
+                                            <Text fw="bold">
+                                                {feature.name}
+                                            </Text>
+                                            <Badge
+                                                leftSection="lv"
+                                                color="dark"
+                                            >
+                                                {Array.isArray(feature.level)
+                                                    ? feature.level.join(', ')
+                                                    : feature.level}
+                                            </Badge>
+                                        </Group>
                                         {features[feature.name] && (
                                             <>
                                                 {/**
