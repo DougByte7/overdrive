@@ -12,12 +12,7 @@ import {
     Title,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import {
-    IconBellRinging,
-    IconHome,
-    IconSkull,
-    IconSwords,
-} from '@tabler/icons-react'
+import { IconBellRinging, IconHome, IconSkull } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
