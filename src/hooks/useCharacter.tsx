@@ -13,6 +13,8 @@ import { api } from '@/utils/api'
 
 export type Character = Input<typeof CharacterSheetSchema>
 export default function useCharacter() {
+    const utils = api.useUtils()
+
     const [localCharacters, setLocalCharacters, clearCharacters] =
         useLocalStorage<Character[]>({
             key: 'characters',
@@ -28,7 +30,11 @@ export default function useCharacter() {
         api.characters.create.useMutation()
     const { mutate: createManyCharacters } =
         api.characters.createMany.useMutation()
-    const { mutate: updateCharacter } = api.characters.update.useMutation()
+    const { mutate: updateCharacter } = api.characters.update.useMutation({
+        onSuccess() {
+            utils.characters.getAll.invalidate()
+        },
+    })
     const { mutate: deleteCharacter } = api.characters.delete.useMutation()
 
     // Validate local characters
