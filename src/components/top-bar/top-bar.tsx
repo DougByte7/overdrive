@@ -66,11 +66,11 @@ export default function TopBar({ title }: TopBarProps) {
                         label="Monstros"
                         leftSection={<IconSkull />}
                     />
-                    <NavLink
+                    {/* <NavLink
                         href="/combat-manager"
                         label="Gerenciador de combate"
                         leftSection={<IconSwords />}
-                    />
+                    /> */}
 
                     <NavLink
                         href="/patch-notes"
