@@ -6,13 +6,7 @@ import { Webhook } from 'svix'
 
 import { prisma } from '@/server/db'
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-}
-
-export default async function POST(req: Request) {
+export async function POST(req: Request) {
     // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 

@@ -10,11 +10,11 @@ import type { DnD5eTrait } from '../races'
 import getModifier from './getModifier'
 import type { CustomClassSchema } from './schemas/classes'
 
-enum HPMethod {
-    AVERAGE,
-    DICE,
-    MANUAL,
-}
+// enum HPMethod {
+//     AVERAGE,
+//     DICE,
+//     MANUAL,
+// }
 
 interface State {
     hasChanges: boolean
