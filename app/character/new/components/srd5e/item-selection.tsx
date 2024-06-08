@@ -149,6 +149,8 @@ function ItemDisplay({
 }: ItemDisplayProps) {
     const [, setItemsMap] = useAtom(itemsMapAtom)
     const isCategoryRange = [
+        'martial',
+        'simple',
         'martial weapon',
         'simple weapon',
         'martial melee',
@@ -219,9 +221,7 @@ function ItemDisplay({
 
     let equipmentOptions: typeof equipmentList = []
     if (isCategoryRange) {
-        equipmentOptions = getItemsByCategoryRange(
-            equipmentOption.item.split(' ')[0]
-        )
+        equipmentOptions = getItemsByCategoryRange(equipmentOption.item)
     } else if (isTool) {
         equipmentOptions = getItemsByToolCategory(equipmentOption.item)
     } else if (isGear) {
