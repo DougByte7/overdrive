@@ -1,19 +1,35 @@
 'use client'
 
-import { List, Space, Stack, Text, Title } from '@mantine/core'
+import { List, Stack, Text, Title } from '@mantine/core'
 
 import TopBar from '@/components/top-bar/top-bar'
 
 export default function PatchNotes() {
     const notes = [
+        // {
+        //     version: 'Versão Pre-alpha 1.2.0 🎉',
+        //     date: '2024-05-03T00:00',
+        //     news: [
+        //         //'✅ Adicionado página de gerenciador de combate.', // @todo
+        //         //'✅ Adicionado seletor de itens no inventário.', // @todo
+        //         //'🦋 Ainda mais bugs!',
+        //     ],
+        // },
         {
-            version: 'Versão Pre-alpha 1.1.0',
-            date: '2024-01-05T00:00',
+            version: 'Versão Pre-alpha 1.1.0 🎉',
+            date: '2024-06-08T00:00',
             news: [
-                'Adicionado barra e menu de navegação.',
-                'Adicionado página de gerenciador de combate.',
-                'Adicionado seletor de itens no inventário.',
-                'Correção do criador de personagem: O botão de continuar agora fica bloqueado se nenhum item for selecionado.',
+                '✅ Adicionado esta página.',
+                '✅ Adicionado barra e menu de navegação.',
+                '✅ Adicionado páginas de "Politica de Privacidade" e "Termos de Serviço".',
+                '✅ Adicionado suporte básico a conteúdo homebrew de classes Marciais pelo construtor de personagem SRD5.',
+                '✅ Adicionado suporte a preenchimento customizado de atributos no construtor de personagem SRD5.',
+                '🔧 Correção de problema em que o banco de dados se encontrava indisponível.',
+                '🔧 Correção de diversos bugs na etapa de seleção de items do criador de personagem.',
+                '⚡ Pequenas melhorias de performance gerais do sistema.',
+                '✨ Pequenas melhorias na disposição alguns elementos da ficha de personagem.',
+                '✨ No desktop agora as magias são exibidas no lugar do inventário para personagens conjuradores.',
+                '🦋 Novos bugs para corrigir depois!',
             ],
         },
     ]
