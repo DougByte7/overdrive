@@ -17,12 +17,14 @@ export default function Home() {
     const router = useRouter()
     const { width } = useViewportSize()
 
+    console.log(isSignedIn)
+
     useEffect(() => {
         if (!isSignedIn) return
 
         localStorage.removeItem(storageKeys.user.isGuest)
         router.push('/home')
-    }, [isSignedIn, router])
+    }, [isSignedIn])
 
     return (
         <main className="justify-center">
