@@ -1,5 +1,9 @@
-import { AuthenticateWithRedirectCallback } from '@clerk/nextjs';
- 
+import { AuthenticateWithRedirectCallback, ClerkProvider } from '@clerk/nextjs'
+
 export default function SSOCallBack() {
-  return <AuthenticateWithRedirectCallback />;
+    return (
+        <ClerkProvider>
+            <AuthenticateWithRedirectCallback />
+        </ClerkProvider>
+    )
 }
