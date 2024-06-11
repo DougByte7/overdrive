@@ -7,7 +7,7 @@ import { IconExternalLink } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import storageKeys from '@/constants/storageKeys'
 import breakpoints from '@/utils/breakpoints'
@@ -17,10 +17,16 @@ export default function Home() {
     const router = useRouter()
     const { width } = useViewportSize()
 
-    if (isSignedIn || location?.href.includes('/#/sso-callback')) {
+    if (isSignedIn) {
         localStorage.removeItem(storageKeys.user.isGuest)
         router.push('/home')
     }
+
+    useEffect(() => {
+        const timeout = setTimeout(location.reload, 5000)
+
+        return () => clearTimeout(timeout)
+    }, [])
 
     return (
         <main className="justify-center">
