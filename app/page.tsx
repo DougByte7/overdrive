@@ -17,7 +17,7 @@ export default function Home() {
     const router = useRouter()
     const { width } = useViewportSize()
 
-    if (isSignedIn || location.href.includes('/#/sso-callback')) {
+    if (isSignedIn || location?.href.includes('/#/sso-callback')) {
         localStorage.removeItem(storageKeys.user.isGuest)
         router.push('/home')
     }
