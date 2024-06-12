@@ -26,7 +26,7 @@ export default function Home() {
         const timeout = setTimeout(location.reload, 5000)
 
         return () => clearTimeout(timeout)
-    }, [])
+    })
 
     return (
         <main className="justify-center">
