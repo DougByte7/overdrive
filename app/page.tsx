@@ -7,7 +7,7 @@ import { IconExternalLink } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import storageKeys from '@/constants/storageKeys'
 import breakpoints from '@/utils/breakpoints'
@@ -16,6 +16,7 @@ export default function Home() {
     const { isSignedIn } = useUser()
     const router = useRouter()
     const { width } = useViewportSize()
+    const [, rerender] = useState(0)
 
     if (isSignedIn) {
         localStorage.removeItem(storageKeys.user.isGuest)
@@ -23,9 +24,15 @@ export default function Home() {
     }
 
     useEffect(() => {
-        const timeout = setTimeout(location.reload, 5000)
+        const timeout = setTimeout(() => {
+            console.log({ isSignedIn })
+            rerender((prev) => prev + 1)
+        }, 5000)
 
-        return () => clearTimeout(timeout)
+        return () => {
+            clearTimeout(timeout)
+            console.log('Cleanup')
+        }
     })
 
     return (
