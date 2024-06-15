@@ -12,30 +12,15 @@ import { useMemo } from 'react'
 import storageKeys from '@/constants/storageKeys'
 import breakpoints from '@/utils/breakpoints'
 
-export const dynamic = 'force-dynamic'
-
 export default function Home() {
     const { isSignedIn } = useUser()
     const router = useRouter()
     const { width } = useViewportSize()
-    // const [, rerender] = useState(0)
 
     if (isSignedIn) {
         localStorage.removeItem(storageKeys.user.isGuest)
         router.push('/home')
     }
-
-    // useEffect(() => {
-    //     const timeout = setTimeout(() => {
-    //         console.log({ isSignedIn })
-    //         rerender((prev) => prev + 1)
-    //     }, 5000)
-
-    //     return () => {
-    //         clearTimeout(timeout)
-    //         console.log('Cleanup')
-    //     }
-    // })
 
     return (
         <main className="justify-center">
