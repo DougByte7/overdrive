@@ -64,8 +64,6 @@ export default function Home() {
                     </Text>
                 </div>
                 <SignUp
-                    routing="hash"
-                    fallbackRedirectUrl="/home"
                     appearance={{
                         elements: {
                             rootBox: {
