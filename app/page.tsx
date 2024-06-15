@@ -17,7 +17,7 @@ export default function Home() {
     const router = useRouter()
     const { width } = useViewportSize()
 
-    if (isSignedIn || location?.href.includes('/#/sso-callback')) {
+    if (isSignedIn) {
         localStorage.removeItem(storageKeys.user.isGuest)
         router.push('/home')
     }
@@ -49,8 +49,6 @@ export default function Home() {
                     </Text>
                 </div>
                 <SignUp
-                    routing="hash"
-                    fallbackRedirectUrl="/home"
                     appearance={{
                         elements: {
                             rootBox: {
