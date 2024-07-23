@@ -217,9 +217,10 @@ export default function CharacterSheetPage({
         })
     }, [customRace, localCharacter, customClasses])
 
-    return loading ? (
-        <LoadingOverlay visible loaderProps={{ type: 'bars' }} />
-    ) : (
+    if (loading)
+        return <LoadingOverlay visible loaderProps={{ type: 'bars' }} />
+
+    return (
         <>
             <AutoSaveCharacter />
             <TopBar title="Personagem" />
@@ -746,15 +747,22 @@ function Skills() {
     const level = useCharacterLevel()
     const attrs = useCharacterAttributes()
     const characterSkills = useCharacterSkills()
+    const { toggleSkillProficiency } = useCharacterSheetActions()
 
     return (
         <Stack className="min-w-[320px]" gap="xs">
             {skills.map((attr) => {
                 const isTrained = characterSkills.includes(attr.value)
-
+                const handleToggle = () => toggleSkillProficiency(attr.value)
                 return (
                     <Group key={attr.value} justify="space-between">
-                        <Checkbox label={attr.label} checked={isTrained} />
+                        <Group>
+                            <Checkbox
+                                checked={isTrained}
+                                onChange={handleToggle}
+                            />
+                            <Text className="text-sm">{attr.label}</Text>
+                        </Group>
 
                         <Text className="size-10 rounded bg-support-400 text-2xl font-bold text-center align-middle leading-10">
                             {+isTrained * getProficiencyBonus(level) +

@@ -61,6 +61,7 @@ interface Actions {
         setCharacterPreparedSpells: (preparedSpells: string[]) => void
         setCharacterSpells: (spells: string[]) => void
         toggleEquippedItem: (itemIndex: string) => void
+        toggleSkillProficiency: (skill: Skill) => void
     }
 }
 
@@ -135,6 +136,14 @@ const useCharacterSheetStore = create<State & Actions>()((set, get) => ({
                 state.items[index].equipped = !state.items[index].equipped
 
                 return { items: state.items, hasChanges: true }
+            }),
+        toggleSkillProficiency: (skill: Skill) =>
+            set((state) => {
+                const skillSet = new Set(state.skills)
+                if (skillSet.has(skill)) skillSet.delete(skill)
+                else skillSet.add(skill)
+
+                return { skills: Array.from(skillSet), hasChanges: true }
             }),
     },
 }))
