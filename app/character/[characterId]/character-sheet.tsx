@@ -698,7 +698,7 @@ function Attributes() {
                 return (
                     <Group key={attr.value} justify="space-between">
                         <Text>{attr.label}</Text>
-                        <Group gap="sm">
+                        <Group gap="xs">
                             <Badge
                                 className="w-24"
                                 mr="sm"
