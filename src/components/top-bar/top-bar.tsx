@@ -86,6 +86,7 @@ export default function TopBar({ title }: TopBarProps) {
                             label="Politica de Privacidade"
                         />
                         <NavLink href="/tos" label="Termos de Serviço" />
+                        <NavLink href="/licenses" label="Licenças" />
 
                         {isSignedIn ? (
                             <Button
