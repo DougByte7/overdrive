@@ -29,6 +29,7 @@ import {
     useDisclosure,
     useViewportSize,
 } from '@mantine/hooks'
+import { notifications } from '@mantine/notifications'
 import {
     IconChevronLeft,
     IconHeartFilled,
@@ -43,7 +44,11 @@ import remarkGfm from 'remark-gfm'
 import type { Input } from 'valibot'
 
 import classes, { type DnD5eClassName } from '@/assets/dnd/5e/classes'
-import type { Attribute, Skill } from '@/assets/dnd/5e/classes/interfaces'
+import type {
+    Attribute,
+    DiceNotation,
+    Skill,
+} from '@/assets/dnd/5e/classes/interfaces'
 import type { DnD5eEquipment } from '@/assets/dnd/5e/interfaces'
 import races, {
     type DnD5eRaceName,
@@ -78,6 +83,11 @@ import { CustomClassSchema } from '@/assets/dnd/5e/utils/schemas/classes'
 import CharacterFooter from '@/components/character/components/footer/character-footer'
 import Grimoire from '@/components/character/components/grimoire'
 import { activeTabAtom } from '@/components/character/state'
+import DiceTray from '@/components/dice-tray'
+import {
+    useDiceTrayActions,
+    useDiceTrayResults,
+} from '@/components/dice-tray/state'
 import TopBar from '@/components/top-bar'
 import useCharacter from '@/hooks/useCharacter'
 import { api } from '@/utils/api'
@@ -222,6 +232,8 @@ export default function CharacterSheetPage({
 
     return (
         <>
+            <DiceTray />
+            <DiceResultsNotification />
             <AutoSaveCharacter />
             <TopBar title="Personagem" />
 
@@ -286,6 +298,25 @@ function AutoSaveCharacter() {
     )
 }
 
+function DiceResultsNotification() {
+    const results = useDiceTrayResults()
+    const { shiftResult } = useDiceTrayActions()
+
+    results.forEach(({ roll, modifiers, label }) => {
+        const total =
+            roll + (modifiers?.reduce((acc, mod) => acc + mod, 0) ?? 0)
+        notifications.show({
+            title: `${label ?? 'Resultado'}: ${total}`,
+            message: `${roll} ${modifiers ? `+ ${modifiers.join(' + ')}` : ''} = ${total}`,
+            autoClose: 10_000,
+        })
+    })
+
+    shiftResult(results.length)
+
+    return <></>
+}
+
 function LevelUpButton() {
     const level = useCharacterLevel()
 
@@ -324,6 +355,7 @@ function Basic() {
                         <Text size="xl" fw="bold">
                             {name}
                         </Text>
+
                         <Text size="sm" c="var(--do_text_color_300)">
                             {`${characterRace.name}, ${characterClasses
                                 .map(
@@ -685,32 +717,51 @@ function Attributes() {
     const level = useCharacterLevel()
     const attrs = useCharacterAttributes()
     const characterClasses = useCharacterClasses()
+    const { rollDice } = useDiceTrayActions()
+
+    const handleRollAttr = (label: string, mod: number) => () => {
+        rollDice(`d20`, [mod], label)
+    }
 
     return (
         <Stack gap="xs">
             {attributeOptions.map((attr) => {
                 const abilityModifier = getModifier(attrs[attr.value])
-
                 const hasProficiency = characterClasses.some((c) =>
                     c.data.proficiencies?.savingThrows.includes(attr.value)
                 )
+                const saveModifier =
+                    abilityModifier +
+                    +hasProficiency * getProficiencyBonus(level)
 
                 const isPositive = abilityModifier > 0
                 return (
                     <Group key={attr.value} justify="space-between">
-                        <Text>{attr.label}</Text>
+                        <UnstyledButton
+                            onClick={handleRollAttr(
+                                attr.label,
+                                abilityModifier
+                            )}
+                        >
+                            <Text>{attr.label}</Text>
+                        </UnstyledButton>
                         <Group gap="xs">
-                            <Badge
-                                className="w-24"
-                                mr="sm"
-                                variant={hasProficiency ? 'dot' : 'outline'}
-                                color={hasProficiency ? 'white' : 'grey'}
+                            <UnstyledButton
+                                onClick={handleRollAttr(
+                                    `Save de ${attr.label}`,
+                                    saveModifier
+                                )}
                             >
-                                Save: {isPositive && '+'}
-                                {abilityModifier +
-                                    +hasProficiency *
-                                        getProficiencyBonus(level)}
-                            </Badge>
+                                <Badge
+                                    className="w-24"
+                                    mr="sm"
+                                    variant={hasProficiency ? 'dot' : 'outline'}
+                                    color={hasProficiency ? 'white' : 'grey'}
+                                >
+                                    Save: {isPositive && '+'}
+                                    {saveModifier}
+                                </Badge>
+                            </UnstyledButton>
                             <Badge
                                 mr="sm"
                                 variant="outline"
@@ -748,12 +799,22 @@ function Skills() {
     const attrs = useCharacterAttributes()
     const characterSkills = useCharacterSkills()
     const { toggleSkillProficiency } = useCharacterSheetActions()
+    const { rollDice } = useDiceTrayActions()
+
+    const handleRollAttr = (label: string, mod: number) => () => {
+        rollDice(`d20`, [mod], label)
+    }
 
     return (
         <Stack className="min-w-[320px]" gap="xs">
             {skills.map((attr) => {
                 const isTrained = characterSkills.includes(attr.value)
                 const handleToggle = () => toggleSkillProficiency(attr.value)
+
+                const value =
+                    +isTrained * getProficiencyBonus(level) +
+                    getModifier(attrs[skillModifierMap[attr.value]])
+
                 return (
                     <Group key={attr.value} justify="space-between">
                         <Group>
@@ -761,14 +822,15 @@ function Skills() {
                                 checked={isTrained}
                                 onChange={handleToggle}
                             />
-                            <Text className="text-sm">{attr.label}</Text>
+                            <UnstyledButton
+                                onClick={handleRollAttr(attr.label, value)}
+                            >
+                                <Text className="text-sm">{attr.label}</Text>
+                            </UnstyledButton>
                         </Group>
 
                         <Text className="size-10 rounded bg-support-400 text-2xl font-bold text-center align-middle leading-10">
-                            {+isTrained * getProficiencyBonus(level) +
-                                getModifier(
-                                    attrs[skillModifierMap[attr.value]]
-                                )}
+                            {value}
                         </Text>
                     </Group>
                 )
@@ -785,14 +847,23 @@ function Inventory() {
     const strength = useCharacterStrength()
     const dexterity = useCharacterDexterity()
     const characterItems = useCharacterItems()
+    const characterLevel = useCharacterLevel()
     const [selectedItem, setSelectedItem] = useState<DnD5eEquipment | null>(
         null
     )
+
+    const { rollDice } = useDiceTrayActions()
+
+    const handleRollAttr =
+        (die: DiceNotation, label: string, mod: number[]) => () => {
+            rollDice(die, mod, label)
+        }
+
     const handleSetSelectedItem = (item: DnD5eEquipment) => () => {
         setSelectedItem(item)
     }
     // const [itemSelectionOpened, { open, close }] = useDisclosure(false)
-    // const [selectedFilter, setSelectedFilter] = useState<string | Nill>()
+    // const [selectedFilter, setSelectedFilter] = useState<string | Nil>()
 
     const getGroupName = (category: string) => {
         switch (category) {
@@ -844,6 +915,14 @@ function Inventory() {
     //     Equipamentos: 'generalEquipment',
     // }
 
+    const getAtkBonus = (weapon: DnD5eEquipment) => {
+        return weapon.weapon_range === 'Ranged'
+            ? getModifier(dexterity)
+            : weapon.properties.some((p) => p.index === 'finesse')
+              ? getModifier(Math.max(strength, dexterity))
+              : getModifier(strength)
+    }
+
     return (
         <>
             {/* 
@@ -856,7 +935,9 @@ function Inventory() {
 
             <Accordion
                 className="w-full max-w-[450px]"
-                defaultValue={accordionData.map((data) => data.group)}
+                defaultValue={accordionData
+                    .filter((data) => data.items.length)
+                    .map((data) => data.group)}
                 multiple
             >
                 {accordionData.map((data) => {
@@ -920,7 +1001,7 @@ function Inventory() {
                                                                 </Text>
                                                                 {itemData.damage && (
                                                                     <Text component="span">
-                                                                        {` ${itemData.damage.damage_dice} + ${itemData.weapon_range === 'Ranged' ? getModifier(dexterity) : itemData.properties.some((p) => p.index === 'finesse') ? getModifier(Math.max(strength, dexterity)) : getModifier(strength)} ${itemData.damage.damage_type.name}`}
+                                                                        {` ${itemData.damage.damage_dice} + ${getAtkBonus(itemData)}`}
                                                                     </Text>
                                                                 )}
                                                                 {itemData.two_handed_damage && (
@@ -1036,26 +1117,97 @@ function Inventory() {
 
                             <Group justify="center">
                                 {selectedItem?.damage && (
-                                    <Stack
-                                        className="rounded-lg"
-                                        justify="center"
-                                        align="center"
-                                        gap={0}
-                                        bg="var(--do_color_primary_base)"
-                                        px="md"
-                                        miw={68}
-                                        h={68}
-                                    >
-                                        <Text color="white" fw="bold">
-                                            {selectedItem?.damage.damage_dice}
-                                        </Text>
-                                        <Text color="white">
-                                            {
-                                                selectedItem?.damage.damage_type
-                                                    .name
-                                            }
-                                        </Text>
-                                    </Stack>
+                                    <>
+                                        <Button
+                                            className="h-16"
+                                            onClick={handleRollAttr(
+                                                'd20',
+                                                `${selectedItem.name} (Ataque)`,
+                                                [
+                                                    getAtkBonus(selectedItem),
+                                                    getProficiencyBonus(
+                                                        characterLevel
+                                                    ),
+                                                ]
+                                            )}
+                                        >
+                                            Ataque +{' '}
+                                            {getAtkBonus(selectedItem) +
+                                                getProficiencyBonus(
+                                                    characterLevel
+                                                )}
+                                        </Button>
+                                        <Button
+                                            className="h-16"
+                                            onClick={handleRollAttr(
+                                                selectedItem.damage
+                                                    .damage_dice as DiceNotation,
+                                                `${selectedItem.name} (Dano)`,
+                                                [getAtkBonus(selectedItem)]
+                                            )}
+                                        >
+                                            <Stack
+                                                className="rounded-lg"
+                                                justify="center"
+                                                align="center"
+                                                gap={0}
+                                            >
+                                                <Text c="white" fw="bold">
+                                                    {
+                                                        selectedItem.damage
+                                                            .damage_dice
+                                                    }{' '}
+                                                    +{' '}
+                                                    {getAtkBonus(selectedItem)}
+                                                </Text>
+                                                <Text c="white">
+                                                    {
+                                                        selectedItem.damage
+                                                            .damage_type.name
+                                                    }
+                                                </Text>
+                                            </Stack>
+                                        </Button>
+                                        {selectedItem.two_handed_damage && (
+                                            <Button
+                                                className="h-16"
+                                                onClick={handleRollAttr(
+                                                    selectedItem
+                                                        .two_handed_damage
+                                                        .damage_dice as DiceNotation,
+                                                    `${selectedItem.name} (Dano)`,
+                                                    [getModifier(strength)]
+                                                )}
+                                            >
+                                                <Stack
+                                                    className="rounded-lg"
+                                                    justify="center"
+                                                    align="center"
+                                                    gap={0}
+                                                >
+                                                    <Text c="white" fw="bold">
+                                                        {
+                                                            selectedItem
+                                                                .two_handed_damage
+                                                                .damage_dice
+                                                        }{' '}
+                                                        +{' '}
+                                                        {getAtkBonus(
+                                                            selectedItem
+                                                        )}
+                                                    </Text>
+                                                    <Text c="white">
+                                                        {
+                                                            selectedItem
+                                                                .two_handed_damage
+                                                                .damage_type
+                                                                .name
+                                                        }
+                                                    </Text>
+                                                </Stack>
+                                            </Button>
+                                        )}
+                                    </>
                                 )}
 
                                 {selectedItem?.armor_class && (
@@ -1124,7 +1276,7 @@ function Inventory() {
  * @todo FIX
  */
 // interface ItemSelectionDrawerProps {
-//     selectedFilter: string | Nill
+//     selectedFilter: string | Nil
 //     itemSelectionOpened: boolean
 //     close: VoidFunction
 // }
