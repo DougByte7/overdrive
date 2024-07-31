@@ -16,7 +16,8 @@ export interface DnD5eSubClass {
 }
 
 export type DiceFaces = 4 | 6 | 8 | 10 | 12 | 20
-export type DiceNotation = `d${DiceFaces}`
+export type DiceFacesNotation = `d${DiceFaces}`
+export type DiceNotation = `${number | ''}${DiceFacesNotation}`
 export type Armor = 'light' | 'medium' | 'heavy' | 'shield'
 export type Weapon =
     | 'simple'

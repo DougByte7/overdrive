@@ -1,5 +1,4 @@
-import { notifications } from '@mantine/notifications'
-import { Center, Line, OrbitControls, Text3D, useGLTF } from '@react-three/drei'
+import { Center, Text3D, useGLTF } from '@react-three/drei'
 import { Canvas, ThreeElements, useFrame } from '@react-three/fiber'
 import {
     MeshCollider,
@@ -7,54 +6,22 @@ import {
     RapierRigidBody,
     RigidBody,
 } from '@react-three/rapier'
-import { nanoid } from 'lib/nanoid'
-import { Perf } from 'r3f-perf'
+import { clsx } from 'clsx'
 import { Fragment, Suspense, useEffect, useMemo, useRef } from 'react'
-import * as THREE from 'three'
-import { Quaternion, Vector3, Vector3Like } from 'three'
-import { create } from 'zustand'
-import { immer } from 'zustand/middleware/immer'
+import {
+    Euler,
+    Matrix3,
+    Quaternion,
+    Triangle,
+    Vector3,
+    Vector3Like,
+} from 'three'
+import type { BufferGeometry, Matrix4, NormalBufferAttributes } from 'three'
 
 import type { DiceNotation } from '@/assets/dnd/5e/classes'
 import randomIntFromInterval from '@/utils/randomIntFromInterval'
 
-interface Dice {
-    id: string
-    faces: DiceNotation
-    result: number
-}
-interface State {
-    dices: Dice[]
-}
-interface Actions {
-    actions: {
-        rollDice: (dice: DiceNotation, results: number[]) => void
-        removeDice: (id: Dice['id']) => void
-    }
-}
-
-const useDiceTrayStore = create<State & Actions>()(
-    immer((set) => ({
-        dices: [],
-        actions: {
-            rollDice(dice, results) {
-                set(({ dices }) => {
-                    results.forEach((result) =>
-                        dices.push({ faces: dice, result, id: nanoid(99) })
-                    )
-                })
-            },
-            removeDice(id) {
-                set(({ dices }) => {
-                    return { dices: dices.filter((die) => die.id !== id) }
-                })
-            },
-        },
-    }))
-)
-
-const useDiceTrayActions = () => useDiceTrayStore((state) => state.actions)
-const useDiceTrayDices = () => useDiceTrayStore((state) => state.dices)
+import { type Dice, useDiceTrayActions, useDiceTrayDices } from './state'
 
 const getTrayBoxDimensions = () => {
     const scale = 0.01375
@@ -71,21 +38,17 @@ const getTrayBoxDimensions = () => {
 
 export default function DiceTray() {
     const dices = useDiceTrayDices()
-    const { rollDice } = useDiceTrayActions()
-    const roll = () => {
-        rollDice('d4', [1])
-        // rollDice('d6', [13])
-        // rollDice('d8', [13])
-        // rollDice('d10', [13])
-        // rollDice('d12', [13])
-        // rollDice('d20', [13])
-    }
-
     const { depth } = getTrayBoxDimensions()
 
     return (
-        <div className="fixed w-screen h-screen z-20">
+        <div
+            className={clsx(
+                // dices.length ? 'fixed' : 'hidden',
+                'fixed pointer-events-none w-screen h-screen z-20'
+            )}
+        >
             <Canvas
+                style={{ pointerEvents: 'none' }}
                 orthographic
                 camera={{
                     position: [0, depth / 2, 0],
@@ -93,7 +56,7 @@ export default function DiceTray() {
                     far: depth * 2,
                 }}
             >
-                <Perf />
+                {/* <Perf /> */}
                 <Suspense>
                     <ambientLight intensity={Math.PI / 4} />
                     <pointLight
@@ -102,28 +65,23 @@ export default function DiceTray() {
                         intensity={Math.PI / 2}
                     />
 
-                    <mesh onClick={roll}>
-                        <boxGeometry args={[1, 1, 1]} />
-                        <meshStandardMaterial color="white" />
-                    </mesh>
-
                     <Physics>
-                        {dices.map((die) => {
-                            const { faces, ...props } = die
+                        {dices.map((data) => {
+                            const { die, id, ...props } = data
 
-                            switch (faces) {
+                            switch (die) {
                                 case 'd20':
-                                    return <D20 key={die.id} {...props} />
+                                    return <D20 key={id} id={id} {...props} />
                                 case 'd12':
-                                    return <D12 key={die.id} {...props} />
+                                    return <D12 key={id} id={id} {...props} />
                                 case 'd10':
-                                    return <D10 key={die.id} {...props} />
+                                    return <D10 key={id} id={id} {...props} />
                                 case 'd8':
-                                    return <D8 key={die.id} {...props} />
+                                    return <D8 key={id} id={id} {...props} />
                                 case 'd6':
-                                    return <D6 key={die.id} {...props} />
+                                    return <D6 key={id} id={id} {...props} />
                                 case 'd4':
-                                    return <D4 key={die.id} {...props} />
+                                    return <D4 key={id} id={id} {...props} />
                             }
                         })}
 
@@ -188,25 +146,29 @@ const DiceMaterial = ({ isBase }: DiceMaterialProps) => (
     />
 )
 
-type DiceProps = {
+type DProps = {
     id: Dice['id']
+    modifiers?: Dice['modifiers']
+    label?: string
+}
+type DiceProps = DProps & {
     die: DiceNotation
     values: number[]
     verticesPerFace: number
 }
-function Dice({ id, die, values, verticesPerFace }: DiceProps) {
+function Dice({ id, die, values, verticesPerFace, ...resultProps }: DiceProps) {
     const { nodes } = useGLTF(`/assets/dices/${die}.glb`)
 
-    const { removeDice } = useDiceTrayActions()
+    const { removeDice, pushResult } = useDiceTrayActions()
 
     const rigidBodyRef = useRef<RapierRigidBody>(null)
     const diceRef = useRef<ThreeElements['mesh']>(null)
     const shouldCheckResult = useRef(true)
     const hasForce = useRef(false)
-    const upVector = new THREE.Vector3(0, 1, 0)
+    const upVector = new Vector3(0, 1, 0)
 
     const numbers = useMemo(() => {
-        const calculateCentroid = (vertices: Vector3Like[]): THREE.Vector3 => {
+        const calculateCentroid = (vertices: Vector3Like[]): Vector3 => {
             const n = vertices.length
             let xSum = 0
             let ySum = 0
@@ -218,7 +180,7 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
                 zSum += vertices[i].z
             }
 
-            return new THREE.Vector3(xSum / n, ySum / n, zSum / n)
+            return new Vector3(xSum / n, ySum / n, zSum / n)
         }
 
         return values.map((value, i) => {
@@ -229,20 +191,18 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
             const vertices = []
             for (let j = 0; j < verticesPerFace; j++) {
                 vertices.push(
-                    new THREE.Vector3().fromBufferAttribute(
+                    new Vector3().fromBufferAttribute(
                         vertexPositions,
                         idx.getX(idxBase + j)
                     )
                 )
             }
             const mid = calculateCentroid(vertices)
-            const dir = new THREE.Vector3()
-            new THREE.Triangle(vertices[0], vertices[1], vertices[2]).getNormal(
-                dir
-            )
+            const dir = new Vector3()
+            new Triangle(vertices[0], vertices[1], vertices[2]).getNormal(dir)
 
-            const rotation = new THREE.Euler().setFromQuaternion(
-                new THREE.Quaternion().setFromUnitVectors(
+            const rotation = new Euler().setFromQuaternion(
+                new Quaternion().setFromUnitVectors(
                     new Vector3(0, 0, 1),
                     dir.normalize()
                 )
@@ -269,21 +229,21 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
     }, [])
 
     const computeNormals = (
-        geometry: THREE.BufferGeometry<THREE.NormalBufferAttributes>,
-        world: THREE.Matrix4
-    ): THREE.Vector3[] => {
+        geometry: BufferGeometry<NormalBufferAttributes>,
+        world: Matrix4
+    ): Vector3[] => {
         const normals = []
         const vertexPositions = geometry.getAttribute('position')
         const idx = geometry.index!
-        const tri = new THREE.Triangle()
-        const v1 = new THREE.Vector3()
-        const v2 = new THREE.Vector3()
-        const v3 = new THREE.Vector3()
+        const tri = new Triangle()
+        const v1 = new Vector3()
+        const v2 = new Vector3()
+        const v3 = new Vector3()
 
         for (let f = 0; f < values.length; f++) {
             const idxBase = f * verticesPerFace
-            const normal = new THREE.Vector3()
-            const normalMatrix = new THREE.Matrix3()
+            const normal = new Vector3()
+            const normalMatrix = new Matrix3()
             v1.fromBufferAttribute(vertexPositions, idx.getX(idxBase + 0))
             v2.fromBufferAttribute(vertexPositions, idx.getX(idxBase + 1))
             v3.fromBufferAttribute(vertexPositions, idx.getX(idxBase + 2))
@@ -297,7 +257,7 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
         return normals
     }
 
-    const getUpwardNormal = (normals: THREE.Vector3[]) => {
+    const getUpwardNormal = (normals: Vector3[]) => {
         return normals.reduce(
             (closest, normal, index) => {
                 const dotProduct = normal.dot(upVector)
@@ -312,7 +272,7 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
                     : closest
             },
             {
-                normal: new THREE.Vector3(0, die === 'd4' ? 1 : -1, 0),
+                normal: new Vector3(0, die === 'd4' ? 1 : -1, 0),
                 index: -1,
             }
         )
@@ -324,7 +284,7 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
         const rigidBody = rigidBodyRef.current
         const { width, height, thickness } = getTrayBoxDimensions()
         rigidBody.setTranslation(
-            new THREE.Vector3(
+            new Vector3(
                 Math.random() > 0.5
                     ? (width - thickness * 2) / 2
                     : -(width - thickness * 2) / 2,
@@ -340,7 +300,7 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
 
         const impulseTimeout = setTimeout(() => {
             rigidBody.applyImpulse(
-                new THREE.Vector3(
+                new Vector3(
                     randomIntFromInterval(-50, 50),
                     0,
                     randomIntFromInterval(-50, 50)
@@ -348,7 +308,7 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
                 true
             )
             rigidBody.applyTorqueImpulse(
-                new THREE.Vector3(
+                new Vector3(
                     randomIntFromInterval(-10, 10),
                     randomIntFromInterval(-10, 10),
                     randomIntFromInterval(-10, 10)
@@ -395,11 +355,7 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
                 computeNormals(dice.geometry, dice.matrixWorld)
             )
 
-            notifications.show({
-                title: 'Resultado',
-                message: `/r ${die} = ${values[upwardFace.index]}`,
-            })
-
+            pushResult({ roll: values[upwardFace.index], ...resultProps })
             setTimeout(() => removeDice(id), 5_000)
         }
     })
@@ -439,9 +395,6 @@ function Dice({ id, die, values, verticesPerFace }: DiceProps) {
     )
 }
 
-type DProps = {
-    id: Dice['id']
-}
 function D20(props: DProps) {
     const valueToNormalIndexMap = [
         18, 2, 20, 8, 10, 12, 15, 5, 13, 1, 7, 17, 3, 19, 9, 11, 4, 14, 6, 16,
