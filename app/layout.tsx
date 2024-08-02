@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import { ClerkProvider } from '@clerk/nextjs'
 import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
@@ -30,9 +31,9 @@ export default function RootLayout({
                     crossOrigin="anonymous"
                 />
                 <link
-                    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
+                    href="https://fonts.googleapis.com/css2?family=Germania+One&family=Manrope:wght@200..800&display=swap"
                     rel="stylesheet"
-                />
+                ></link>
             </head>
             <body>
                 <ClerkProvider>

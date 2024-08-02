@@ -16,7 +16,8 @@ export interface DnD5eSubClass {
 }
 
 export type DiceFaces = 4 | 6 | 8 | 10 | 12 | 20
-export type Dice = `d${DiceFaces}`
+export type DiceFacesNotation = `d${DiceFaces}`
+export type DiceNotation = `${number | ''}${DiceFacesNotation}`
 export type Armor = 'light' | 'medium' | 'heavy' | 'shield'
 export type Weapon =
     | 'simple'
@@ -63,7 +64,7 @@ export interface DnD5eClass {
     features: DnD5eFeature[]
     subclasses: DnD5eSubClass[]
     hp: {
-        dice: Dice
+        dice: DiceNotation
         average: number
     }
     cantripKnown?: number[]
