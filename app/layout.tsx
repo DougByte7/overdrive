@@ -7,11 +7,24 @@ import '@mantine/notifications/styles.css'
 import { Analytics } from '@vercel/analytics/react'
 import { Provider as JotaiProvider } from 'jotai'
 import type { Metadata, Viewport } from 'next'
+import { Germania_One, Manrope } from 'next/font/google'
 import 'src/styles/global.css'
 import 'src/styles/variables.css'
 
 import TRPCProvider from '@/providers/trpc-provider'
 import theme from '@/theme'
+
+const germaniaOne = Germania_One({
+    subsets: ['latin'],
+    display: 'swap',
+    weight: '400',
+})
+
+const manrope = Manrope({
+    subsets: ['latin'],
+    display: 'swap',
+    weight: '400',
+})
 
 export default function RootLayout({
     children,
@@ -28,10 +41,6 @@ export default function RootLayout({
                     rel="preconnect"
                     href="https://fonts.gstatic.com"
                     crossOrigin="anonymous"
-                />
-                <link
-                    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
-                    rel="stylesheet"
                 />
             </head>
             <body>

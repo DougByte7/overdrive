@@ -20,6 +20,9 @@ module.exports = {
                     600: 'var(--do_color_support_dark_60)',
                 },
             },
+            fontFamily: {
+                germaniaOne : ['Germania One']
+            }
         },
     },
     plugins: [

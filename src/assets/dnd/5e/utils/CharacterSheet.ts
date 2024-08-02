@@ -1,5 +1,7 @@
+import { notifications } from '@mantine/notifications'
 import type { Input } from 'valibot'
 import { create } from 'zustand'
+import { immer } from 'zustand/middleware/immer'
 import { useShallow } from 'zustand/react/shallow'
 
 import equipment from '@/assets/dnd/5e/equipment.json'
@@ -61,92 +63,144 @@ interface Actions {
         setCharacterPreparedSpells: (preparedSpells: string[]) => void
         setCharacterSpells: (spells: string[]) => void
         toggleEquippedItem: (itemIndex: string) => void
+        addItem: (itemIndex: string) => void
+        decreaseItemAmount: (itemIndex: string) => void
         toggleSkillProficiency: (skill: Skill) => void
     }
 }
 
-const useCharacterSheetStore = create<State & Actions>()((set, get) => ({
-    hasChanges: false,
-    id: '',
-    hp: 0,
-    currentHp: 0,
-    tempHp: 0,
-    initiative: 0,
-    name: '',
-    picture: '',
-    backstory: '',
-    race: {
+const useCharacterSheetStore = create<State & Actions>()(
+    immer((set, get) => ({
+        hasChanges: false,
         id: '',
+        hp: 0,
+        currentHp: 0,
+        tempHp: 0,
+        initiative: 0,
         name: '',
-        description: '',
-        traits: [],
-    },
-    classes: [],
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    intelligence: 0,
-    wisdom: 0,
-    charisma: 0,
-    traits: {},
-    features: {},
-    skills: [],
-    items: [],
-    spells: [],
-    preparedSpells: [],
-    actions: {
-        getMutationPayload: () => {
-            const sheet = get()
-            if (!(sheet.id && sheet.hasChanges)) return
-
-            const { classes, race, skills, actions, hasChanges, ...rest } =
-                sheet
-
-            const payload = {
-                ...rest,
-                classes: classes.map((c) => ({
-                    level: c.level,
-                    name: c.id ?? c.data.name,
-                })),
-                race: race.id || race.name,
-                proficiencies: skills,
-            }
-
-            return payload
+        picture: '',
+        backstory: '',
+        race: {
+            id: '',
+            name: '',
+            description: '',
+            traits: [],
         },
-        setHasChanges: (hasChanges: boolean) => set({ hasChanges }),
-        setCharacterSheet: (sheet: State) => set(sheet),
-        setCharacterTempHP: (tempHp: number) =>
-            set({ tempHp, hasChanges: true }),
-        setCharacterCurrentHP: (currentHp: number) =>
-            set({ currentHp, hasChanges: true }),
-        setCharacterInitiative: (initiative: number) =>
-            set({ initiative, hasChanges: true }),
-        setCharacterPreparedSpells: (preparedSpells: string[]) =>
-            set({ preparedSpells, hasChanges: true }),
-        setCharacterSpells: (spells: string[]) =>
-            set({ spells, hasChanges: true }),
-        toggleEquippedItem: (itemIndex: string) =>
-            set((state) => {
-                const index = state.items.findIndex(
-                    (item) => item.item === itemIndex
-                )
-                if (index === -1) return state
+        classes: [],
+        strength: 0,
+        dexterity: 0,
+        constitution: 0,
+        intelligence: 0,
+        wisdom: 0,
+        charisma: 0,
+        traits: {},
+        features: {},
+        skills: [],
+        items: [],
+        spells: [],
+        preparedSpells: [],
+        actions: {
+            getMutationPayload: () => {
+                const sheet = get()
+                if (!(sheet.id && sheet.hasChanges)) return
 
-                state.items[index].equipped = !state.items[index].equipped
+                const { classes, race, skills, actions, hasChanges, ...rest } =
+                    sheet
 
-                return { items: state.items, hasChanges: true }
-            }),
-        toggleSkillProficiency: (skill: Skill) =>
-            set((state) => {
-                const skillSet = new Set(state.skills)
-                if (skillSet.has(skill)) skillSet.delete(skill)
-                else skillSet.add(skill)
+                const payload = {
+                    ...rest,
+                    classes: classes.map((c) => ({
+                        level: c.level,
+                        name: c.id ?? c.data.name,
+                    })),
+                    race: race.id || race.name,
+                    proficiencies: skills,
+                }
 
-                return { skills: Array.from(skillSet), hasChanges: true }
-            }),
-    },
-}))
+                return payload
+            },
+            setHasChanges: (hasChanges: boolean) => set({ hasChanges }),
+            setCharacterSheet: (sheet: State) => set(sheet),
+            setCharacterTempHP: (tempHp: number) =>
+                set({ tempHp, hasChanges: true }),
+            setCharacterCurrentHP: (currentHp: number) =>
+                set({ currentHp, hasChanges: true }),
+            setCharacterInitiative: (initiative: number) =>
+                set({ initiative, hasChanges: true }),
+            setCharacterPreparedSpells: (preparedSpells: string[]) =>
+                set({ preparedSpells, hasChanges: true }),
+            setCharacterSpells: (spells: string[]) =>
+                set({ spells, hasChanges: true }),
+            toggleEquippedItem: (itemIndex: string) =>
+                set((state) => {
+                    const index = state.items.findIndex(
+                        (item) => item.item === itemIndex
+                    )
+                    if (index === -1) return
+
+                    state.items[index].equipped = !state.items[index].equipped
+                    state.hasChanges = true
+                }),
+            addItem(itemIndex) {
+                set((state) => {
+                    const item = equipment.find((e) => e.index === itemIndex)
+                    if (!item) {
+                        notifications.show({
+                            color: 'red',
+                            title: 'Erro ao adicionar item',
+                            message: 'Index não encontrado',
+                        })
+                        return
+                    }
+
+                    const duplicatedItemIndex = state.items.findIndex(
+                        (i) => i.item === itemIndex
+                    )
+
+                    if (duplicatedItemIndex > -1) {
+                        state.items[duplicatedItemIndex].amount += 1
+                    } else {
+                        state.items.push({
+                            amount: 1,
+                            item: itemIndex,
+                        })
+                    }
+
+                    state.hasChanges = true
+                })
+            },
+            decreaseItemAmount(itemIndex) {
+                set((state) => {
+                    const index = state.items.findIndex(
+                        (i) => i.item === itemIndex
+                    )
+                    if (index === -1) {
+                        notifications.show({
+                            color: 'red',
+                            title: 'Erro ao adicionar item',
+                            message: 'Index não encontrado',
+                        })
+                        return
+                    }
+
+                    state.items[index].amount -= 1
+                    if (state.items[index].amount === 0)
+                        state.items.splice(index, 1)
+
+                    state.hasChanges = true
+                })
+            },
+            toggleSkillProficiency: (skill: Skill) =>
+                set((state) => {
+                    const skillSet = new Set(state.skills)
+                    if (skillSet.has(skill)) skillSet.delete(skill)
+                    else skillSet.add(skill)
+
+                    return { skills: Array.from(skillSet), hasChanges: true }
+                }),
+        },
+    }))
+)
 
 export const useCharacterSheetActions = () =>
     useCharacterSheetStore((state) => state.actions)

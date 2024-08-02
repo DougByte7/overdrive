@@ -12,6 +12,7 @@ import {
     type ComboboxItem,
     type ComboboxItemGroup,
     Divider,
+    Drawer,
     Group,
     List,
     LoadingOverlay,
@@ -21,11 +22,13 @@ import {
     Stack,
     Tabs,
     Text,
+    TextInput,
     Transition,
     UnstyledButton,
 } from '@mantine/core'
 import {
     useDebouncedCallback,
+    useDebouncedValue,
     useDisclosure,
     useViewportSize,
 } from '@mantine/hooks'
@@ -33,12 +36,16 @@ import { notifications } from '@mantine/notifications'
 import {
     IconChevronLeft,
     IconHeartFilled,
+    IconInfoCircle,
+    IconPlus,
+    IconSearch,
     IconShieldFilled,
+    IconTrash,
 } from '@tabler/icons-react'
 import { useAtom } from 'jotai'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import type { Input } from 'valibot'
@@ -49,6 +56,7 @@ import type {
     DiceNotation,
     Skill,
 } from '@/assets/dnd/5e/classes/interfaces'
+import equipment from '@/assets/dnd/5e/equipment.json'
 import type { DnD5eEquipment } from '@/assets/dnd/5e/interfaces'
 import races, {
     type DnD5eRaceName,
@@ -88,10 +96,12 @@ import {
     useDiceTrayActions,
     useDiceTrayResults,
 } from '@/components/dice-tray/state'
+import ToggleTip from '@/components/shared/toggle-tip'
 import TopBar from '@/components/top-bar'
 import useCharacter from '@/hooks/useCharacter'
 import { api } from '@/utils/api'
 import breakpoints from '@/utils/breakpoints'
+import { removeDiacritics } from '@/utils/removeDiacritics'
 
 interface CharacterSheetPageProps {
     characterId: string
@@ -306,8 +316,15 @@ function DiceResultsNotification() {
         const total =
             roll + (modifiers?.reduce((acc, mod) => acc + mod, 0) ?? 0)
         notifications.show({
-            title: `${label ?? 'Resultado'}: ${total}`,
-            message: `${roll} ${modifiers ? `+ ${modifiers.join(' + ')}` : ''} = ${total}`,
+            title: label ?? 'Resultado',
+            message: (
+                <Group>{`${roll} ${modifiers ? `+ ${modifiers.join(' + ')}` : ''} = ${total}`}</Group>
+            ),
+            icon: (
+                <Text className="text-2xl p-2 font-germaniaOne rounded bg-brand-700">
+                    {total}
+                </Text>
+            ),
             autoClose: 10_000,
         })
     })
@@ -371,7 +388,7 @@ function Basic() {
                 <Space h="md" />
                 <Group justify="center">
                     <InitiativeInput />
-                    <ArmorClassInput />
+                    <ArmorClass />
                     <HpInput />
                     <TempHpInput />
                 </Group>
@@ -609,7 +626,7 @@ function InitiativeInput() {
     )
 }
 
-function ArmorClassInput() {
+function ArmorClass() {
     const armorClass = useCharacterArmorClass()
 
     return (
@@ -839,11 +856,10 @@ function Skills() {
     )
 }
 
-/**
- * @todo Add Item selection
- */
 function Inventory() {
-    const { toggleEquippedItem } = useCharacterSheetActions()
+    const { toggleEquippedItem, decreaseItemAmount } =
+        useCharacterSheetActions()
+    const { rollDice } = useDiceTrayActions()
     const strength = useCharacterStrength()
     const dexterity = useCharacterDexterity()
     const characterItems = useCharacterItems()
@@ -851,8 +867,9 @@ function Inventory() {
     const [selectedItem, setSelectedItem] = useState<DnD5eEquipment | null>(
         null
     )
-
-    const { rollDice } = useDiceTrayActions()
+    const [itemSelectionOpened, { open, close }] = useDisclosure(false)
+    const [selectedFilter, setSelectedFilter] =
+        useState<keyof typeof categoryToGroupMap>('armor')
 
     const handleRollAttr =
         (die: DiceNotation, label: string, mod: number[]) => () => {
@@ -862,8 +879,6 @@ function Inventory() {
     const handleSetSelectedItem = (item: DnD5eEquipment) => () => {
         setSelectedItem(item)
     }
-    // const [itemSelectionOpened, { open, close }] = useDisclosure(false)
-    // const [selectedFilter, setSelectedFilter] = useState<string | Nil>()
 
     const getGroupName = (category: string) => {
         switch (category) {
@@ -895,25 +910,21 @@ function Inventory() {
                 { group: 'Equipamentos', items: [] },
                 { group: 'Ferramentas', items: [] },
                 { group: 'Montarias e Veículos', items: [] },
-            ] as Array<{ group: string; items: typeof characterItems }>
+            ] as Array<{
+                group: keyof typeof groupToCategoryMap
+                items: typeof characterItems
+            }>
         ) ?? []
 
     const handleEquipItem = (itemIndex: string) => () => {
         toggleEquippedItem(itemIndex)
     }
 
-    // const handleOpenItemSelection = (itemGroup: string) => () => {
-    //     open()
-    //     setSelectedFilter(itemGroup)
-    // }
-
-    // const groupToCategoryMap: Record<any, string> = {
-    //     Ferramentas: 'tools',
-    //     'Montarias e Veículos': 'mounts-and-vehicles',
-    //     Armas: 'weapon',
-    //     Armaduras: 'armor',
-    //     Equipamentos: 'generalEquipment',
-    // }
+    const handleOpenItemSelection =
+        (itemGroup: keyof typeof categoryToGroupMap) => () => {
+            open()
+            setSelectedFilter(itemGroup)
+        }
 
     const getAtkBonus = (weapon: DnD5eEquipment) => {
         return weapon.weapon_range === 'Ranged'
@@ -923,15 +934,17 @@ function Inventory() {
               : getModifier(strength)
     }
 
+    const handleDecreaseItem = (itemIndex: string) => () => {
+        decreaseItemAmount(itemIndex)
+    }
+
     return (
         <>
-            {/* 
-            * @todo FIX
             <ItemSelectionDrawer
                 selectedFilter={selectedFilter}
                 itemSelectionOpened={itemSelectionOpened}
                 close={close}
-            /> */}
+            />
 
             <Accordion
                 className="w-full max-w-[450px]"
@@ -947,7 +960,7 @@ function Inventory() {
                                 <Accordion.Control>
                                     {data.group}
                                 </Accordion.Control>
-                                {/*
+
                                 <ActionIcon
                                     size="lg"
                                     variant="subtle"
@@ -959,7 +972,6 @@ function Inventory() {
                                 >
                                     <IconPlus size="1rem" />
                                 </ActionIcon>
-                                */}
                             </Center>
 
                             <Accordion.Panel>
@@ -1048,6 +1060,15 @@ function Inventory() {
                                                             : 'Equipar'}
                                                     </Button>
                                                 )}
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    color="gray"
+                                                    onClick={handleDecreaseItem(
+                                                        itemData.index
+                                                    )}
+                                                >
+                                                    <IconTrash size="1rem" />
+                                                </ActionIcon>
                                             </Group>
                                         )
                                     })}
@@ -1272,291 +1293,217 @@ function Inventory() {
     )
 }
 
-/**
- * @todo FIX
- */
-// interface ItemSelectionDrawerProps {
-//     selectedFilter: string | Nil
-//     itemSelectionOpened: boolean
-//     close: VoidFunction
-// }
-// function ItemSelectionDrawer({
-//     selectedFilter,
-//     itemSelectionOpened,
-//     close,
-// }: ItemSelectionDrawerProps) {
-//     const [search, setSearch] = useState('')
-//     const [debouncedSearch] = useDebouncedValue(search, 200)
-//     const [
-//         openedNewItemModal,
-//         { open: openNewItemModal, close: closeNewItemModal },
-//     ] = useDisclosure(false)
+interface ItemSelectionDrawerProps {
+    selectedFilter: keyof typeof categoryToGroupMap
+    itemSelectionOpened: boolean
+    close: VoidFunction
+}
+function ItemSelectionDrawer({
+    selectedFilter,
+    itemSelectionOpened,
+    close,
+}: ItemSelectionDrawerProps) {
+    const { addItem } = useCharacterSheetActions()
+    const [search, setSearch] = useState('')
+    const [debouncedSearch] = useDebouncedValue(search, 200)
 
-//     const filterFn = (category: string) => (e: (typeof equipment)[number]) => {
-//         return e.equipment_category.index === category
-//     }
+    const filterFn = (category: string) => (e: (typeof equipment)[number]) => {
+        return e.equipment_category.index === category
+    }
 
-//     const tools = useMemo(() => {
-//         return equipment
-//             .filter(filterFn('tools'))
-//             .sort((a, b) => a.tool_category!.localeCompare(b.tool_category!))
-//     }, [])
-//     const mountsAndVehicles = useMemo(() => {
-//         return equipment
-//             .filter(filterFn('mounts-and-vehicles'))
-//             .sort((a, b) =>
-//                 a.vehicle_category!.localeCompare(b.vehicle_category!)
-//             )
-//     }, [])
-//     const weapons = useMemo(() => {
-//         return equipment
-//             .filter(filterFn('weapon'))
-//             .sort((a, b) =>
-//                 a.weapon_category!.localeCompare(b.weapon_category!)
-//             )
-//     }, [])
-//     const armors = useMemo(() => {
-//         return equipment
-//             .filter(filterFn('armor'))
-//             .sort((a, b) => a.armor_category!.localeCompare(b.armor_category!))
-//     }, [])
-//     const generalEquipment = useMemo(() => {
-//         return equipment
-//             .filter(
-//                 (e) =>
-//                     ![
-//                         'tools',
-//                         'mounts-and-vehicles',
-//                         'weapon',
-//                         'armor',
-//                     ].includes(e.equipment_category.index)
-//             )
-//             .sort((a, b) =>
-//                 a.gear_category!.name.localeCompare(b.gear_category!.name)
-//             )
-//     }, [])
+    const tools = useMemo(() => {
+        return equipment
+            .filter(filterFn('tools'))
+            .sort((a, b) => a.tool_category!.localeCompare(b.tool_category!))
+    }, [])
+    const mountsAndVehicles = useMemo(() => {
+        return equipment
+            .filter(filterFn('mounts-and-vehicles'))
+            .sort((a, b) =>
+                a.vehicle_category!.localeCompare(b.vehicle_category!)
+            )
+    }, [])
+    const weapons = useMemo(() => {
+        return equipment
+            .filter(filterFn('weapon'))
+            .sort((a, b) =>
+                a.weapon_category!.localeCompare(b.weapon_category!)
+            )
+    }, [])
+    const armors = useMemo(() => {
+        return equipment
+            .filter(filterFn('armor'))
+            .sort((a, b) => a.armor_category!.localeCompare(b.armor_category!))
+    }, [])
+    const generalEquipment = useMemo(() => {
+        return equipment
+            .filter(
+                (e) =>
+                    ![
+                        'tools',
+                        'mounts-and-vehicles',
+                        'weapon',
+                        'armor',
+                    ].includes(e.equipment_category.index)
+            )
+            .sort((a, b) =>
+                a.gear_category!.name.localeCompare(b.gear_category!.name)
+            )
+    }, [])
 
-//     const equipmentByCategory = {
-//         tools,
-//         'mounts-and-vehicles': mountsAndVehicles,
-//         weapon: weapons,
-//         armor: armors,
-//         generalEquipment,
-//     }
+    const equipmentByCategory = {
+        tools,
+        'mounts-and-vehicles': mountsAndVehicles,
+        weapon: weapons,
+        armor: armors,
+        generalEquipment,
+    }
 
-//     const itemList = equipmentByCategory[
-//         (selectedFilter as keyof typeof equipmentByCategory) ??
-//             'generalEquipment'
-//     ].filter((e) =>
-//         removeDiacritics(e.name.toLocaleLowerCase()).includes(
-//             removeDiacritics(debouncedSearch.toLocaleLowerCase())
-//         )
-//     )
+    const itemList = equipmentByCategory[
+        (selectedFilter as keyof typeof equipmentByCategory) ??
+            'generalEquipment'
+    ].filter((e) =>
+        removeDiacritics(e.name.toLocaleLowerCase()).includes(
+            removeDiacritics(debouncedSearch.toLocaleLowerCase())
+        )
+    )
 
-//     const separatorKey: Record<any, string> = {
-//         tools: 'tool_category',
-//         'mounts-and-vehicles': 'vehicle_category',
-//         weapon: 'weapon_category',
-//         armor: 'armor_category',
-//         generalEquipment: 'gear_category',
-//     }
+    const separatorKey: Record<keyof typeof categoryToGroupMap, string> = {
+        tools: 'tool_category',
+        'mounts-and-vehicles': 'vehicle_category',
+        weapon: 'weapon_category',
+        armor: 'armor_category',
+        generalEquipment: 'gear_category',
+    }
 
-//     const handleSearch: ChangeEventHandler<HTMLInputElement> = (event) => {
-//         setSearch(event.currentTarget.value)
-//     }
+    const handleSearch: React.ChangeEventHandler<HTMLInputElement> = (
+        event
+    ) => {
+        setSearch(event.currentTarget.value)
+    }
 
-//     const handleClose = () => {
-//         setSearch('')
-//         close()
-//     }
+    const handleClose = () => {
+        setSearch('')
+        close()
+    }
 
-//     /**
-//      * @todo implement
-//      */
-//     const handleAddItem = (itemIndex: string) => () => {}
+    const handleAddItem = (itemIndex: string) => () => {
+        addItem(itemIndex)
+    }
 
-//     return (
-//         <>
-//             <Drawer
-//                 title={categoryToGroupMap[selectedFilter ?? 'generalEquipment']}
-//                 opened={itemSelectionOpened}
-//                 position="right"
-//                 onClose={handleClose}
-//             >
-//                 <Stack>
-//                     <TextInput
-//                         type="search"
-//                         label="Invocar pelo nome"
-//                         rightSection={<IconSearch />}
-//                         value={search}
-//                         onChange={handleSearch}
-//                     />
-//                     <Button onClick={openNewItemModal}>Novo</Button>
-//                     {itemList.map((item, i, prev) => {
-//                         // Type safety first :D
-//                         // @ts-ignore
-//                         const key = separatorKey[selectedFilter]
-//                         const prevSeparator =
-//                             i > 0 && // @ts-ignore
-//                             (prev[i - 1][key]?.name ??
-//                                 // @ts-ignore
-//                                 prev[i - 1][key])
-//                         const currentSeparator =
-//                             // @ts-ignore
-//                             item[key]?.name ??
-//                             // @ts-ignore
-//                             item[key]
+    return (
+        <>
+            <Drawer
+                title={categoryToGroupMap[selectedFilter ?? 'generalEquipment']}
+                opened={itemSelectionOpened}
+                position="right"
+                onClose={handleClose}
+            >
+                <Stack>
+                    <TextInput
+                        type="search"
+                        placeholder="Invocar pelo nome"
+                        rightSection={<IconSearch />}
+                        value={search}
+                        onChange={handleSearch}
+                    />
+                    {itemList.map((item, i, prev) => {
+                        const key = separatorKey[selectedFilter]
+                        const prevSeparator =
+                            i > 0 && // @ts-ignore
+                            (prev[i - 1][key]?.name ??
+                                // @ts-ignore
+                                prev[i - 1][key])
+                        const currentSeparator =
+                            // @ts-ignore
+                            item[key]?.name ??
+                            // @ts-ignore
+                            item[key]
 
-//                         return (
-//                             <Fragment key={item.index}>
-//                                 {(i === 0 ||
-//                                     (i > 0 &&
-//                                         prevSeparator !==
-//                                             currentSeparator)) && (
-//                                     <Divider label={currentSeparator} />
-//                                 )}
-//                                 <Group>
-//                                     <Stack gap={0}>
-//                                         <Text>
-//                                             {item.name}{' '}
-//                                             {!!item.desc.length && (
-//                                                 <ToggleTip
-//                                                     className="align-bottom"
-//                                                     label={item.desc}
-//                                                 >
-//                                                     <IconInfoCircle size={24} />
-//                                                 </ToggleTip>
-//                                             )}
-//                                         </Text>
-//                                         {!!item.contents.length && (
-//                                             <Spoiler
-//                                                 styles={{
-//                                                     control: {
-//                                                         fontSize: '.75rem',
-//                                                     },
-//                                                 }}
-//                                                 maxHeight={0}
-//                                                 showLabel="Mostrar mais"
-//                                                 hideLabel="Esconder"
-//                                             >
-//                                                 <Stack mt="sm">
-//                                                     {item.contents.map((c) => {
-//                                                         return (
-//                                                             <Text
-//                                                                 key={
-//                                                                     c.item.index
-//                                                                 }
-//                                                                 className="text-xs text-support-300"
-//                                                             >
-//                                                                 {c.quantity}x{' '}
-//                                                                 {c.item.name}
-//                                                             </Text>
-//                                                         )
-//                                                     })}
-//                                                 </Stack>
-//                                             </Spoiler>
-//                                         )}
-//                                     </Stack>
-//                                     {item.damage?.damage_dice && (
-//                                         <Text className="text-xs text-support-300">
-//                                             {item.damage.damage_dice} -{' '}
-//                                             {item.damage.damage_type.name}
-//                                         </Text>
-//                                     )}
-//                                     {item.armor_class && (
-//                                         <Text className="text-xs text-support-300">
-//                                             CA {item.armor_class.base}{' '}
-//                                             {item.armor_class.max_bonus
-//                                                 ? `+ DES (Max ${item.armor_class.max_bonus})`
-//                                                 : item.armor_class.dex_bonus &&
-//                                                   `+ DES`}
-//                                         </Text>
-//                                     )}
+                        return (
+                            <Fragment key={item.index}>
+                                {(i === 0 ||
+                                    (i > 0 &&
+                                        prevSeparator !==
+                                            currentSeparator)) && (
+                                    <Divider label={currentSeparator} />
+                                )}
+                                <Group>
+                                    <Stack gap={0}>
+                                        <Text>
+                                            {item.name}{' '}
+                                            {!!item.desc.length && (
+                                                <ToggleTip
+                                                    className="align-bottom"
+                                                    label={item.desc}
+                                                >
+                                                    <IconInfoCircle size={24} />
+                                                </ToggleTip>
+                                            )}
+                                        </Text>
+                                        {!!item.contents.length && (
+                                            <Spoiler
+                                                styles={{
+                                                    control: {
+                                                        fontSize: '.75rem',
+                                                    },
+                                                }}
+                                                maxHeight={0}
+                                                showLabel="Mostrar mais"
+                                                hideLabel="Esconder"
+                                            >
+                                                <Stack mt="sm">
+                                                    {item.contents.map((c) => {
+                                                        return (
+                                                            <Text
+                                                                key={
+                                                                    c.item.index
+                                                                }
+                                                                className="text-xs text-support-300"
+                                                            >
+                                                                {c.quantity}x{' '}
+                                                                {c.item.name}
+                                                            </Text>
+                                                        )
+                                                    })}
+                                                </Stack>
+                                            </Spoiler>
+                                        )}
+                                    </Stack>
+                                    {item.damage?.damage_dice && (
+                                        <Text className="text-xs text-support-300">
+                                            {item.damage.damage_dice} -{' '}
+                                            {item.damage.damage_type.name}
+                                        </Text>
+                                    )}
+                                    {item.armor_class && (
+                                        <Text className="text-xs text-support-300">
+                                            CA {item.armor_class.base}{' '}
+                                            {item.armor_class.max_bonus
+                                                ? `+ DES (Max ${item.armor_class.max_bonus})`
+                                                : item.armor_class.dex_bonus &&
+                                                  `+ DES`}
+                                        </Text>
+                                    )}
 
-//                                     <Text className="text-xs text-support-300 text-right flex-grow">
-//                                         {item.cost.quantity} {item.cost.unit}
-//                                     </Text>
-//                                     <ActionIcon
-//                                         title="Adicionar"
-//                                         onClick={handleAddItem(item.index)}
-//                                     >
-//                                         <IconPlus />
-//                                     </ActionIcon>
-//                                 </Group>
-//                             </Fragment>
-//                         )
-//                     })}
-//                 </Stack>
-//             </Drawer>
-//             <NewItemModal
-//                 category={selectedFilter!}
-//                 opened={openedNewItemModal}
-//                 onClose={closeNewItemModal}
-//             />
-//         </>
-//     )
-// }
-
-// interface NewItemModal {
-//     opened: boolean
-//     category: string
-//     onClose: VoidFunction
-// }
-// function NewItemModal({ opened, category, onClose }: NewItemModal) {
-//     const isMobile = useMediaQuery('(max-width: 50em)')
-
-//     const form = useForm({
-//         initialValues: {
-//             name: '',
-//             category, // Undefined for some reason...
-//         },
-
-//         validate: {
-//             name: (value) => (value ? null : 'O nome não pode ficar em branco'),
-//             category: (value) => (value ? null : 'Selecione um tipo de item'),
-//         },
-//     })
-
-//     const handleClose = () => {
-//         form.reset()
-//         onClose()
-//     }
-
-//     return (
-//         <Modal
-//             title="Novo item"
-//             opened={opened}
-//             fullScreen={isMobile}
-//             transitionProps={{ transition: 'fade', duration: 200 }}
-//             onClose={handleClose}
-//         >
-//             <form onSubmit={form.onSubmit((values) => console.log(values))}>
-//                 <Stack>
-//                     <TextInput
-//                         label="Nome"
-//                         required
-//                         {...form.getInputProps('name')}
-//                     />
-//                     <Select
-//                         label="Tipo"
-//                         required
-//                         data={Object.entries(categoryToGroupMap).map(
-//                             ([k, v]) => {
-//                                 return {
-//                                     label: v,
-//                                     value: k,
-//                                 }
-//                             }
-//                         )}
-//                         {...form.getInputProps('category')}
-//                     />
-//                     <Space h="sm" />
-//                     <Button type="submit">Criar e adicionar</Button>
-//                 </Stack>
-//             </form>
-//         </Modal>
-//     )
-// }
+                                    <Text className="text-xs text-support-300 text-right flex-grow">
+                                        {item.cost.quantity} {item.cost.unit}
+                                    </Text>
+                                    <ActionIcon
+                                        title="Adicionar"
+                                        onClick={handleAddItem(item.index)}
+                                    >
+                                        <IconPlus />
+                                    </ActionIcon>
+                                </Group>
+                            </Fragment>
+                        )
+                    })}
+                </Stack>
+            </Drawer>
+        </>
+    )
+}
 
 const attributeOptions: LabelValue<Attribute>[] = [
     {
@@ -1623,10 +1570,18 @@ const skillModifierMap: Record<Skill, Attribute> = {
     survival: 'wisdom',
 }
 
-// const categoryToGroupMap: Record<any, string> = {
-//     tools: 'Ferramentas',
-//     'mounts-and-vehicles': 'Montarias e Veículos',
-//     weapon: 'Armas',
-//     armor: 'Armaduras',
-//     generalEquipment: 'Equipamentos',
-// }
+const categoryToGroupMap = {
+    tools: 'Ferramentas',
+    'mounts-and-vehicles': 'Montarias e Veículos',
+    weapon: 'Armas',
+    armor: 'Armaduras',
+    generalEquipment: 'Equipamentos',
+} as const
+
+const groupToCategoryMap = {
+    Ferramentas: 'tools',
+    'Montarias e Veículos': 'mounts-and-vehicles',
+    Armas: 'weapon',
+    Armaduras: 'armor',
+    Equipamentos: 'generalEquipment',
+} as const
