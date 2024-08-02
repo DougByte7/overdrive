@@ -7,14 +7,25 @@ import TopBar from '@/components/top-bar/top-bar'
 export default function PatchNotes() {
     const notes = [
         // {
-        //     version: 'Versão Pre-alpha 1.2.0 🎉',
+        //     version: 'Versão Pre-alpha 1.3.0 🎉',
         //     date: '2024-05-03T00:00',
         //     news: [
         //         //'✅ Adicionado página de gerenciador de combate.', // @todo
-        //         //'✅ Adicionado seletor de itens no inventário.', // @todo
-        //         //'🦋 Ainda mais bugs!',
         //     ],
         // },
+        {
+            version: 'Versão Pre-alpha 1.2.0 🎉',
+            date: '2024-08-02T00:00',
+            news: [
+                '✅ Adicionado página de licenças.',
+                '✅ Adicionado seletor de itens no inventário.',
+                '✅ Agora é possível marcar proficiência em skills e saves através da ficha.',
+                '✅ Agora é possível fazer rolagem de dados de skills, e saves.',
+                '✅ Agora é possível fazer rolagem de dados de itens no inventário.',
+                '🔧 Correção no alinhamento de elementos que quebravam em dispositivos moveis',
+                '🦋 Ainda mais bugs!',
+            ],
+        },
         {
             version: 'Versão Pre-alpha 1.1.0 🎉',
             date: '2024-06-08T00:00',
