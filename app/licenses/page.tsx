@@ -29,20 +29,16 @@ export default function Licenses() {
             ),
         },
         {
-            id: 'Dice Set by JayDesigns3D',
+            id: 'Eldritch Nouveau Font',
             content: (
                 <>
-                    <a href="https://skfb.ly/6oFLq" target="_blank">
-                        Dungeons And Dragons Dice Set
-                    </a>{' '}
-                    by <strong>JayDesigns3D</strong> is licensed under{' '}
                     <a
-                        href="http://creativecommons.org/licenses/by/4.0/"
+                        href="https://www.patreon.com/posts/52812293"
                         target="_blank"
                     >
-                        Creative Commons Attribution
-                    </a>
-                    .
+                        Eldritch Nouveau Font
+                    </a>{' '}
+                    by <strong>rpgtoons & r-n-w</strong>.
                 </>
             ),
         },
