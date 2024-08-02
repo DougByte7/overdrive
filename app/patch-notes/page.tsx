@@ -1,6 +1,6 @@
 'use client'
 
-import { List, Stack, Text, Title } from '@mantine/core'
+import { List, Text, Title } from '@mantine/core'
 
 import TopBar from '@/components/top-bar/top-bar'
 
@@ -19,9 +19,8 @@ export default function PatchNotes() {
             news: [
                 '✅ Adicionado página de licenças.',
                 '✅ Adicionado seletor de itens no inventário.',
-                '✅ Agora é possível marcar proficiência em skills e saves através da ficha.',
-                '✅ Agora é possível fazer rolagem de dados de skills, e saves.',
-                '✅ Agora é possível fazer rolagem de dados de itens no inventário.',
+                '✅ Agora é possível marcar proficiência em skills através da ficha.',
+                '✅ Agora é possível fazer rolagem de dados de habilidades, saves, e itens.',
                 '🔧 Correção no alinhamento de elementos que quebravam em dispositivos moveis',
                 '🦋 Ainda mais bugs!',
             ],
@@ -48,32 +47,24 @@ export default function PatchNotes() {
     return (
         <>
             <TopBar title="Novidades" />
-            <main className="p-4">
-                <Stack gap="xl" align="center">
-                    {notes.map((note) => {
-                        return (
-                            <Stack key={note.version} gap="xs">
-                                <Title
-                                    className="font-mono"
-                                    order={2}
-                                    size="h3"
-                                >
-                                    {note.version}
-                                </Title>
-                                <List className="list-disc">
-                                    {note.news.map((n) => {
-                                        return (
-                                            <List.Item key={n}>{n}</List.Item>
-                                        )
-                                    })}
-                                </List>
-                                <Text className="opacity-75" size="xs">
-                                    {new Date(note.date).toLocaleDateString()}
-                                </Text>
-                            </Stack>
-                        )
-                    })}
-                </Stack>
+            <main className="prose lg:prose-xl prose-invert mx-auto mt-4">
+                {notes.map((note) => {
+                    return (
+                        <article key={note.version}>
+                            <Title className="font-mono" order={2}>
+                                {note.version}
+                            </Title>
+                            <List className="list-disc">
+                                {note.news.map((n) => {
+                                    return <List.Item key={n}>{n}</List.Item>
+                                })}
+                            </List>
+                            <Text className="opacity-75" size="xs">
+                                {new Date(note.date).toLocaleDateString()}
+                            </Text>
+                        </article>
+                    )
+                })}
             </main>
         </>
     )
