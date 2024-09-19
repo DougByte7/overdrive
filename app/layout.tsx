@@ -5,6 +5,8 @@ import '@mantine/core/styles.css'
 import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
 import '@mantine/notifications/styles.css'
+import { NavigationProgress } from '@mantine/nprogress'
+import '@mantine/nprogress/styles.css'
 import { Analytics } from '@vercel/analytics/react'
 import { Provider as JotaiProvider } from 'jotai'
 import type { Metadata, Viewport } from 'next'
@@ -42,6 +44,8 @@ export default function RootLayout({
                             theme={{ ...theme }}
                             defaultColorScheme="dark"
                         >
+                            <NavigationProgress />
+
                             <TRPCProvider>
                                 <ModalsProvider>
                                     <Notifications />
