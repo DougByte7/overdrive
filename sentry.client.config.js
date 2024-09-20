@@ -11,11 +11,17 @@ Sentry.init({
         'https://9d1126cff3f64b76b5e9492be373d6cb@o4504726191276032.ingest.sentry.io/4504726194159616',
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: 1.0,
-    debug: true,
+    debug: false,
+    replaysOnErrorSampleRate: 1.0,
+    replaysSessionSampleRate: 0.1,
     integrations: [
         Sentry.feedbackIntegration({
             // Additional SDK configuration goes in here, for example:
-            colorScheme: 'system',
+            colorScheme: 'dark',
+            showBranding: false,
+            themeDark:{
+                background: 'var(--mantine-color-body)'
+            }
         }),
     ],
 

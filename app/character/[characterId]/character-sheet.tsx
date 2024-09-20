@@ -187,7 +187,7 @@ export default function CharacterSheetPage({
                     spellsKnown:
                         typeof spellsKnown === 'number'
                             ? [spellsKnown]
-                            : (spellsKnown ?? []),
+                            : spellsKnown ?? [],
                     spellsSlots: spellsSlots ?? [],
                 }
 
