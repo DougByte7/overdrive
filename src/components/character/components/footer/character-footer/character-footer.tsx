@@ -16,8 +16,6 @@ export default function CharacterFooter() {
     return (
         <footer className="fixed bottom-0 w-full h-[72px] bg-[var(--mantine-color-body)] border-t border-support-400 z-10">
             <Flex justify="space-evenly" align="center" h={56} mt={8}>
-                <AttachToFeedbackButton />
-
                 <UnstyledButton onClick={handleSetActiveTab('basic')}>
                     <Stack align="center" gap={0}>
                         <i
