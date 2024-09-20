@@ -296,7 +296,7 @@ export default function CharacterBuilder() {
                                         esperam por você.
                                     </Text>
                                 </Box>
-                                <Card radius="md" w={280} h={275} p={0}>
+                                <Card m="auto" radius="md" w={280} h={275} p={0}>
                                     <BackgroundImage
                                         src={avatarPreviewUrl}
                                         radius="md"

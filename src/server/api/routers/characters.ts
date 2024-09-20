@@ -22,7 +22,11 @@ async function publishImage(
     playerId: string
 ) {
     // If default picture return
-    if (picture.endsWith('.png') && picture.length < 100) return picture
+    if (
+        (picture.endsWith('.png') || picture.endsWith('.svg')) &&
+        picture.length < 100
+    )
+        return picture
 
     const oneMega = 1024 ** 2
 
@@ -97,7 +101,9 @@ export const charactersRouter = createTRPCRouter({
                     playerId,
                     data: {
                         ...input.data,
-                        picture: pictureUrl,
+                        picture:
+                            pictureUrl ??
+                            `/images/fantasy/races/${input.data.race}.png`,
                     },
                 },
             })
@@ -177,7 +183,10 @@ export const charactersRouter = createTRPCRouter({
 
             const { picture } = (deleted?.data as Record<string, any>) ?? {}
 
-            if (picture) {
+            if (
+                picture &&
+                !(picture.endsWith('.png') && picture.endsWith('.svg'))
+            ) {
                 await del(picture)
             }
 

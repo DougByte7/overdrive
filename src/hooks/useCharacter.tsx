@@ -26,8 +26,11 @@ export default function useCharacter() {
 
     const { data: remoteCharacters, isSuccess } =
         api.characters.getAll.useQuery()
-    const { mutate: createCharacter, status: createCharacterStatus } =
-        api.characters.create.useMutation()
+    const {
+        mutate: createCharacter,
+        status: createCharacterStatus,
+        error: createCharacterError,
+    } = api.characters.create.useMutation()
     const { mutate: createManyCharacters } =
         api.characters.createMany.useMutation()
     const { mutate: updateCharacter } = api.characters.update.useMutation({
@@ -55,18 +58,13 @@ export default function useCharacter() {
         if (!isSuccess) return
 
         // Save characters of previously guest user now with new account
-        /**
-         *  @todo remove isLegacySync stuff on alpha release
-         * */
         if (
-            (window?.localStorage.getItem(storageKeys.user.isGuest) ===
-                'true' ||
-                window?.localStorage.getItem('isLegacySync') !== 'true') &&
+            window?.localStorage.getItem(storageKeys.user.isGuest) === 'true' &&
             isSignedIn &&
             localCharacters.length
         ) {
             addManyCharacters(localCharacters)
-            window.localStorage.setItem('isLegacySync', 'true')
+
             window.localStorage.removeItem(storageKeys.user.isGuest)
             return
         }
@@ -82,6 +80,7 @@ export default function useCharacter() {
                     color: 'red',
                     title: 'Falha crítica ao salvar seu personagem!',
                     message:
+                        createCharacterError.message ??
                         'Você precisará voltar a página inicial e recria-lo :/',
                 })
             }
