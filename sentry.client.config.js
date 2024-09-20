@@ -19,9 +19,9 @@ Sentry.init({
             // Additional SDK configuration goes in here, for example:
             colorScheme: 'dark',
             showBranding: false,
-            themeDark:{
-                background: 'var(--mantine-color-body)'
-            }
+            themeDark: {
+                background: 'var(--mantine-color-body)',
+            },
         }),
     ],
 

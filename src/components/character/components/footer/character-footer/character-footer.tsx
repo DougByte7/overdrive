@@ -107,7 +107,9 @@ function AttachToFeedbackButton() {
         useState<ReturnType<typeof Sentry.getFeedback>>()
     // Read `getFeedback` on the client only, to avoid hydration errors when server rendering
     useEffect(() => {
-        setFeedback(Sentry.getFeedback())
+        const feed = Sentry.getFeedback()
+        feed?.remove()
+        setFeedback(feed)
     }, [])
 
     const buttonRef = useRef(null)

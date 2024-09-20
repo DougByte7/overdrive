@@ -25,7 +25,7 @@ export default function Home() {
     return (
         <main className="justify-center">
             <Stack
-                className="relative z-10 h-screen max-w-[550px] bg-[var(--mantine-color-body)] px-6 py-12 md:p-20 md:pb-0"
+                className="relative opacity-95 z-10 h-screen max-w-[550px] bg-[var(--mantine-color-body)] px-6 py-12 md:p-20 md:pb-0"
                 align="center"
             >
                 <Image
