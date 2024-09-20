@@ -7,3 +7,7 @@
 :root {
     --mantine-color-body: rgba(23, 21, 28) !important;
 }
+
+#sentry-feedback {
+    --page-margin: 0 calc(50% - 25px) 45px;
+}

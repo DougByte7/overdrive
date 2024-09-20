@@ -1,17 +1,8 @@
 'use client'
 
-import {
-    ActionIcon,
-    Divider,
-    Flex,
-    Stack,
-    Text,
-    UnstyledButton,
-} from '@mantine/core'
-import * as Sentry from '@sentry/nextjs'
-import { IconCrystalBall, IconSpeakerphone } from '@tabler/icons-react'
+import { Divider, Flex, Stack, Text, UnstyledButton } from '@mantine/core'
+import { IconCrystalBall } from '@tabler/icons-react'
 import { useAtom } from 'jotai'
-import { useEffect, useRef, useState } from 'react'
 
 import { activeTabAtom } from '@/components/character/state'
 
@@ -99,37 +90,6 @@ export default function CharacterFooter() {
                 </UnstyledButton>
             </Flex>
         </footer>
-    )
-}
-
-function AttachToFeedbackButton() {
-    const [feedback, setFeedback] =
-        useState<ReturnType<typeof Sentry.getFeedback>>()
-    // Read `getFeedback` on the client only, to avoid hydration errors when server rendering
-    useEffect(() => {
-        const feed = Sentry.getFeedback()
-        feed?.remove()
-        setFeedback(feed)
-    }, [])
-
-    const buttonRef = useRef(null)
-    useEffect(() => {
-        console.log({ feedback })
-
-        if (feedback) {
-            const unsubscribe = feedback.attachTo(buttonRef.current!)
-            return unsubscribe
-        }
-        return () => {}
-    }, [feedback])
-
-    return (
-        <ActionIcon
-            className="absolute size-12 rounded-full top-0 left-1/2 -translate-y-1/2 -translate-x-1/2"
-            ref={buttonRef}
-        >
-            <IconSpeakerphone />
-        </ActionIcon>
     )
 }
 
