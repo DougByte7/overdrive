@@ -139,7 +139,12 @@ export default function CharacterSheetPage({
 
     // Initialize characterSheetStore
     useEffect(() => {
-        if (!(localCharacter && customRace && customClasses)) return
+        if (
+            !localCharacter ||
+            (isCustomRace && !customRace) ||
+            (hasCustomClass && !customClasses)
+        )
+            return
 
         const {
             proficiencies,
@@ -147,13 +152,6 @@ export default function CharacterSheetPage({
             classes: classList,
             ...sheet
         } = localCharacter
-
-        const normalizedRace = {
-            id: race,
-            name: customRace.name,
-            description: customRace.description,
-            traits: customRace.traits as unknown as DnD5eTrait[],
-        }
 
         const normalizedClasses = classList.map((c) => {
             if (c.name in classes) {
@@ -189,7 +187,7 @@ export default function CharacterSheetPage({
                     spellsKnown:
                         typeof spellsKnown === 'number'
                             ? [spellsKnown]
-                            : spellsKnown ?? [],
+                            : (spellsKnown ?? []),
                     spellsSlots: spellsSlots ?? [],
                 }
 
@@ -209,7 +207,7 @@ export default function CharacterSheetPage({
                 proficiencies_skills,
                 proficiencies_weapon,
                 ...normalizedClass
-            } = customClasses.find((custom) => custom.id === c.name)!
+            } = customClasses?.find((custom) => custom.id === c.name)!
             return {
                 id,
                 data: {
@@ -232,7 +230,14 @@ export default function CharacterSheetPage({
             ...sheet,
             hasChanges: false,
             skills: proficiencies,
-            race: isCustomRace ? normalizedRace : races[race as DnD5eRaceName],
+            race: isCustomRace
+                ? {
+                      id: race,
+                      name: customRace!.name,
+                      description: customRace!.description,
+                      traits: customRace!.traits as unknown as DnD5eTrait[],
+                  }
+                : races[race as DnD5eRaceName],
             classes: normalizedClasses,
         })
     }, [customRace, localCharacter, customClasses])
