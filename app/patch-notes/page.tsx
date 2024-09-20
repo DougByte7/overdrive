@@ -14,6 +14,16 @@ export default function PatchNotes() {
         //     ],
         // },
         {
+            version: 'Versão Pre-alpha 1.2.1 🎉',
+            date: '2024-09-19T00:00',
+            news: [
+                '✅ Adicionado botão de feedback.',
+                '🦋 Correção de bug em que não era possível criar personagem sem imagem',
+                '🦋 Correção de bug em que não era possível abrir a ficha se o usuário não possuísse homebrews',
+                '🦋 Correção de bug em que os valores do point buy não era exibidos',
+            ],
+        },
+        {
             version: 'Versão Pre-alpha 1.2.0 🎉',
             date: '2024-08-02T00:00',
             news: [
