@@ -166,9 +166,9 @@ export default function AttributeSelection({
                     const base = !isNil(i) ? attributeValueOptions[i] : 0
                     const bonus: number =
                         form.race! in races
-                            ? races[form.race as keyof typeof races].boost?.[
+                            ? (races[form.race as keyof typeof races].boost?.[
                                   attribute
-                              ] ?? 0
+                              ] ?? 0)
                             : 0
                     const total = base + bonus
 
@@ -364,6 +364,11 @@ export default function AttributeSelection({
                     <NumberInput
                         className="w-11"
                         styles={{ input: { textAlign: 'center' } }}
+                        readOnly={attrMethod === 'pointbuy'}
+                        value={
+                            form[ability.attributeName].base +
+                            form[ability.attributeName].bonus
+                        }
                         onChange={handleSetManualAttrValue(
                             ability.attributeName
                         )}
