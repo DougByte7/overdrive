@@ -9,24 +9,30 @@ Sentry.init({
     dsn:
         SENTRY_DSN ||
         'https://9d1126cff3f64b76b5e9492be373d6cb@o4504726191276032.ingest.sentry.io/4504726194159616',
-    // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: 1.0,
-    debug: false,
     replaysOnErrorSampleRate: 1.0,
     replaysSessionSampleRate: 0.1,
     integrations: [
         Sentry.feedbackIntegration({
-            // Additional SDK configuration goes in here, for example:
             colorScheme: 'dark',
             showBranding: false,
             themeDark: {
                 background: 'var(--mantine-color-body)',
             },
+            buttonLabel: 'Reportar um Bug',
+            formTitle: 'Reportar um Bug',
+            cancelButtonLabel: 'Cancelar',
+            formTitle: 'Enviar',
+            nameLabel: 'Nome',
+            namePlaceholder: 'Seu Nome',
+            emailPlaceholder: 'seu.email@examplo.com',
+            messageLabel: 'Descrição',
+            messagePlaceholder: 'Qual o bug? O que você esperava?',
+            successMessageText: 'Obrigado pelo seu relato!',
+            isRequiredText: '(obrigatório)',
+            addScreenshotButtonLabel: 'Adicionar captura de tela',
+            removeScreenshotButtonLabel: 'Remover captura de tela',
+            confirmButtonLabel: 'Confirmar',
         }),
     ],
-
-    // ...
-    // Note: if you want to override the automatic release value, do not set a
-    // `release` value here - use the environment variable `SENTRY_RELEASE`, so
-    // that it will also get attached to your source maps
 })
