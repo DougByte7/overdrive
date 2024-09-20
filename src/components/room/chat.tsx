@@ -151,6 +151,8 @@ interface SystemMessageProps {
     message: Message
 }
 function SystemMessage({ message, type }: SystemMessageProps) {
+    console.log(type)
+
     return (
         <div>
             <Text className="title" color="white" size="14px">
