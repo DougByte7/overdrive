@@ -7,8 +7,10 @@ import { useShallow } from 'zustand/react/shallow'
 import equipment from '@/assets/dnd/5e/equipment.json'
 
 import type { Skill } from '../classes'
+import classes from '../classes'
 import type { EquipmentOption } from '../classes/interfaces'
 import type { DnD5eTrait } from '../races'
+import races from '../races'
 import getModifier from './getModifier'
 import type { CustomClassSchema } from './schemas/classes'
 
@@ -104,16 +106,44 @@ const useCharacterSheetStore = create<State & Actions>()(
                 const sheet = get()
                 if (!(sheet.id && sheet.hasChanges)) return
 
-                const { classes, race, skills, actions, hasChanges, ...rest } =
-                    sheet
+                const {
+                    classes: charClasses,
+                    race,
+                    skills,
+                    actions,
+                    hasChanges,
+                    ...rest
+                } = sheet
+
+                console.log(
+                    charClasses.map((c) => ({
+                        level: c.level,
+                        name:
+                            c.id ??
+                            Object.entries(classes).find(
+                                ([, v]) => v.name === c.data.name
+                            )![0],
+                    })),
+                    Object.entries(races).find(
+                        ([, v]) => v.name === race.name
+                    )![0]
+                )
 
                 const payload = {
                     ...rest,
-                    classes: classes.map((c) => ({
+                    classes: charClasses.map((c) => ({
                         level: c.level,
-                        name: c.id ?? c.data.name,
+                        name:
+                            c.id ??
+                            Object.entries(classes).find(
+                                ([, v]) => v.name === c.data.name
+                            )![0],
                     })),
-                    race: race.id || race.name,
+                    race:
+                        race.id ||
+                        Object.entries(races).find(
+                            ([, v]) => v.name === race.name
+                        )![0],
                     proficiencies: skills,
                 }
 

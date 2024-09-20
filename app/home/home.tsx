@@ -33,8 +33,8 @@ import type {
     ReactNode,
 } from 'react'
 
-import classes from '@/assets/dnd/5e/classes'
-import races from '@/assets/dnd/5e/races'
+import classes, { type DnD5eClassName } from '@/assets/dnd/5e/classes'
+import races, { type DnD5eRaceName } from '@/assets/dnd/5e/races'
 import TopBar from '@/components/top-bar'
 import useRouteGuard from '@/hooks/routeGuard'
 import useCharacter from '@/hooks/useCharacter'
@@ -50,13 +50,10 @@ export default function Home() {
 
     const normalizedCharacters = useMemo(() => {
         return characters.map((character) => {
-            console.log(character.race)
-
-            const raceName = Object.values(races)
-                .map((r) => r.name)
-                .includes(character.race)
-                ? character.race
-                : customRaces?.find((r) => r.id === character.race)?.name
+            const raceName =
+                character.race in races
+                    ? races[character.race as DnD5eRaceName].name
+                    : customRaces?.find((r) => r.id === character.race)?.name
             return {
                 id: character.id,
                 name: character.name,
@@ -71,13 +68,13 @@ export default function Home() {
                                 }
                             >
                                 {character.classes?.map((c) => {
-                                    const className = Object.values(classes)
-                                        .map((c) => c.name)
-                                        .includes(c.name)
-                                        ? c.name
-                                        : customClasses?.find(
-                                              (cc) => cc.id === c.name
-                                          )?.name
+                                    const className =
+                                        c.name in classes
+                                            ? classes[c.name as DnD5eClassName]
+                                                  .name
+                                            : customClasses?.find(
+                                                  (cc) => cc.id === c.name
+                                              )?.name
                                     return (
                                         <Fragment key={c.name}>
                                             {className} <br />

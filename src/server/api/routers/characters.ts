@@ -101,9 +101,7 @@ export const charactersRouter = createTRPCRouter({
                     playerId,
                     data: {
                         ...input.data,
-                        picture:
-                            pictureUrl ??
-                            `/images/fantasy/races/${input.data.race}.png`,
+                        picture: pictureUrl,
                     },
                 },
             })
