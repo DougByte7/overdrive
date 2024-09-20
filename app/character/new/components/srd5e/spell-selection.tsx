@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react'
 import {
     Accordion,
     Badge,
@@ -73,7 +71,7 @@ export default function SpellSelection({ styles }: ClassSelectionProps) {
                     maxSpells={
                         Array.isArray(spellsKnown)
                             ? spellsKnown[0]
-                            : spellsKnown ?? 0
+                            : (spellsKnown ?? 0)
                     }
                 />
             )}
@@ -149,13 +147,7 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
                         }}
                     >
                         <UnstyledButton
-                            css={css`
-                                position: absolute;
-                                top: 16px;
-                                left: 16px;
-                                bottom: 16px;
-                                right: 56px;
-                            `}
+                            className="absolute top-4 left-4 bottom-4 right-14"
                             aria-label={`Selecionar: ${spell.name}`}
                             onClick={handleSelectSpell(spell.name)}
                         />
@@ -212,10 +204,7 @@ function SpellList({ label, spells, maxSpells }: SpellListProps) {
                                     )}
                                     {spell.components.material && (
                                         <Tooltip
-                                            css={css`
-                                                position: relative;
-                                                z-index: 2;
-                                            `}
+                                            className="relative z-[2]"
                                             label={
                                                 spell.components
                                                     .materials_needed

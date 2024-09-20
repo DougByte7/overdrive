@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react'
 import {
     ActionIcon,
     Badge,
@@ -296,15 +294,15 @@ export default function AttributeSelection({
                             return (
                                 <button
                                     key={i}
-                                    css={[
-                                        attributeButtonStyles,
-                                        selectedRoll.activeIndex === i
+                                    style={{
+                                        ...attributeButtonStyles,
+                                        ...(selectedRoll.activeIndex === i
                                             ? attributeButtonActiveStyles
-                                            : null,
-                                        indexUsedAt.current.get(i)
+                                            : {}),
+                                        ...(indexUsedAt.current.get(i)
                                             ? attributeButtonUsedStyles
-                                            : null,
-                                    ]}
+                                            : {}),
+                                    }}
                                     onClick={handleSelectAttrValue(
                                         i,
                                         attrValue
@@ -352,7 +350,7 @@ export default function AttributeSelection({
                     attrMethod
                 ) ? (
                     <button
-                        css={attributeButtonStyles}
+                        style={attributeButtonStyles}
                         onClick={handleSetAttrValue(
                             ability.attributeName,
                             selectedRoll.activeIndex
@@ -463,26 +461,26 @@ export default function AttributeSelection({
     )
 }
 
-const attributeButtonActiveStyles = css`
-    outline: 1px solid var(--do_color_primary_base);
-    outline-offset: 2px;
-`
+const attributeButtonActiveStyles = {
+    outline: '1px solid var(--do_color_primary_base)',
+    'outline-offset': '2px',
+}
 
-const attributeButtonUsedStyles = css`
-    opacity: 0.5;
-    text-decoration: line-through;
-`
+const attributeButtonUsedStyles = {
+    opacity: 0.5,
+    'text-decoration': 'line-through',
+}
 
-const attributeButtonStyles = css`
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    border-radius: var(--do_border_radius_sm);
-    width: 39px;
-    height: 40px;
-    background: var(--do_color_support_dark_30);
-    font-size: var(--do_text_size_lg);
-    font-weight: bold;
-`
+const attributeButtonStyles = {
+    cursor: 'pointer',
+    display: 'flex',
+    'justify-content': 'center',
+    'align-items': 'center',
+    border: 'none',
+    'border-radius': 'var(--do_border_radius_sm)',
+    width: '39px',
+    height: '40px',
+    background: 'var(--do_color_support_dark_30)',
+    'font-size': 'var(--do_text_size_lg)',
+    'font-weight': 'bold',
+}

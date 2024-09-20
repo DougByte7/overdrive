@@ -1,7 +1,5 @@
 'use client'
 
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react'
 import { Divider, Flex, Stack, Text, UnstyledButton } from '@mantine/core'
 import { IconCrystalBall } from '@tabler/icons-react'
 import { useAtom } from 'jotai'
@@ -22,7 +20,7 @@ export default function CharacterFooter() {
                     <Stack align="center" gap={0}>
                         <i
                             aria-hidden={true}
-                            css={customIconStyles(
+                            style={customIconStyles(
                                 `/icons/${
                                     activeTab === 'basic' ? 'bold' : 'linear'
                                 }/user-octagon.svg`,
@@ -39,7 +37,7 @@ export default function CharacterFooter() {
                     <Stack align="center" gap={0}>
                         <i
                             aria-hidden={true}
-                            css={customIconStyles(
+                            style={customIconStyles(
                                 `/icons/${
                                     activeTab === 'inventory'
                                         ? 'bold'
@@ -58,7 +56,7 @@ export default function CharacterFooter() {
                     <Stack align="center" gap={0}>
                         <i
                             aria-hidden={true}
-                            css={customIconStyles(
+                            style={customIconStyles(
                                 `/icons/${activeTab === 'skills' ? 'bold' : 'linear'}/book.svg`,
                                 activeTab === 'skills'
                             )}
@@ -93,13 +91,13 @@ export default function CharacterFooter() {
     )
 }
 
-const customIconStyles = (path: string, isActive: boolean) => css`
-    display: flex;
-    width: 32px;
-    height: 32px;
-    background-color: ${isActive
+const customIconStyles = (path: string, isActive: boolean) => ({
+    display: 'flex',
+    width: '32px',
+    height: '32px',
+    'background-color': isActive
         ? 'var(--do_color_primary_base)'
-        : 'var(--do_color_support_dark_30)'};
-    mask: url(${path}) no-repeat center;
-    mask-size: 28px;
-`
+        : 'var(--do_color_support_dark_30)',
+    mask: `url(${path}) no-repeat center`,
+    'mask-size': '28px',
+})

@@ -1,67 +1,70 @@
-import type { DnD5eMonster } from "@/assets/dnd/5e/interfaces"
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"
-import { UnstyledButton, Group, Text, Avatar, Badge } from "@mantine/core"
-import { useLocalStorage } from "@mantine/hooks"
-import { selectedMonsterAtom } from "../state"
-import { useAtom } from "jotai"
+import { Avatar, Badge, Group, Text, UnstyledButton } from '@mantine/core'
+import { useLocalStorage } from '@mantine/hooks'
+import { useAtom } from 'jotai'
+
+import type { DnD5eMonster } from '@/assets/dnd/5e/interfaces'
+
+import { selectedMonsterAtom } from '../state'
 
 interface MonsterCardProps {
-  monster: DnD5eMonster
+    monster: DnD5eMonster
 }
 export function MonsterCard({ monster }: MonsterCardProps) {
-  const [showXp] = useLocalStorage({
-    key: "monster:showXp",
-    defaultValue: false,
-  })
-  const [, setSelectedMonster] = useAtom(selectedMonsterAtom)
-  const handleSetSelectedMonster = (monster: DnD5eMonster) => () => {
-    setSelectedMonster(monster)
-  }
-
-  const getFraction = (cr: number) => {
-    switch (cr) {
-      case 0.125:
-        return "1/8"
-      case 0.25:
-        return "1/4"
-      case 0.5:
-        return "1/2"
-      default:
-        return cr
+    const [showXp] = useLocalStorage({
+        key: 'monster:showXp',
+        defaultValue: false,
+    })
+    const [, setSelectedMonster] = useAtom(selectedMonsterAtom)
+    const handleSetSelectedMonster = (monster: DnD5eMonster) => () => {
+        setSelectedMonster(monster)
     }
-  }
 
-  return (
-    <UnstyledButton onClick={handleSetSelectedMonster(monster)}>
-      <Group
-        css={css`
-          border-radius: var(--do_border_radius_md);
-          border: 1px solid var(--do_border_color);
-          padding: 8px;
-          height: 80px;
-        `}
-      >
-        <Avatar src={`https://www.dnd5eapi.co${monster.image}`} size={64} />
+    const getFraction = (cr: number) => {
+        switch (cr) {
+            case 0.125:
+                return '1/8'
+            case 0.25:
+                return '1/4'
+            case 0.5:
+                return '1/2'
+            default:
+                return cr
+        }
+    }
 
-        <Group w="calc(100% - 80px)" gap={4}>
-          <Text w="100%" fw="bold">
-            {monster.name}
-          </Text>
+    return (
+        <UnstyledButton onClick={handleSetSelectedMonster(monster)}>
+            <Group
+                style={{
+                    'border-radius': 'var(--do_border_radius_md)',
+                    border: '1px solid var(--do_border_color)',
+                    padding: '8px',
+                    height: '80px',
+                }}
+            >
+                <Avatar
+                    src={`https://www.dnd5eapi.co${monster.image}`}
+                    size={64}
+                />
 
-          <Group w="100%" justify="space-between" gap={0}>
-            <Text size="sm">
-              {monster.size} {monster.type}
-            </Text>
+                <Group w="calc(100% - 80px)" gap={4}>
+                    <Text w="100%" fw="bold">
+                        {monster.name}
+                    </Text>
 
-            <Badge variant="filled" size="xs">
-              {showXp
-                ? `${monster.xp} XP`
-                : `CR ${getFraction(monster.challenge_rating)}`}
-            </Badge>
-          </Group>
-        </Group>
-      </Group>
-    </UnstyledButton>
-  )
+                    <Group w="100%" justify="space-between" gap={0}>
+                        <Text size="sm">
+                            {monster.size} {monster.type}
+                        </Text>
+
+                        <Badge variant="filled" size="xs">
+                            {showXp
+                                ? `${monster.xp} XP`
+                                : `CR ${getFraction(monster.challenge_rating)}`}
+                        </Badge>
+                    </Group>
+                </Group>
+            </Group>
+        </UnstyledButton>
+    )
 }
