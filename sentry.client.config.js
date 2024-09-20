@@ -31,7 +31,7 @@ Sentry.init({
             submitButtonLabel: 'Enviar',
             cancelButtonLabel: 'Cancelar',
             successMessageText: 'Obrigado pelo seu relato!',
-            isRequiredText: '(obrigatório)',
+            isRequiredLabel: '(obrigatório)',
             confirmButtonLabel: 'Confirmar',
         }),
     ],
