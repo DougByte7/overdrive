@@ -1,10 +1,39 @@
+type Property =
+    | 'CA'
+    | 'STR_MOD'
+    | 'CON_MOD'
+    | 'DEX_MOD'
+    | 'WIS_MOD'
+    | 'INT_MOD'
+    | 'CHA_MOD'
+    | 'WEAPON_RANGED_ATK'
+    | 'WEAPON_RANGED_DMG'
+    | 'WEAPON_MELEE_ATK'
+    | 'WEAPON_MELEE_DMG'
+type Assignment = '=' | '+=' | '-='
+
+/////////////////////////////
+type ArrayLengthMutationKeys = 'splice' | 'push' | 'pop' | 'shift' | 'unshift'
+type FixedLengthArray<T, L extends number, TObj = [T, ...Array<T>]> = Pick<
+    TObj,
+    Exclude<keyof TObj, ArrayLengthMutationKeys>
+> & {
+    readonly length: L
+    [I: number]: T
+    [Symbol.iterator]: () => IterableIterator<T>
+}
+/////////////////////////////
+
 export interface DnD5eFeature {
     name: string
     level: number | number[]
-    description: string | string[]
-    amount?: number[]
-    options?: LabelValue<string>[]
-    misc?: Record<string, string[]>
+    description: string
+    amount?: FixedLengthArray<number, 20>
+    options?: Array<LabelValue<string> & { description: string }>
+    rules?: Array<{
+        action: `${Property}${Assignment}${string}`
+        isActive: boolean
+    }>
 }
 
 export interface DnD5eSubClass {
@@ -67,9 +96,9 @@ export interface DnD5eClass {
         dice: DiceNotation
         average: number
     }
-    cantripKnown?: number[]
-    spellsKnown?: number[] | number
-    spellsSlots?: number[][]
+    cantripKnown?: FixedLengthArray<number, 20>
+    spellsKnown?: FixedLengthArray<number, 20> | number
+    spellsSlots?: FixedLengthArray<number[], 20>
     proficiencies: {
         armor?: Armor[]
         weapon: Weapon[]

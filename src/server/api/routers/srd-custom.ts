@@ -1,11 +1,11 @@
 import { TRPCError } from '@trpc/server'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
-import { length, merge, object, parse, string } from 'valibot'
+import { length, object, parse, pipe, string } from 'valibot'
 import z from 'zod'
 
-import { CustomClassSchema } from '@/assets/dnd/5e/utils/schemas/classes'
-import { CustomRaceSchema } from '@/assets/dnd/5e/utils/schemas/race'
+import { ClassSchema } from '@/assets/dnd/5e/schemas/classes'
+import { CustomRaceSchema } from '@/assets/dnd/5e/schemas/race'
 
 import { createTRPCRouter, privateProcedure, publicProcedure } from '../trpc'
 
@@ -65,7 +65,10 @@ const raceActions = {
     updateRace: privateProcedure
         .input((input) =>
             parse(
-                merge([CustomRaceSchema, object({ id: string([length(21)]) })]),
+                object({
+                    ...CustomRaceSchema.entries,
+                    ...object({ id: pipe(string(), length(21)) }).entries,
+                }),
                 input
             )
         )
@@ -142,7 +145,7 @@ const classActions = {
         })
     }),
     createClass: privateProcedure
-        .input((input) => parse(CustomClassSchema, input))
+        .input((input) => parse(ClassSchema, input))
         .mutation(async ({ ctx, input }) => {
             const authorId = ctx.userId
 
@@ -172,10 +175,10 @@ const classActions = {
     updateClass: privateProcedure
         .input((input) =>
             parse(
-                merge([
-                    CustomClassSchema,
-                    object({ id: string([length(21)]) }),
-                ]),
+                object({
+                    ...ClassSchema.entries,
+                    ...object({ id: pipe(string(), length(21)) }).entries,
+                }),
                 input
             )
         )

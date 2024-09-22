@@ -32,7 +32,7 @@ import Link from 'next/link'
 import { type CSSProperties, Fragment } from 'react'
 
 import races, { type DnD5eRaceName } from '@/assets/dnd/5e/races'
-import { CustomRaceSchema } from '@/assets/dnd/5e/utils/schemas/race'
+import { CustomRaceSchema } from '@/assets/dnd/5e/schemas/race'
 import storageKeys from '@/constants/storageKeys'
 import { type RouterOutputs, api } from '@/utils/api'
 

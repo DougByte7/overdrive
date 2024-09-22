@@ -1,5 +1,6 @@
 import { notifications } from '@mantine/notifications'
-import type { Input } from 'valibot'
+import { evaluate } from 'mathjs'
+import type { InferInput } from 'valibot'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { useShallow } from 'zustand/react/shallow'
@@ -12,7 +13,7 @@ import type { EquipmentOption } from '../classes/interfaces'
 import type { DnD5eTrait } from '../races'
 import races from '../races'
 import getModifier from './getModifier'
-import type { CustomClassSchema } from './schemas/classes'
+import type { ClassSchema } from '../schemas/classes'
 
 // enum HPMethod {
 //     AVERAGE,
@@ -38,7 +39,7 @@ interface State {
     }
     classes: Array<{
         id?: string
-        data: Input<typeof CustomClassSchema>
+        data: InferInput<typeof ClassSchema>
         level: number
     }>
     strength: number
@@ -299,6 +300,32 @@ export const useCharacterAttributes = () =>
 
 export const useCharacterArmorClass = () =>
     useCharacterSheetStore((state) => {
+        const rules = state.classes
+            .flatMap((c) => c.data.features)
+            .flatMap((feature) => feature.rules)
+            .filter((rule) => rule?.isActive && rule?.action.startsWith('CA'))
+
+        const setRule = rules
+            .find((rule) => rule?.action.startsWith('CA='))
+            ?.action.replace('CA=', '')
+        const addRules = rules
+            .filter((rule) => rule?.action.startsWith('CA+='))
+            .reduce(
+                (acc, rule) => `${acc}${rule?.action.replace('CA+=', '+')}`,
+                ''
+            )
+
+        const replaceProperties = (rule: string) =>
+            rule
+                .replaceAll('STR_MOD', `${getModifier(state.strength)}`)
+                .replaceAll('DEX_MOD', `${getModifier(state.dexterity)}`)
+                .replaceAll('CON_MOD', `${getModifier(state.constitution)}`)
+                .replaceAll('WIS_MOD', `${getModifier(state.wisdom)}`)
+                .replaceAll('CHA_MOD', `${getModifier(state.charisma)}`)
+                .replaceAll('INT_MOD', `${getModifier(state.intelligence)}`)
+
+        if (setRule) return evaluate(replaceProperties(`${setRule}${addRules}`))
+
         const armors = state.items
             .filter((item) => item.equipped)
             .map((item) => equipment.find((eq) => eq.index === item.item)!)
@@ -318,7 +345,8 @@ export const useCharacterArmorClass = () =>
                 Math.min(
                     getModifier(state.dexterity),
                     armor.armor_class.max_bonus ?? Infinity
-                )
+                ) +
+                evaluate(replaceProperties(addRules))
             )
         }, 0)
     })

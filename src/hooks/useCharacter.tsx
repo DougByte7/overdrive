@@ -4,14 +4,14 @@ import { useUser } from '@clerk/nextjs'
 import { useLocalStorage } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import { useEffect } from 'react'
-import { Input, parse } from 'valibot'
+import { InferInput, parse } from 'valibot'
 
-import { CharacterSheetSchema } from '@/assets/dnd/5e/utils/schemas/charater'
+import { CharacterSheetSchema } from '@/assets/dnd/5e/schemas/charater'
 import storageKeys from '@/constants/storageKeys'
 import { SupportedSystems } from '@/server/api/routers/characters'
 import { api } from '@/utils/api'
 
-export type Character = Input<typeof CharacterSheetSchema>
+export type Character = InferInput<typeof CharacterSheetSchema>
 export default function useCharacter() {
     const utils = api.useUtils()
 

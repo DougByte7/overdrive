@@ -16,6 +16,7 @@ Sentry.init({
         Sentry.feedbackIntegration({
             colorScheme: 'dark',
             showBranding: false,
+            //autoInject: false,
             themeDark: {
                 background: 'var(--mantine-color-body)',
             },

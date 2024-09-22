@@ -60,22 +60,23 @@ export default function FeaturesSelection({ styles }: FeaturesSelectionProps) {
 
                 return [
                     ...acc,
-                    <>
-                        <Select
-                            key={feature.name}
-                            label={feature.name}
-                            data={feature.options}
-                            onChange={(val) =>
-                                setForm((f) => {
-                                    f.features[feature.name] = val!
-                                    return { ...f }
-                                })
-                            }
-                        />
-                        {form.features[feature.name] && (
-                            <Code>{feature.misc?.[feature.name]}</Code>
-                        )}
-                    </>,
+                    <Select
+                        key={feature.name}
+                        label={feature.name}
+                        description={
+                            form.features[feature.name] &&
+                            feature.options.find(
+                                (o) => o.value === form.features[feature.name]
+                            )?.description
+                        }
+                        data={feature.options}
+                        onChange={(val) =>
+                            setForm((f) => {
+                                f.features[feature.name] = val!
+                                return { ...f }
+                            })
+                        }
+                    />,
                 ]
             },
             [] as ReactNode[]

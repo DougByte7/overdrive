@@ -41,7 +41,7 @@ import classes, {
     type Skill,
 } from '@/assets/dnd/5e/classes'
 import equipment from '@/assets/dnd/5e/equipment.json'
-import { CustomClassSchema } from '@/assets/dnd/5e/utils/schemas/classes'
+import { ClassSchema } from '@/assets/dnd/5e/schemas/classes'
 import storageKeys from '@/constants/storageKeys'
 import { type RouterOutputs, api } from '@/utils/api'
 
@@ -61,7 +61,7 @@ export default function ClassSelection({ styles }: ClassSelectionProps) {
         (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             event.stopPropagation()
 
-            const initialHp = classes[className].hp.average
+            const initialHp = +classes[className].hp.dice.replace('d', '')
 
             setForm((form) => ({
                 ...form,
@@ -313,7 +313,7 @@ function FormCustomClass() {
                 },
             ],
         },
-        validate: valibotResolver(CustomClassSchema),
+        validate: valibotResolver(ClassSchema),
     })
 
     const queryUtils = api.useUtils()
@@ -630,7 +630,7 @@ function FormCustomClass() {
                     {form.values.features.map((_, i) => {
                         const manualValidationBecauseUseFormDoesNotShowErrorMessageForTagsForSomeReason =
                             safeParse(
-                                CustomClassSchema.entries.features.item.entries
+                                ClassSchema.entries.features.item.entries
                                     .level,
                                 form.getInputProps(`features.${i}.level`)
                                     .defaultValue

@@ -21,6 +21,7 @@ const features: DnD5eFeature[] = [
         level: 1,
         description:
             'Enquanto você não estiver usando nenhuma armadura, sua Classe de Armadura é igual a 10 + seu modificador de Destreza + seu modificador de Constituição. Você pode usar um escudo e ainda assim obter esse benefício.',
+        rules: [{ action: 'CA=10+DEX_MOD+CON_MOD', isActive: true }],
     },
     {
         name: 'Ataque Descuidado',

@@ -1,3 +1,5 @@
+import dedent from 'dedent'
+
 import type { DnD5eClass, DnD5eFeature, DnD5eSubClass } from './interfaces'
 
 const features: DnD5eFeature[] = [
@@ -137,16 +139,16 @@ const devotion: DnD5eSubClass = {
         {
             name: 'Magias do Juramento',
             level: 3,
-            description: [
-                'Você ganha magias de juramento nos níveis de paladino listados.',
-                '| Nível de Paladino | Magias |',
-                '|-|-|',
-                '| 3rd  | protection	from	evil	and	good,	sanctuary |',
-                '| 5th  | lesser	restoration,	zone	of	truth       |',
-                '| 9th  | beacon	of	hope,	dispel	magic             |',
-                '| 13th | freedom	of	movement,	guardian	of	faith   |',
-                '| 17th | commune,	flame	strike                      |',
-            ],
+            description: dedent`
+                Você ganha magias de juramento nos níveis de paladino listados.
+                | Nível de Paladino | Magias |
+                |-|-|
+                | 3rd  | protection	from evil and good,	sanctuary |
+                | 5th  | lesser	restoration, zone of truth |
+                | 9th  | beacon of hope, dispel magic |
+                | 13th | freedom of movement, guardian of faith |
+                | 17th | commune, flame strike |
+            `,
         },
         {
             name: 'Canalizar Divindade',

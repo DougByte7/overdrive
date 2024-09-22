@@ -1,3 +1,5 @@
+import dedent from 'dedent'
+
 import type { DnD5eClass, DnD5eFeature, DnD5eSubClass } from './interfaces'
 
 const features: DnD5eFeature[] = [
@@ -58,16 +60,16 @@ const features: DnD5eFeature[] = [
     {
         name: 'Conjuração Flexível',
         level: 2,
-        description: [
-            'Você pode usar seus pontos de feitiçaria para ganhar espaços de magia adicionais ou sacrificar espaços de magia para ganhar pontos de feitiçaria adicionais. Você aprende outras maneiras de usar seus pontos de feitiçaria à medida que atinge níveis mais altos.',
-            '| Nível do espaço de magia | Custo de pontos de feitiçaria |',
-            '| --- | - |',
-            '| 1st | 2 |',
-            '| 2nd | 3 |',
-            '| 3rd | 5 |',
-            '| 4th | 6 |',
-            '| 5th | 7 |',
-        ],
+        description: dedent`
+            Você pode usar seus pontos de feitiçaria para ganhar espaços de magia adicionais ou sacrificar espaços de magia para ganhar pontos de feitiçaria adicionais. Você aprende outras maneiras de usar seus pontos de feitiçaria à medida que atinge níveis mais altos.
+            | Nível do espaço de magia | Custo de pontos de feitiçaria |
+            | --- | - |
+            | 1st | 2 |
+            | 2nd | 3 |
+            | 3rd | 5 |
+            | 4th | 6 |
+            | 5th | 7 |
+        `,
     },
     {
         name: 'Conversão de Espaços de Magia em Pontos de Feitiçaria',
@@ -82,52 +84,56 @@ const features: DnD5eFeature[] = [
             'No 3º nível, você adquire a habilidade de torcer suas magias para atender às suas necessidades. Você adquire duas das seguintes opções de Metamagia de sua escolha. Você ganha outra opção aos níveis 10 e 17. Você só pode usar uma opção de Metamagia em uma magia quando a conjura, a menos que seja indicado o contrário.',
         amount: [0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4],
         options: [
-            { label: 'Magia Cuidadosa', value: 'careful_spell' },
-            { label: 'Magia Distante', value: 'distant_spell' },
-            { label: 'Magia Aprimorada', value: 'empowered_spell' },
-            { label: 'Magia Prolongada', value: 'extended_spell' },
-            { label: 'Magia Elevada', value: 'heightened_spell' },
-            { label: 'Magia Acelerada', value: 'quickened_spell' },
-            { label: 'Magia Sutil', value: 'subtle_spell' },
-            { label: 'Magia Gemelar', value: 'twinned_spell' },
+            {
+                label: 'Magia Cuidadosa',
+                value: 'careful_spell',
+                description:
+                    'Quando você conjura uma magia que obriga outras criaturas a fazer um teste de resistência, você pode proteger algumas dessas criaturas da força total da magia. Para fazer isso, você gasta 1 ponto de magia e escolhe um número dessas criaturas até o seu modificador de Carisma (mínimo de uma criatura). A criatura escolhida automaticamente obtém sucesso em seu teste de resistência contra a magia.',
+            },
+            {
+                label: 'Magia Distante',
+                value: 'distant_spell',
+                description: dedent`
+                Quando você conjura uma magia que possui um alcance de 5 pés ou mais, você pode gastar 1 ponto de magia para dobrar o alcance da magia.
+                Quando você conjura uma magia que possui alcance de toque, você pode gastar 1 ponto de magia para aumentar o alcance da magia para 30 pés.`,
+            },
+            {
+                label: 'Magia Aprimorada',
+                value: 'empowered_spell',
+                description: dedent`Quando você rola o dano de uma magia, você pode gastar 1 ponto de magia para rolar novamente um número dos dados de dano até o seu modificador de Carisma (mínimo de um). Você deve usar os novos resultados.
+                Você pode usar a Magia Aprimorada mesmo se já tiver usado uma opção de Metamagia diferente durante a conjuração da magia.`,
+            },
+            {
+                label: 'Magia Prolongada',
+                value: 'extended_spell',
+                description:
+                    'Quando você conjura uma magia que possui uma duração de 1 minuto ou mais, você pode gastar 1 ponto de magia para dobrar a sua duração, até um máximo de 24 horas.',
+            },
+            {
+                label: 'Magia Elevada',
+                value: 'heightened_spell',
+                description:
+                    'Quando você conjura uma magia que obriga uma criatura a fazer um teste de resistência para resistir aos seus efeitos, você pode gastar 3 pontos de magia para dar a um alvo da magia desvantagem em seu primeiro teste de resistência contra a magia.',
+            },
+            {
+                label: 'Magia Acelerada',
+                value: 'quickened_spell',
+                description:
+                    'Quando você conjura uma magia que tem um tempo de conjuração de 1 ação, você pode gastar 2 pontos de magia para mudar o tempo de conjuração para 1 ação bônus para essa conjuração.',
+            },
+            {
+                label: 'Magia Sutil',
+                value: 'subtle_spell',
+                description:
+                    'Quando você conjura uma magia, você pode gastar 1 ponto de magia para conjurá-la sem quaisquer componentes somáticos ou verbais.',
+            },
+            {
+                label: 'Magia Gemelar',
+                value: 'twinned_spell',
+                description: dedent`Quando você conjura uma magia que tem como alvo apenas uma criatura e não possui um alcance pessoal, você pode gastar um número de pontos de magia igual ao nível da magia para direcionar uma segunda criatura no alcance com a mesma magia (1 ponto de magia se a magia for um truque).
+                Para ser elegível, uma magia deve ser incapaz de ter como alvo mais de uma criatura no nível atual da magia. Por exemplo, 'míssil mágico' e 'raio abrasador' não são elegíveis, mas 'raio de gelo é.`,
+            },
         ],
-        misc: {
-            careful_spell: [
-                'Magia Cuidadosa',
-                'Quando você conjura uma magia que obriga outras criaturas a fazer um teste de resistência, você pode proteger algumas dessas criaturas da força total da magia. Para fazer isso, você gasta 1 ponto de magia e escolhe um número dessas criaturas até o seu modificador de Carisma (mínimo de uma criatura). A criatura escolhida automaticamente obtém sucesso em seu teste de resistência contra a magia.',
-            ],
-            distant_spell: [
-                'Magia Distante',
-                'Quando você conjura uma magia que possui um alcance de 5 pés ou mais, você pode gastar 1 ponto de magia para dobrar o alcance da magia.',
-                'Quando você conjura uma magia que possui alcance de toque, você pode gastar 1 ponto de magia para aumentar o alcance da magia para 30 pés.',
-            ],
-            empowered_spell: [
-                'Magia Aprimorada',
-                'Quando você rola o dano de uma magia, você pode gastar 1 ponto de magia para rolar novamente um número dos dados de dano até o seu modificador de Carisma (mínimo de um). Você deve usar os novos resultados.',
-                'Você pode usar a Magia Aprimorada mesmo se já tiver usado uma opção de Metamagia diferente durante a conjuração da magia.',
-            ],
-            extended_spell: [
-                'Magia Prolongada',
-                'Quando você conjura uma magia que possui uma duração de 1 minuto ou mais, você pode gastar 1 ponto de magia para dobrar a sua duração, até um máximo de 24 horas.',
-            ],
-            heightened_spell: [
-                'Magia Elevada',
-                'Quando você conjura uma magia que obriga uma criatura a fazer um teste de resistência para resistir aos seus efeitos, você pode gastar 3 pontos de magia para dar a um alvo da magia desvantagem em seu primeiro teste de resistência contra a magia.',
-            ],
-            quickened_spell: [
-                'Magia Acelerada',
-                'Quando você conjura uma magia que tem um tempo de conjuração de 1 ação, você pode gastar 2 pontos de magia para mudar o tempo de conjuração para 1 ação bônus para essa conjuração.',
-            ],
-            subtle_spell: [
-                'Magia Sutil',
-                'Quando você conjura uma magia, você pode gastar 1 ponto de magia para conjurá-la sem quaisquer componentes somáticos ou verbais.',
-            ],
-            twinned_spell: [
-                'Magia Gemelar',
-                'Quando você conjura uma magia que tem como alvo apenas uma criatura e não possui um alcance pessoal, você pode gastar um número de pontos de magia igual ao nível da magia para direcionar uma segunda criatura no alcance com a mesma magia (1 ponto de magia se a magia for um truque).',
-                "Para ser elegível, uma magia deve ser incapaz de ter como alvo mais de uma criatura no nível atual da magia. Por exemplo, 'míssil mágico' e 'raio abrasador' não são elegíveis, mas 'raio de gelo é.",
-            ],
-        },
     },
     {
         name: 'Melhoria de Atributo',
@@ -151,20 +157,21 @@ const draconicBloodline: DnD5eSubClass = {
         {
             name: 'Ancestral de Dragão',
             level: 1,
-            description: `No 1º nível, você escolhe um tipo de dragão como seu ancestral. O tipo de dano associado a cada dragão é usado por recursos que você ganha mais tarde.
-        | Dragão   | Tipo de dano |
-        | -------- | ------------ |
-        | Preto    | Ácido        |
-        | Cobre    | Ácido        |
-        | Azul     | Raio         |
-        | Bronze   | Raio         |
-        | Ouro     | Fogo         |
-        | Vermelho | Fogo         |
-        | Verde    | Veneno       |
-        | Prata    | Frio         |
-        | Branco   | Frio         |
-        
-        Você pode falar, ler e escrever em Dracônico. Além disso, sempre que fizer um teste de Carisma ao interagir com dragões, seu bônus de proficiência é dobrado, se aplicável ao teste. Resiliência Draconiana: À medida que a magia flui pelo seu corpo, ela faz com que traços físicos de seus antepassados de dragão surjam. No 1º nível, seu total de pontos de vida aumenta em 1 e aumenta em 1 novamente sempre que você ganha um nível nesta classe. Além disso, partes de sua pele são cobertas por uma fina camada de escamas semelhantes às de um dragão. Quando você não está usando armadura, sua Classe de Armadura é igual a 13 + seu modificador de Destreza.
+            description: dedent`
+                No 1º nível, você escolhe um tipo de dragão como seu ancestral. O tipo de dano associado a cada dragão é usado por recursos que você ganha mais tarde.
+                | Dragão   | Tipo de dano |
+                | -------- | ------------ |
+                | Preto    | Ácido        |
+                | Cobre    | Ácido        |
+                | Azul     | Raio         |
+                | Bronze   | Raio         |
+                | Ouro     | Fogo         |
+                | Vermelho | Fogo         |
+                | Verde    | Veneno       |
+                | Prata    | Frio         |
+                | Branco   | Frio         |
+                
+                Você pode falar, ler e escrever em Dracônico. Além disso, sempre que fizer um teste de Carisma ao interagir com dragões, seu bônus de proficiência é dobrado, se aplicável ao teste. Resiliência Draconiana: À medida que a magia flui pelo seu corpo, ela faz com que traços físicos de seus antepassados de dragão surjam. No 1º nível, seu total de pontos de vida aumenta em 1 e aumenta em 1 novamente sempre que você ganha um nível nesta classe. Além disso, partes de sua pele são cobertas por uma fina camada de escamas semelhantes às de um dragão. Quando você não está usando armadura, sua Classe de Armadura é igual a 13 + seu modificador de Destreza.
         `,
         },
         {

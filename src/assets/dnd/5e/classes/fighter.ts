@@ -1,55 +1,63 @@
+import dedent from 'dedent'
+
 import type { DnD5eClass, DnD5eFeature, DnD5eSubClass } from './interfaces'
 
 const features: DnD5eFeature[] = [
     {
         name: 'Estilo de Luta',
         level: 1,
-        description: [
-            'Você adota um estilo particular de luta como sua especialidade. Escolha uma das opções a seguir. Você não pode escolher a mesma opção de Estilo de Luta mais de uma vez, mesmo que depois possa escolher novamente.',
-            '- Arquearia: Você recebe um bônus de +2 em rolagens de ataque que você faz com armas de longo alcance.',
-            '- Defesa: Enquanto estiver usando armadura, você recebe um bônus de +1 na CA (Classe de Armadura).',
-            '- Duelo: Quando estiver empunhando uma arma de combate corpo a corpo em uma mão e nenhuma outra arma, você recebe um bônus de +2 em rolagens de dano com essa arma.',
-            "- Combate com Arma Grande: Quando você rolar um 1 ou 2 em um dado de dano para um ataque que você fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo se for um 1 ou 2. A arma deve ter a propriedade 'duas mãos' ou 'versátil' para você obter esse benefício.",
-            '- Proteção: Quando uma criatura que você pode ver ataca um alvo que não seja você e esteja a até 1.5m (5ft) de você, você pode usar sua reação para impor desvantagem na rolagem de ataque. Você deve estar empunhando um escudo.',
-            '- Combate com Duas Armas: Quando você se envolve em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.',
+        description: dedent`
+            Você adota um estilo particular de luta como sua especialidade. Escolha uma das opções a seguir. Você não pode escolher a mesma opção de Estilo de Luta mais de uma vez, mesmo que depois possa escolher novamente.
+            - Arquearia: Você recebe um bônus de +2 em rolagens de ataque que você faz com armas de longo alcance.
+            - Defesa: Enquanto estiver usando armadura, você recebe um bônus de +1 na CA (Classe de Armadura).
+            - Duelo: Quando estiver empunhando uma arma de combate corpo a corpo em uma mão e nenhuma outra arma, você recebe um bônus de +2 em rolagens de dano com essa arma.
+            - Combate com Arma Grande: Quando você rolar um 1 ou 2 em um dado de dano para um ataque que você fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo se for um 1 ou 2. A arma deve ter a propriedade 'duas mãos' ou 'versátil' para você obter esse benefício.
+            - Proteção: Quando uma criatura que você pode ver ataca um alvo que não seja você e esteja a até 1.5m (5ft) de você, você pode usar sua reação para impor desvantagem na rolagem de ataque. Você deve estar empunhando um escudo.
+            - Combate com Duas Armas: Quando você se envolve em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.
+        `,
+        rules: [
+            { action: 'WEAPON_RANGED_ATK+=2', isActive: false },
+            { action: 'CA+=1', isActive: false },
+            { action: 'WEAPON_MELEE_DMG+=2', isActive: false },
         ],
         options: [
-            { label: 'Arquearia', value: 'archery' },
-            { label: 'Defesa', value: 'defense' },
-            { label: 'Duelo', value: 'dueling' },
+            {
+                label: 'Arquearia',
+                value: 'archery',
+                description:
+                    'Você recebe um bônus de +2 em rolagens de ataque que você faz com armas de longo alcance.',
+            },
+            {
+                label: 'Defesa',
+                value: 'defense',
+                description:
+                    'Enquanto estiver usando armadura, você recebe um bônus de +1 na CA (Classe de Armadura).',
+            },
+            {
+                label: 'Duelo',
+                value: 'dueling',
+                description:
+                    'Quando estiver empunhando uma arma de combate corpo a corpo em uma mão e nenhuma outra arma, você recebe um bônus de +2 em rolagens de dano com essa arma.',
+            },
             {
                 label: 'Combate com Arma Grande',
                 value: 'great_weapon_fighting',
+                description:
+                    "Quando você rolar um 1 ou 2 em um dado de dano para um ataque que você fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo se for um 1 ou 2. A arma deve ter a propriedade 'duas mãos' ou 'versátil' para você obter esse benefício.",
             },
-            { label: 'Proteção', value: 'protection' },
-            { label: 'Combate com Duas Armas', value: 'two_weapon_fighting' },
+            {
+                label: 'Proteção',
+                value: 'protection',
+                description:
+                    'Quando uma criatura que você pode ver ataca um alvo que não seja você e esteja a até 1.5m (5ft) de você, você pode usar sua reação para impor desvantagem na rolagem de ataque. Você deve estar empunhando um escudo.',
+            },
+            {
+                label: 'Combate com Duas Armas',
+                value: 'two_weapon_fighting',
+                description:
+                    'Quando você se envolve em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.',
+            },
         ],
-        misc: {
-            archery: [
-                'Arquearia',
-                'Você recebe um bônus de +2 em rolagens de ataque que você faz com armas de longo alcance.',
-            ],
-            defense: [
-                'Defesa',
-                'Enquanto estiver usando armadura, você recebe um bônus de +1 na CA (Classe de Armadura).',
-            ],
-            dueling: [
-                'Duelo',
-                'Quando estiver empunhando uma arma de combate corpo a corpo em uma mão e nenhuma outra arma, você recebe um bônus de +2 em rolagens de dano com essa arma.',
-            ],
-            great_weapon_fighting: [
-                'Combate com Arma Grande',
-                "Quando você rolar um 1 ou 2 em um dado de dano para um ataque que você fizer com uma arma corpo a corpo que esteja empunhando com as duas mãos, você pode rolar o dado novamente e deve usar o novo resultado, mesmo se for um 1 ou 2. A arma deve ter a propriedade 'duas mãos' ou 'versátil' para você obter esse benefício.",
-            ],
-            protection: [
-                'Proteção',
-                'Quando uma criatura que você pode ver ataca um alvo que não seja você e esteja a até 1.5m (5ft) de você, você pode usar sua reação para impor desvantagem na rolagem de ataque. Você deve estar empunhando um escudo.',
-            ],
-            two_weapon_fighting: [
-                'Combate com Duas Armas',
-                'Quando você se envolve em combate com duas armas, você pode adicionar seu modificador de habilidade ao dano do segundo ataque.',
-            ],
-        },
     },
     {
         name: 'Retomar folego',

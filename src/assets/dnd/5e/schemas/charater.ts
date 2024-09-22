@@ -10,7 +10,7 @@ import {
     union,
 } from 'valibot'
 
-import type { Skill } from '../../classes'
+import type { Skill } from '../classes'
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
     k: infer I
@@ -73,8 +73,13 @@ export const CharacterSheetSchema = object({
         ),
         'No Class'
     ),
-    traits: record(union([string(), array(string())]), 'Invalid trait format'),
+    traits: record(
+        string(),
+        union([string(), array(string())]),
+        'Invalid trait format'
+    ),
     features: record(
+        string(),
         union([string(), array(string())]),
         'Invalid feature format'
     ),

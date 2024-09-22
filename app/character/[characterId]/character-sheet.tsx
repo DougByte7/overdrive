@@ -20,6 +20,7 @@ import {
     Space,
     Spoiler,
     Stack,
+    Switch,
     Tabs,
     Text,
     TextInput,
@@ -48,7 +49,7 @@ import Link from 'next/link'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import type { Input } from 'valibot'
+import type { InferInput } from 'valibot'
 
 import classes, { type DnD5eClassName } from '@/assets/dnd/5e/classes'
 import type {
@@ -62,6 +63,7 @@ import races, {
     type DnD5eRaceName,
     type DnD5eTrait,
 } from '@/assets/dnd/5e/races'
+import { ClassSchema } from '@/assets/dnd/5e/schemas/classes'
 import {
     useCharacterArmorClass,
     useCharacterAttributes,
@@ -87,7 +89,6 @@ import {
 } from '@/assets/dnd/5e/utils/CharacterSheet'
 import getModifier from '@/assets/dnd/5e/utils/getModifier'
 import getProficiencyBonus from '@/assets/dnd/5e/utils/getProficiencyBonus'
-import { CustomClassSchema } from '@/assets/dnd/5e/utils/schemas/classes'
 import CharacterFooter from '@/components/character/components/footer/character-footer'
 import Grimoire from '@/components/character/components/grimoire'
 import { activeTabAtom } from '@/components/character/state'
@@ -165,7 +166,7 @@ export default function CharacterSheetPage({
                     spellsSlots,
                     ...rest
                 } = classes[c.name as DnD5eClassName]
-                const normalizedClass: Input<typeof CustomClassSchema> = {
+                const normalizedClass: InferInput<typeof ClassSchema> = {
                     ...rest,
                     hp: hp.dice,
                     public: true,
@@ -183,16 +184,16 @@ export default function CharacterSheetPage({
                         ...rest.features,
                         ...subclasses[0].features,
                     ] as any,
-                    cantripKnown: cantripKnown ?? [],
+                    cantripKnown: cantripKnown as unknown as number[],
                     spellsKnown:
                         typeof spellsKnown === 'number'
                             ? [spellsKnown]
-                            : spellsKnown ?? [],
-                    spellsSlots: spellsSlots ?? [],
+                            : (spellsKnown as unknown as number[]),
+                    spellsSlots: spellsSlots as unknown as number[][],
                 }
 
                 return {
-                    data: normalizedClass as Input<typeof CustomClassSchema>,
+                    data: normalizedClass as InferInput<typeof ClassSchema>,
                     level: c.level,
                 }
             }
@@ -220,7 +221,7 @@ export default function CharacterSheetPage({
                         skillAmount: proficiencies_skillAmount,
                         tools: [],
                     },
-                } as unknown as Input<typeof CustomClassSchema>,
+                } as unknown as InferInput<typeof ClassSchema>,
                 level: c.level,
             }
         })
@@ -499,7 +500,7 @@ function Features() {
                                     <Stack
                                         key={feature.name}
                                         className="rounded border border-brand-200 border-opacity-20 p-2"
-                                        gap={0}
+                                        gap="xs"
                                     >
                                         <Group justify="space-between">
                                             <Text fw="bold">
@@ -519,10 +520,7 @@ function Features() {
                                                 {/**
                                                  * @todo Support homebrew options like ranger
                                                  */}
-                                                {(
-                                                    (feature as TypeFixMe)
-                                                        .options as TypeFixMe[]
-                                                )
+                                                {feature.options
                                                     ?.filter((o) =>
                                                         features[
                                                             feature.name
@@ -530,25 +528,12 @@ function Features() {
                                                     )
                                                     .map((o) => (
                                                         <Fragment key={o.value}>
-                                                            {(
-                                                                (
-                                                                    feature as TypeFixMe
-                                                                ).misc?.[
-                                                                    o.value
-                                                                ] as TypeFixMe[]
-                                                            ).map((txt, i) => (
-                                                                <Text
-                                                                    className="text-sm"
-                                                                    key={i}
-                                                                    fw={
-                                                                        i === 0
-                                                                            ? 'bold'
-                                                                            : 'normal'
-                                                                    }
-                                                                >
-                                                                    {txt}
-                                                                </Text>
-                                                            ))}
+                                                            <Text className="text-sm font-bold">
+                                                                {o.label}
+                                                            </Text>
+                                                            <Text>
+                                                                {o.description}
+                                                            </Text>
                                                         </Fragment>
                                                     ))}
                                                 <Space h="md" />
@@ -561,7 +546,7 @@ function Features() {
                                             hideLabel="Ver menos"
                                         >
                                             <ReactMarkdown
-                                                className="text-sm"
+                                                className="text-sm [&_code]:text-wrap"
                                                 remarkPlugins={[remarkGfm]}
                                             >
                                                 {Array.isArray(
@@ -573,6 +558,19 @@ function Features() {
                                                     : feature.description}
                                             </ReactMarkdown>
                                         </Spoiler>
+
+                                        <List>
+                                            {feature.rules?.map((rule) => (
+                                                <List.Item key={rule.action}>
+                                                    <Switch
+                                                        label={rule.action}
+                                                        defaultChecked={
+                                                            rule.isActive
+                                                        }
+                                                    />
+                                                </List.Item>
+                                            ))}
+                                        </List>
                                     </Stack>
                                 )
                             })}

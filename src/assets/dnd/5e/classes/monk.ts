@@ -1,3 +1,5 @@
+import dedent from 'dedent'
+
 import type { DnD5eClass, DnD5eFeature, DnD5eSubClass } from './interfaces'
 
 const features: DnD5eFeature[] = [
@@ -6,6 +8,7 @@ const features: DnD5eFeature[] = [
         level: 1,
         description:
             'Começando no 1º nível, enquanto você não está vestindo armadura e não está empunhando um escudo, sua CA é igual a 10 + seu modificador de Destreza + seu modificador de Sabedoria.',
+        rules: [{ action: 'CA=10+DEX_MOD+WIS_MOD', isActive: true }],
     },
     {
         name: 'Artes Marciais',
@@ -143,12 +146,11 @@ const openHand: DnD5eSubClass = {
         {
             name: 'Técnica da Mão Aberta',
             level: 3,
-            description: [
-                'A partir do momento em que você escolhe esta tradição no 3º nível, pode manipular o ki do seu inimigo quando canaliza o seu próprio. Sempre que você acerta uma criatura com um dos ataques concedidos por sua Enxurrada de Golpes, pode impor um dos seguintes efeitos a esse alvo:',
-                '- Ele deve ser bem sucedido em um teste de resistência de Destreza ou ficará caído.',
-                '- Ele deve fazer um teste de resistência de Força. Se falhar, você pode empurrá-lo até 3 espaços (7,5m / 15ft) de distância de você.',
-                '- Ele não pode fazer reações até o final do seu próximo turno.',
-            ],
+            description: dedent`
+                A partir do momento em que você escolhe esta tradição no 3º nível, pode manipular o ki do seu inimigo quando canaliza o seu próprio. Sempre que você acerta uma criatura com um dos ataques concedidos por sua Enxurrada de Golpes, pode impor um dos seguintes efeitos a esse alvo:
+                - Ele deve ser bem sucedido em um teste de resistência de Destreza ou ficará caído.
+                - Ele deve fazer um teste de resistência de Força. Se falhar, você pode empurrá-lo até 3 espaços (7,5m / 15ft) de distância de você.
+                - Ele não pode fazer reações até o final do seu próximo turno.`,
         },
         {
             name: 'Integridade do Corpo',

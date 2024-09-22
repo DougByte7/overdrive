@@ -6,7 +6,7 @@ import { resizeImage } from 'lib/resizeImage'
 import { array, object, parse, picklist } from 'valibot'
 import { string } from 'zod'
 
-import { CharacterSheetSchema } from '@/assets/dnd/5e/utils/schemas/charater'
+import { CharacterSheetSchema } from '@/assets/dnd/5e/schemas/charater'
 
 import { createTRPCRouter, privateProcedure } from '../trpc'
 
