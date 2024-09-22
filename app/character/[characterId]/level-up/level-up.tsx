@@ -416,7 +416,7 @@ const NewFeatures = ({ styles, currentStep, onNextStep }: NewFeaturesProps) => {
                     spellsKnown: [],
                     spellsSlots: [],
                     ...(rest as any),
-                    hp,
+                    hp: +hp.replace('d', ''),
                     proficiencies: {
                         armor: proficiencies_armor as string[],
                         weapon: proficiencies_weapon as string[],
@@ -435,6 +435,7 @@ const NewFeatures = ({ styles, currentStep, onNextStep }: NewFeaturesProps) => {
             })
         } else {
             sheetPreview!.classes![classToLevelUpIndex].level += 1
+            /** @todo Alterar vida máxima */
         }
 
         attrToImprove.forEach((attr) => {
@@ -551,6 +552,7 @@ const NewFeatures = ({ styles, currentStep, onNextStep }: NewFeaturesProps) => {
                                     />
                                 </>
                             )}
+                            {/** @todo trocar por Radio.Card */}
                             {f.options &&
                                 Array(f.amount?.[newLevel] ?? 1)
                                     .fill(0)
@@ -561,6 +563,15 @@ const NewFeatures = ({ styles, currentStep, onNextStep }: NewFeaturesProps) => {
                                                     my="sm"
                                                     searchable
                                                     placeholder="Selecione uma opção"
+                                                    description={
+                                                        f.options?.find(
+                                                            (o) =>
+                                                                sheetPreview
+                                                                    .features[
+                                                                    f.name
+                                                                ][i] === o.value
+                                                        )?.description
+                                                    }
                                                     data={f.options!.filter(
                                                         (o) =>
                                                             (
@@ -585,32 +596,6 @@ const NewFeatures = ({ styles, currentStep, onNextStep }: NewFeaturesProps) => {
                                                         i
                                                     )}
                                                 />
-                                                {f.misc && (
-                                                    <Box>
-                                                        {f.misc[
-                                                            f.options?.find(
-                                                                (o) =>
-                                                                    sheetPreview
-                                                                        .features[
-                                                                        f.name
-                                                                    ]?.[i] ===
-                                                                    o.value
-                                                            )?.value ?? ''
-                                                        ]?.map((v, i) => (
-                                                            <Text
-                                                                key={v}
-                                                                size="sm"
-                                                                fw={
-                                                                    !i
-                                                                        ? 'bold'
-                                                                        : 'normal'
-                                                                }
-                                                            >
-                                                                {v}
-                                                            </Text>
-                                                        ))}
-                                                    </Box>
-                                                )}
                                             </Box>
                                         )
                                     })}
