@@ -13,6 +13,7 @@ import {
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconBellRinging, IconHome, IconSkull } from '@tabler/icons-react'
+import { latestVersion } from 'app/patch-notes/notes'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -73,7 +74,7 @@ export default function TopBar({ title }: TopBarProps) {
                             <Group>
                                 Novidades
                                 <Text className="font-mono text-xs opacity-75">
-                                    {process.env.NEXT_PUBLIC_APP_VERSION}
+                                    {latestVersion}
                                 </Text>
                             </Group>
                         }
