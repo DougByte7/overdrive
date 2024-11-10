@@ -1,4 +1,4 @@
-export const latestVersion = 'Pre-alpha 1.2.1'
+export const latestVersion = 'Pre-alpha 1.2.2'
 export const notes = [
     // {
     //     version: 'Pre-alpha 1.3.0',
@@ -9,6 +9,13 @@ export const notes = [
     // },
     {
         version: latestVersion,
+        date: '2024-10-04T00:00',
+        news: [
+            '🦋 Correção de bug em que a vida se tornava NaN ao subir de nível',
+        ],
+    },
+    {
+        version: 'Pre-alpha 1.2.1',
         date: '2024-09-19T00:00',
         news: [
             '✅ Adicionado botão de feedback.',
